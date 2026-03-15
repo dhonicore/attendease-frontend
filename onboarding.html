@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoBunk — Setup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050505;
+  --card: #111111;
+  --border: rgba(255,255,255,0.08);
+  --text: #ffffff;
+  --muted: #666;
+  --success: #00ff88;
+  --warn: #ffaa00;
+  --danger: #ff3366;
+  --purple: #7C5CF5;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.25rem;
+}
+
+/* TOP BAR */
+.topbar {
+  padding: 1.5rem 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: var(--success);
+}
+
+.step-counter {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* PROGRESS BAR */
+.progress-track {
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 1px;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* SCREEN */
+.screen { display: none; flex: 1; flex-direction: column; }
+.screen.active { display: flex; }
+
+.screen-content { flex: 1; }
+
+.step-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--success);
+  margin-bottom: 0.75rem;
+}
+
+.screen-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.screen-sub {
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+/* FORM FIELDS */
+.field { margin-bottom: 1rem; }
+
+.field label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.field input, .field select {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+
+.field input:focus, .field select:focus { border-color: var(--success); }
+.field input::placeholder { color: var(--muted); }
+.field select { cursor: pointer; }
+.field select option { background: #111; }
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* UPLOAD BOX */
+.upload-box {
+  border: 1.5px dashed rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--card);
+  margin-bottom: 1rem;
+}
+
+.upload-box:hover { border-color: var(--success); }
+.upload-box.uploaded { border-color: var(--success); border-style: solid; background: rgba(0,255,136,0.05); }
+
+.upload-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+.upload-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+.upload-sub { font-size: 0.78rem; color: var(--muted); }
+
+input[type="file"] { display: none; }
+
+/* SECTION PICKER */
+.section-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+
+.section-option {
+  padding: 13px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-option:hover { border-color: rgba(255,255,255,0.2); }
+.section-option.selected { border-color: var(--success); background: rgba(0,255,136,0.05); }
+
+.section-radio {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+
+.section-option.selected .section-radio { border-color: var(--success); background: var(--success); }
+.section-option.selected .section-radio::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--bg); }
+
+.section-name { font-size: 0.9rem; font-weight: 600; }
+.section-subjects { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+/* SUBJECTS PREVIEW */
+.subjects-preview {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.subjects-preview-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.subject-chip {
+  display: inline-block;
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--success);
+  margin: 3px;
+}
+
+/* ATTENDANCE IMPORT */
+.import-option {
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.import-option:hover { border-color: rgba(255,255,255,0.2); }
+.import-option-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 3px; }
+.import-option-sub { font-size: 0.75rem; color: var(--muted); }
+
+/* LOADING */
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  display: none;
+}
+
+.loading-state.visible { display: block; }
+
+.spinner {
+  width: 32px; height: 32px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: var(--success);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text { font-size: 0.85rem; color: var(--muted); }
+
+/* BUTTONS */
+.btn-row { padding: 1rem 0 2rem; }
+
+.btn-next {
+  width: 100%;
+  background: var(--success);
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-next:active { transform: translateY(0); }
+.btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.btn-skip {
+  width: 100%;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  padding: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s;
+  margin-top: 8px;
+}
+
+.btn-skip:hover { color: var(--text); }
+
+/* SUCCESS */
+.success-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+.summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.summary-row:last-child { border-bottom: none; }
+.summary-label { color: var(--muted); }
+.summary-val { font-weight: 600; }
+
+/* MANUAL ATTENDANCE */
+.manual-subject {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+.manual-subject-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; }
+.manual-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.manual-fields label { font-size: 0.62rem; color: var(--muted); display: block; margin-bottom: 4px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.manual-fields input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 0.88rem; color: var(--text); outline: none; font-family: 'Inter', sans-serif; }
+.manual-fields input:focus { border-color: var(--success); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">NoBunk</div>
+    <div class="step-counter" id="step-counter">Step 1 of 5</div>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:20%"></div>
+  </div>
+
+  <!-- STEP 1: DETAILS -->
+  <div class="screen active" id="s1">
+    <div class="screen-content">
+      <div class="step-label">Your Details</div>
+      <div class="screen-title">Tell us about yourself</div>
+      <div class="screen-sub">We need this to set up your attendance tracking correctly.</div>
+      <div class="field">
+        <label>College Name</label>
+        <input type="text" id="college" placeholder="e.g. RV College of Engineering">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Year</label>
+          <select id="year">
+            <option value="">Select</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Semester</label>
+          <select id="semester">
+            <option value="">Select</option>
+            <option>Sem 1</option>
+            <option>Sem 2</option>
+            <option>Sem 3</option>
+            <option>Sem 4</option>
+            <option>Sem 5</option>
+            <option>Sem 6</option>
+            <option>Sem 7</option>
+            <option>Sem 8</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Minimum Attendance Required (%)</label>
+        <input type="number" id="min-attendance" value="75" min="1" max="100">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" onclick="saveProfile()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: TIMETABLE -->
+  <div class="screen" id="s2">
+    <div class="screen-content">
+      <div class="step-label">Timetable</div>
+      <div class="screen-title">Upload your timetable</div>
+      <div class="screen-sub">Upload the timetable PDF from your college. AI will extract your subjects and schedule automatically.</div>
+      <div class="upload-box" id="tt-box" onclick="document.getElementById('tt-file').click()">
+        <div class="upload-icon">📄</div>
+        <div class="upload-title">Tap to upload timetable PDF</div>
+        <div class="upload-sub">AI reads it and extracts your subjects</div>
+      </div>
+      <input type="file" id="tt-file" accept=".pdf,image/*" onchange="uploadTimetable(this)">
+      <div class="loading-state" id="tt-loading">
+        <div class="spinner"></div>
+        <div class="loading-text">AI is reading your timetable...</div>
+      </div>
+      <div id="section-picker" style="display:none;">
+        <div class="step-label" style="margin-bottom:8px;">Select your section</div>
+        <div class="section-list" id="section-list"></div>
+      </div>
+      <div id="subjects-preview" style="display:none;">
+        <div class="subjects-preview">
+          <div class="subjects-preview-title">Subjects found</div>
+          <div id="subjects-chips"></div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" id="tt-next-btn" onclick="saveTimetable()" disabled>Save & Continue →</button>
+      <button class="btn-skip" onclick="skipTimetable()">Skip for now — add subjects manually</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: COE -->
+  <div class="screen" id="s3">
+    <div class="screen-content">
+      <div class="step-label">Academic Calendar</div>
+      <div class="screen-title">Upload your COE</div>
+      <div class="screen-sub">Upload your Calendar of Events so NoBunk can detect holidays and calculate your remaining classes accurately.</div>
+      <div class="upload-box" id="coe-box" onclick="document.getElementById('coe-file').click()">
+        <div class="upload-icon">📅</div>
+        <div class="upload-title">Tap to upload COE / Academic Calendar</div>
+        <div class="upload-sub">PDF or image — AI detects holidays automatically</div>
+      </div>
+      <input type="file" id="coe-file" accept=".pdf,image/*" onchange="uploadCOE(this)">
+      <div class="loading-state" id="coe-loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Detecting holidays...</div>
+      </div>
+      <div id="coe-result" style="display:none;"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" onclick="goTo(4)">Continue →</button>
+      <button class="btn-skip" onclick="goTo(4)">Skip for now</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: PAST ATTENDANCE -->
+  <div class="screen" id="s4">
+    <div class="screen-content">
+      <div class="step-label">Past Attendance</div>
+      <div class="screen-title">Import your attendance</div>
+      <div class="screen-sub">Semester already started? Import your current attendance so NoBunk knows where you stand.</div>
+      <div class="import-option" onclick="showScreenshot()">
+        <div class="import-option-title">📸 Upload screenshot from college app</div>
+        <div class="import-option-sub">AI reads your attendance automatically — fastest option</div>
+      </div>
+      <div class="import-option" onclick="showManual()">
+        <div class="import-option-title">✏️ Enter manually</div>
+        <div class="import-option-sub">Type in classes attended and total for each subject</div>
+      </div>
+      <div id="screenshot-section" style="display:none;margin-top:1rem;">
+        <div class="upload-box" id="ss-box" onclick="document.getElementById('ss-file').click()">
+          <div class="upload-icon">📱</div>
+          <div class="upload-title">Tap to upload attendance screenshot</div>
+          <div class="upload-sub">From your college app or portal</div>
+        </div>
+        <input type="file" id="ss-file" accept="image/*" onchange="uploadScreenshot(this)">
+        <div class="loading-state" id="ss-loading">
+          <div class="spinner"></div>
+          <div class="loading-text">AI is reading your attendance...</div>
+        </div>
+        <div id="ss-result" style="display:none;"></div>
+      </div>
+      <div id="manual-section" style="display:none;margin-top:1rem;">
+        <div id="manual-subjects-list"></div>
+        <button class="btn-next" onclick="saveManualAttendance()" style="margin-top:0.5rem;">Save Attendance →</button>
+      </div>
+    </div>
+    <div class="btn-row" id="s4-btn-row">
+      <button class="btn-skip" onclick="goTo(5)">Skip — I'll track from today</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: DONE -->
+  <div class="screen" id="s5">
+    <div class="screen-content">
+      <div style="text-align:center;padding-top:2rem;">
+        <div class="success-icon">🎉</div>
+        <div class="screen-title" style="text-align:center;">You're all set!</div>
+        <div class="screen-sub" style="text-align:center;">NoBunk is ready. Your attendance is being tracked from today.</div>
+      </div>
+      <div class="summary-card" id="summary-card"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" onclick="goToDashboard()">Open Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://attendease-backend-wrag.onrender.com';
+let currentUser = null;
+let timetableData = null;
+let selectedSection = null;
+let currentStep = 1;
+
+function init() {
+  const p = new URLSearchParams(window.location.search);
+  const uid = p.get('user_id');
+  const uname = p.get('name');
+  const uemail = p.get('email');
+  if (uid) {
+    currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
+    localStorage.setItem('user_id', uid);
+    localStorage.setItem('user_name', uname || '');
+    localStorage.setItem('user_email', uemail || '');
+  }
+}
+
+function goTo(step) {
+  document.getElementById(`s${currentStep}`).classList.remove('active');
+  currentStep = step;
+  document.getElementById(`s${step}`).classList.add('active');
+  document.getElementById('step-counter').textContent = `Step ${step} of 5`;
+  document.getElementById('progress-fill').style.width = `${step * 20}%`;
+  if (step === 5) buildSummary();
+}
+
+async function saveProfile() {
+  const college = document.getElementById('college').value.trim();
+  const year = document.getElementById('year').value;
+  const semester = document.getElementById('semester').value;
+  const minAtt = parseInt(document.getElementById('min-attendance').value) || 75;
+  if (!college || !year || !semester) { alert('Please fill in all fields'); return; }
+  try {
+    await fetch(`${API}/onboarding/profile`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUser.id, college, year, semester, section: '', min_attendance: minAtt })
+    });
+    goTo(2);
+  } catch(e) { console.error(e); goTo(2); }
+}
+
+async function uploadTimetable(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const box = document.getElementById('tt-box');
+  box.classList.add('uploaded');
+  box.querySelector('.upload-title').textContent = file.name;
+  box.querySelector('.upload-sub').textContent = 'AI is reading...';
+  document.getElementById('tt-loading').classList.add('visible');
+
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${API}/onboarding/timetable/${currentUser.id}`, {
+      method: 'POST', body: formData
+    });
+    timetableData = await res.json();
+    document.getElementById('tt-loading').classList.remove('visible');
+    if (timetableData.error) {
+      box.querySelector('.upload-sub').textContent = 'Could not read. Try another file or skip.';
+      return;
+    }
+    renderSections(timetableData);
+  } catch(e) {
+    document.getElementById('tt-loading').classList.remove('visible');
+    box.querySelector('.upload-sub').textContent = 'Error reading file. Try skip.';
+  }
+}
+
+function renderSections(data) {
+  const sections = data.sections || ['DEFAULT'];
+  const picker = document.getElementById('section-picker');
+  const list = document.getElementById('section-list');
+  picker.style.display = 'block';
+  list.innerHTML = sections.map(s => `
+    <div class="section-option" onclick="selectSection('${s}')" id="sec-${s}">
+      <div class="section-radio"></div>
+      <div>
+        <div class="section-name">Section ${s}</div>
+        <div class="section-subjects">${(data.subjects_by_section?.[s] || []).slice(0,3).join(', ')}${(data.subjects_by_section?.[s] || []).length > 3 ? '...' : ''}</div>
+      </div>
+    </div>`).join('');
+  if (sections.length === 1) selectSection(sections[0]);
+}
+
+function selectSection(section) {
+  selectedSection = section;
+  document.querySelectorAll('.section-option').forEach(el => el.classList.remove('selected'));
+  document.getElementById(`sec-${section}`)?.classList.add('selected');
+  const subjects = timetableData?.subjects_by_section?.[section] || [];
+  if (subjects.length > 0) {
+    document.getElementById('subjects-preview').style.display = 'block';
+    document.getElementById('subjects-chips').innerHTML = subjects.map(s => `<span class="subject-chip">${s}</span>`).join('');
+  }
+  document.getElementById('tt-next-btn').disabled = false;
+}
+
+async function saveTimetable() {
+  if (!selectedSection || !timetableData) return;
+  const subjects = timetableData.subjects_by_section?.[selectedSection] || [];
+  const schedule = timetableData.schedule_by_section?.[selectedSection] || {};
+  try {
+    await fetch(`${API}/onboarding/save-timetable`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUser.id, section: selectedSection, subjects, schedule })
+    });
+    goTo(3);
+  } catch(e) { goTo(3); }
+}
+
+function skipTimetable() { goTo(3); }
+
+async function uploadCOE(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const box = document.getElementById('coe-box');
+  box.classList.add('uploaded');
+  box.querySelector('.upload-title').textContent = file.name;
+  document.getElementById('coe-loading').classList.add('visible');
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${API}/onboarding/coe/${currentUser.id}`, {
+      method: 'POST', body: formData
+    });
+    const data = await res.json();
+    document.getElementById('coe-loading').classList.remove('visible');
+    if (data.holidays_added > 0) {
+      const result = document.getElementById('coe-result');
+      result.style.display = 'block';
+      result.innerHTML = `<div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:12px 14px;font-size:0.82rem;color:var(--success);">✓ Detected ${data.holidays_added} holidays from your COE</div>`;
+    }
+  } catch(e) {
+    document.getElementById('coe-loading').classList.remove('visible');
+  }
+}
+
+function showScreenshot() {
+  document.getElementById('screenshot-section').style.display = 'block';
+  document.getElementById('manual-section').style.display = 'none';
+  document.getElementById('s4-btn-row').style.display = 'none';
+}
+
+async function showManual() {
+  document.getElementById('manual-section').style.display = 'block';
+  document.getElementById('screenshot-section').style.display = 'none';
+  document.getElementById('s4-btn-row').style.display = 'none';
+  try {
+    const res = await fetch(`${API}/subjects/${currentUser.id}`);
+    const data = await res.json();
+    const list = document.getElementById('manual-subjects-list');
+    if (!data.subjects || data.subjects.length === 0) {
+      list.innerHTML = '<div style="color:var(--muted);font-size:0.82rem;">No subjects found. Add subjects first from the timetable step.</div>';
+      return;
+    }
+    list.innerHTML = data.subjects.map(s => `
+      <div class="manual-subject">
+        <div class="manual-subject-name">${s.name}</div>
+        <div class="manual-fields">
+          <div><label>Classes Held</label><input type="number" id="total-${s.id}" placeholder="e.g. 40"></div>
+          <div><label>Attended</label><input type="number" id="att-${s.id}" placeholder="e.g. 32"></div>
+        </div>
+      </div>`).join('');
+  } catch(e) { console.error(e); }
+}
+
+async function uploadScreenshot(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const box = document.getElementById('ss-box');
+  box.classList.add('uploaded');
+  box.querySelector('.upload-title').textContent = 'Screenshot uploaded';
+  document.getElementById('ss-loading').classList.add('visible');
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {
+      method: 'POST', body: formData
+    });
+    const data = await res.json();
+    document.getElementById('ss-loading').classList.remove('visible');
+    const result = document.getElementById('ss-result');
+    result.style.display = 'block';
+    if (data.message) {
+      result.innerHTML = `<div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:12px 14px;font-size:0.82rem;color:var(--success);">✓ ${data.message}</div>`;
+      setTimeout(() => goTo(5), 1500);
+    }
+  } catch(e) {
+    document.getElementById('ss-loading').classList.remove('visible');
+  }
+}
+
+async function saveManualAttendance() {
+  try {
+    const res = await fetch(`${API}/subjects/${currentUser.id}`);
+    const data = await res.json();
+    for (const s of data.subjects || []) {
+      const total = parseInt(document.getElementById(`total-${s.id}`)?.value) || 0;
+      const attended = parseInt(document.getElementById(`att-${s.id}`)?.value) || 0;
+      if (total > 0) {
+        for (let i = 0; i < attended; i++) {
+          await fetch(`${API}/attendance`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject_id: s.id, date: `2026-01-${String(i+1).padStart(2,'0')}`, status: 'attended' })
+          });
+        }
+        for (let i = 0; i < (total - attended); i++) {
+          await fetch(`${API}/attendance`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject_id: s.id, date: `2026-02-${String(i+1).padStart(2,'0')}`, status: 'bunked' })
+          });
+        }
+      }
+    }
+    goTo(5);
+  } catch(e) { goTo(5); }
+}
+
+function buildSummary() {
+  const college = document.getElementById('college').value || '—';
+  const year = document.getElementById('year').value || '—';
+  const semester = document.getElementById('semester').value || '—';
+  const minAtt = document.getElementById('min-attendance').value || '75';
+  document.getElementById('summary-card').innerHTML = `
+    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${currentUser.name}</span></div>
+    <div class="summary-row"><span class="summary-label">College</span><span class="summary-val">${college}</span></div>
+    <div class="summary-row"><span class="summary-label">Year & Sem</span><span class="summary-val">${year} · ${semester}</span></div>
+    <div class="summary-row"><span class="summary-label">Min Attendance</span><span class="summary-val">${minAtt}%</span></div>
+    <div class="summary-row"><span class="summary-label">Section</span><span class="summary-val">${selectedSection || 'Manual'}</span></div>
+  `;
+}
+
+function goToDashboard() {
+  window.location.href = `index.html?user_id=${currentUser.id}&name=${encodeURIComponent(currentUser.name)}&email=${currentUser.email}`;
+}
+
+init();
+</script>
+</body>
+</html>
