@@ -1,1111 +1,563 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AttendEase</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #F9F8F5;
-  --white: #FFFFFF;
-  --black: #0C0C0C;
-  --border: #E4E2DC;
-  --muted: #9B9891;
-  --cyan: #00D4C4;
-  --yellow: #F5C518;
-  --red: #E8364A;
-  --purple: #5B4CF5;
-  --green: #22C55E;
-  --text: #0C0C0C;
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
-  --hover-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  --r: 16px;
-  --r-sm: 10px;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Geist', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  font-size: 14px;
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
-/* ── SCROLL REVEAL ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* ═══════════════════════════════
-   AUTH SCREEN
-═══════════════════════════════ */
-#auth-screen {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--white);
-}
-
-.auth-nav {
-  padding: 0 2.5rem;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-
-.logo-text {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 0.06em;
-  color: var(--black);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.logo-pill {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--cyan);
-  display: inline-block;
-}
-
-.auth-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tag-chip {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 5px 12px;
-}
-
-/* AUTH HERO */
-.auth-hero {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 5rem 2rem 3rem;
-  text-align: center;
-  position: relative;
-}
-
-.auth-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--purple);
-  background: rgba(91,76,245,0.08);
-  border: 1px solid rgba(91,76,245,0.2);
-  border-radius: 20px;
-  padding: 6px 14px;
-  margin-bottom: 2rem;
-  animation: fadeUp 0.6s 0.1s ease both;
-}
-
-.auth-h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(5rem, 14vw, 11rem);
-  line-height: 0.88;
-  letter-spacing: 0.03em;
-  color: var(--black);
-  margin-bottom: 1.5rem;
-  animation: fadeUp 0.6s 0.2s ease both;
-}
-
-.auth-h1 .accent { color: var(--purple); }
-
-.auth-sub {
-  font-size: 1rem;
-  font-weight: 400;
-  color: var(--muted);
-  max-width: 420px;
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-  animation: fadeUp 0.6s 0.3s ease both;
-}
-
-.google-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--black);
-  color: var(--white);
-  border: none;
-  border-radius: 12px;
-  padding: 14px 28px;
-  font-family: 'Geist', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeUp 0.6s 0.4s ease both;
-  letter-spacing: 0.01em;
-}
-
-.google-btn:hover {
-  background: #1a1a1a;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
-
-.auth-features {
-  display: flex;
-  gap: 10px;
-  margin-top: 2.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  animation: fadeUp 0.6s 0.5s ease both;
-}
-
-.feat-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--muted);
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 7px 14px;
-  transition: all 0.2s;
-}
-
-.feat-pill:hover { border-color: var(--black); color: var(--black); }
-.feat-pip { width: 6px; height: 6px; border-radius: 50%; }
-
-/* MARQUEE */
-.marquee-strip {
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-  padding: 14px 0;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.marquee-inner {
-  display: inline-flex;
-  gap: 2.5rem;
-  animation: ticker 20s linear infinite;
-}
-
-.marquee-word {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.marquee-word .dot { color: var(--cyan); font-size: 1rem; }
-
-@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ═══════════════════════════════
-   APP
-═══════════════════════════════ */
-#app { display: none; }
-
-/* TOPNAV */
-.topnav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.nav-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.06em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-pills {
-  display: flex;
-  gap: 2px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 3px;
-}
-
-.nav-pill {
-  padding: 5px 16px;
-  border-radius: 8px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  transition: all 0.15s;
-  font-family: 'Geist', sans-serif;
-  letter-spacing: 0.01em;
-}
-
-.nav-pill.active {
-  background: var(--white);
-  color: var(--black);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
-
-.nav-right { display: flex; align-items: center; gap: 10px; }
-
-.user-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 5px 12px 5px 5px;
-  transition: all 0.15s;
-  cursor: pointer;
-}
-
-.user-chip:hover { border-color: var(--black); }
-
-.user-av {
-  width: 28px; height: 28px;
-  border-radius: 8px;
-  background: var(--cyan);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.78rem; font-weight: 700; color: var(--black);
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.05em;
-}
-
-.user-nm { font-size: 0.82rem; font-weight: 600; }
-
-/* ── MAIN ── */
-.main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
-
-/* HERO ROW */
-.page-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 2.5rem;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.page-greeting {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  letter-spacing: 0.03em;
-  line-height: 1;
-  color: var(--black);
-}
-
-.page-greeting .name-accent { color: var(--purple); }
-.page-date { font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-top: 6px; letter-spacing: 0.01em; }
-
-.header-actions { display: flex; gap: 8px; align-items: center; }
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 18px;
-  border-radius: var(--r-sm);
-  font-family: 'Geist', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
-  letter-spacing: 0.01em;
-  border: none;
-}
-
-.btn-dark {
-  background: var(--black);
-  color: var(--white);
-}
-
-.btn-dark:hover {
-  background: #1a1a1a;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.btn-outline {
-  background: var(--white);
-  color: var(--black);
-  border: 1px solid var(--border);
-}
-
-.btn-outline:hover {
-  border-color: var(--black);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-}
-
-/* ── METRICS ── */
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0,1fr));
-  gap: 12px;
-  margin-bottom: 2rem;
-}
-
-.metric {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 1.5rem;
-  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-  position: relative;
-  overflow: hidden;
-}
-
-.metric:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--hover-shadow);
-  border-color: rgba(0,0,0,0.12);
-}
-
-.metric-bar {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: 0 0 var(--r) var(--r);
-}
-
-.metric-label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-
-.metric-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 3.2rem;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.metric-sub { font-size: 0.72rem; font-weight: 500; color: var(--muted); }
-
-/* ── CONTENT GRID ── */
-.content-grid {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-/* ── CARD ── */
-.card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 1.5rem;
-  margin-bottom: 1.25rem;
-  transition: box-shadow 0.2s;
-}
-
-.card:hover { box-shadow: var(--card-shadow); }
-
-.card-head {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-}
-
-.card-lbl {
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  display: flex; align-items: center; gap: 8px;
-}
-
-.lbl-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-.card-btn {
-  font-size: 0.75rem; font-weight: 600;
-  color: var(--purple); cursor: pointer;
-  border: none; background: none;
-  font-family: 'Geist', sans-serif;
-  transition: opacity 0.15s;
-  letter-spacing: 0.01em;
-}
-
-.card-btn:hover { opacity: 0.7; }
-
-/* ── SUBJECTS ── */
-.sub-list { display: flex; flex-direction: column; gap: 8px; }
-
-.sub-item {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 14px;
-  border-radius: var(--r-sm);
-  border: 1px solid var(--border);
-  background: var(--bg);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
-  position: relative;
-  overflow: hidden;
-}
-
-.sub-item:hover {
-  background: var(--white);
-  border-color: rgba(0,0,0,0.14);
-  transform: translateX(2px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.sub-line { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 2px 0 0 2px; }
-
-.sub-body { flex: 1; min-width: 0; }
-.sub-nm { font-size: 0.88rem; font-weight: 600; color: var(--black); margin-bottom: 2px; }
-.sub-info { font-size: 0.7rem; font-weight: 500; color: var(--muted); }
-.sub-prog { width: 100%; height: 2px; background: var(--border); border-radius: 1px; margin-top: 7px; overflow: hidden; }
-.sub-fill { height: 100%; border-radius: 1px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
-
-.sub-right { text-align: right; flex-shrink: 0; }
-.sub-pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.02em; }
-
-.badge {
-  display: inline-block;
-  font-size: 0.58rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 3px 8px;
-  border-radius: 6px;
-  margin-top: 3px;
-}
-
-.bs { background: rgba(0,212,196,0.12); color: #00A89A; }
-.bw { background: rgba(245,197,24,0.15); color: #B8860B; }
-.bd { background: rgba(232,54,74,0.1); color: var(--red); }
-
-/* ── ADD FORM ── */
-.add-row {
-  display: flex; gap: 8px;
-  margin-top: 1rem; padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.add-inp {
-  flex: 1;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  padding: 9px 14px;
-  font-family: 'Geist', sans-serif;
-  font-size: 0.84rem;
-  font-weight: 500;
-  color: var(--black);
-  outline: none;
-  transition: all 0.15s;
-}
-
-.add-inp:focus {
-  border-color: var(--black);
-  background: var(--white);
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
-}
-
-.add-inp::placeholder { color: #C0BDB8; }
-
-/* ── TODAY ── */
-.today-list { display: flex; flex-direction: column; gap: 7px; }
-
-.cls-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 11px 14px;
-  border-radius: var(--r-sm);
-  border: 1px solid var(--border);
-  background: var(--bg);
-  transition: all 0.2s;
-}
-
-.cls-row.attended { background: rgba(34,197,94,0.06); border-color: rgba(34,197,94,0.25); }
-
-.cls-time {
-  font-size: 0.65rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--muted); min-width: 40px;
-}
-
-.cls-nm { font-size: 0.86rem; font-weight: 600; flex: 1; }
-
-.mark-btn {
-  font-size: 0.72rem; font-weight: 600;
-  padding: 6px 14px; border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--white); color: var(--black);
-  cursor: pointer; font-family: 'Geist', sans-serif;
-  transition: all 0.15s; white-space: nowrap;
-}
-
-.mark-btn:hover { border-color: var(--black); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-.mark-btn.done { background: var(--green); color: var(--white); border-color: var(--green); }
-
-.bunk-tag {
-  font-size: 0.65rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  padding: 5px 10px; border-radius: 8px;
-  background: rgba(245,197,24,0.15);
-  color: #B8860B;
-  border: 1px solid rgba(245,197,24,0.3);
-}
-
-/* ── ALERTS ── */
-.alert-list { display: flex; flex-direction: column; gap: 7px; }
-
-.alert-row {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 10px 13px; border-radius: var(--r-sm);
-  font-size: 0.8rem; font-weight: 500; line-height: 1.5;
-  border: 1px solid;
-  transition: all 0.2s;
-}
-
-.alert-row:hover { transform: translateX(2px); }
-
-/* ── VERDICT ── */
-.verdict-box {
-  background: var(--purple);
-  border-radius: var(--r-sm);
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-}
-
-.verdict-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-
-.score-bubble {
-  width: 48px; height: 48px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.3rem; letter-spacing: 0.02em;
-  color: var(--white); flex-shrink: 0;
-  border: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(8px);
-}
-
-.verdict-lbl {
-  font-size: 0.62rem; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-}
-
-.verdict-txt {
-  font-size: 0.82rem; font-weight: 400;
-  color: rgba(255,255,255,0.85);
-  line-height: 1.65; font-style: italic;
-}
-
-/* ── PROFILE ── */
-.profile-box {
-  background: var(--black);
-  border-radius: var(--r-sm);
-  padding: 1.25rem;
-  margin-bottom: 10px;
-}
-
-.profile-top { display: flex; align-items: center; gap: 10px; margin-bottom: 1.1rem; }
-
-.profile-av {
-  width: 38px; height: 38px; border-radius: 10px;
-  background: var(--cyan);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem; letter-spacing: 0.04em;
-  color: var(--black);
-}
-
-.profile-name { font-size: 0.9rem; font-weight: 700; color: var(--white); }
-.profile-sub { font-size: 0.68rem; color: rgba(255,255,255,0.35); margin-top: 1px; }
-
-.pstats { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-
-.pstat {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px; padding: 8px 10px;
-}
-
-.pstat-lbl { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
-.pstat-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.02em; color: var(--white); margin-top: 1px; }
-
-/* ── STREAK ── */
-.streak-box {
-  background: var(--yellow);
-  border-radius: var(--r-sm);
-  padding: 12px 14px;
-  margin-bottom: 12px;
-  display: flex; align-items: center; gap: 12px;
-}
-
-.streak-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.4rem; letter-spacing: 0.02em;
-  color: var(--black); line-height: 1;
-}
-
-.streak-lbl { font-size: 0.72rem; font-weight: 600; color: rgba(0,0,0,0.55); }
-
-.week-row { display: flex; gap: 5px; }
-.wd { flex: 1; }
-.wd-bar { height: 20px; border-radius: 5px; margin-bottom: 4px; transition: background 0.2s; }
-.wd-lbl { font-size: 0.58rem; color: var(--muted); text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
-
-.empty-state { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.82rem; font-weight: 500; }
-
-/* ── MOBILE ── */
-@media (max-width: 900px) {
-  .topnav { padding: 0 1.25rem; }
-  .nav-pills { display: none; }
-  .main { padding: 1.5rem 1.25rem 3rem; }
-  .metrics { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .content-grid { grid-template-columns: 1fr; }
-  .page-header { flex-direction: column; }
-  .auth-nav { padding: 0 1.5rem; }
-}
-
-@media (max-width: 480px) {
-  .auth-h1 { font-size: clamp(3.5rem, 18vw, 6rem); }
-  .metrics { grid-template-columns: 1fr 1fr; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoBunk — Know Your Fate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@700;800&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.02);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #fff;
+            --muted: #888;
+            --success: #00ff88;
+            --danger: #ff3366;
+            --warn: #ffaa00;
+            --font-vintage: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-tech: 'Montserrat', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background: var(--bg); color: #fff; -webkit-font-smoothing: antialiased; }
+
+        h1, h2 { font-family: var(--font-vintage); font-style: italic; font-weight: 400; }
+        .label-caps { font-family: var(--font-tech); text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.65rem; color: var(--muted); }
+        .nav-link { font-family: var(--font-tech); font-size: 0.7rem; letter-spacing: 0.1em; }
+
+        /* ── AUTH ── */
+        .auth-screen {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            position: fixed; width: 100%; z-index: 2000;
+            background: var(--bg); transition: 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-title { font-size: clamp(5rem, 15vw, 11rem); line-height: 0.8; margin-bottom: 2rem; }
+
+        .google-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: #fff; color: #000; padding: 18px 40px; border-radius: 2px;
+            font-family: var(--font-tech); font-size: 0.7rem; font-weight: 800;
+            border: none; cursor: pointer; transition: 0.4s; text-decoration: none;
+        }
+        .google-btn:hover { background: var(--success); letter-spacing: 0.2em; }
+
+        .marquee-wrap {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            border-top: 1px solid var(--border);
+            padding: 12px 0; overflow: hidden; white-space: nowrap;
+        }
+        .marquee-track { display: inline-flex; gap: 3rem; animation: ticker 20s linear infinite; }
+        .marquee-item { font-family: var(--font-tech); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+        @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ── DASHBOARD ── */
+        nav {
+            position: sticky; top: 0; z-index: 1000; padding: 1.5rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+        }
+
+        .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+
+        .user-chip {
+            display: flex; align-items: center; gap: 10px;
+            border: 1px solid var(--border); padding: 6px 14px 6px 6px;
+            border-radius: 2px;
+        }
+
+        #nav-av {
+            width: 26px; height: 26px; background: var(--success);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-tech); font-size: 0.7rem; font-weight: 800;
+            color: #000; flex-shrink: 0;
+        }
+
+        #nav-name { font-family: var(--font-tech); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 5rem 5%; }
+
+        .metrics-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 1px; background: var(--border); border: 1px solid var(--border);
+            margin-bottom: 5rem;
+        }
+
+        .m-card { background: var(--bg); padding: 2.5rem; text-align: left; transition: background 0.3s; }
+        .m-card:hover { background: rgba(255,255,255,0.03); }
+        .m-value { font-family: var(--font-tech); font-size: 2.8rem; font-weight: 800; line-height: 1; margin-top: 1rem; }
+
+        .dashboard-main { display: grid; grid-template-columns: 1.7fr 1fr; gap: 4rem; }
+
+        .glass-card {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 2.5rem; margin-bottom: 2rem;
+        }
+
+        .sub-row {
+            margin-bottom: 2rem; padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border); transition: opacity 0.2s;
+        }
+        .sub-row:last-child { border-bottom: none; margin-bottom: 0; }
+        .sub-row:hover { opacity: 0.8; }
+
+        .sub-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+        .sub-name { font-family: var(--font-body); font-weight: 300; font-size: 1rem; }
+        .sub-right-col { text-align: right; }
+        .sub-pct { font-family: var(--font-tech); font-size: 0.85rem; font-weight: 800; }
+        .sub-meta { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+
+        .prog-track { height: 1px; background: var(--border); margin-top: 8px; }
+        .prog-fill { height: 1px; transition: width 0.5s ease; }
+
+        .badge {
+            font-family: var(--font-tech); font-size: 0.55rem; font-weight: 800;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 3px 8px; border-radius: 1px; margin-top: 5px;
+            display: inline-block;
+        }
+        .bs { background: rgba(0,255,136,0.1); color: var(--success); border: 1px solid rgba(0,255,136,0.2); }
+        .bw { background: rgba(255,170,0,0.1); color: var(--warn); border: 1px solid rgba(255,170,0,0.2); }
+        .bd { background: rgba(255,51,102,0.1); color: var(--danger); border: 1px solid rgba(255,51,102,0.2); }
+
+        .add-form { display: flex; gap: 10px; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+        .add-inp {
+            flex: 1; background: transparent; border: 1px solid var(--border);
+            padding: 10px 14px; font-family: var(--font-body); font-size: 0.85rem;
+            color: #fff; outline: none; border-radius: 1px; transition: border-color 0.2s;
+        }
+        .add-inp:focus { border-color: rgba(255,255,255,0.3); }
+        .add-inp::placeholder { color: var(--muted); }
+        .add-btn {
+            background: #fff; color: #000; border: none; padding: 10px 20px;
+            font-family: var(--font-tech); font-size: 0.65rem; font-weight: 800;
+            letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;
+        }
+        .add-btn:hover { background: var(--success); }
+
+        .cls-row {
+            display: flex; align-items: center; gap: 1rem; padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border); transition: opacity 0.2s;
+        }
+        .cls-row:last-child { border-bottom: none; }
+        .cls-row:hover { opacity: 0.8; }
+        .cls-row.attended { opacity: 0.5; }
+
+        .cls-time { font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); min-width: 45px; }
+        .cls-name { font-size: 0.9rem; font-weight: 300; flex: 1; }
+
+        .mark-btn {
+            background: transparent; border: 1px solid var(--border);
+            color: var(--muted); padding: 6px 14px; cursor: pointer;
+            font-family: var(--font-tech); font-size: 0.6rem; font-weight: 800;
+            letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s;
+        }
+        .mark-btn:hover { border-color: var(--success); color: var(--success); }
+        .mark-btn.done { border-color: var(--success); color: var(--success); }
+
+        .bunk-tag {
+            font-family: var(--font-tech); font-size: 0.55rem; font-weight: 800;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 5px 10px; border: 1px solid rgba(255,170,0,0.3);
+            color: var(--warn); background: rgba(255,170,0,0.05);
+        }
+
+        .verdict-box { background: #fff; color: #000; padding: 3rem; text-align: center; margin-bottom: 2rem; }
+        #verdict-score { font-size: 6rem; font-family: var(--font-vintage); font-style: italic; line-height: 0.9; display: block; margin: 1rem 0; }
+        #verdict-text { font-size: 0.78rem; color: #555; line-height: 1.7; margin-top: 1rem; }
+
+        .alert-item {
+            padding: 1rem 0; border-bottom: 1px solid var(--border);
+            font-size: 0.8rem; font-weight: 300; line-height: 1.6;
+            display: flex; gap: 10px; align-items: flex-start;
+        }
+        .alert-item:last-child { border-bottom: none; }
+        .alert-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+
+        .streak-box {
+            display: flex; align-items: center; gap: 1.5rem;
+            padding: 2rem; border: 1px solid var(--border); margin-bottom: 2rem;
+        }
+        .streak-num { font-family: var(--font-tech); font-size: 2.5rem; font-weight: 800; color: var(--success); }
+        .streak-sub { font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+
+        .profile-box { padding: 2rem; border: 1px solid var(--border); margin-bottom: 2rem; }
+        .profile-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+
+        #profile-av {
+            width: 40px; height: 40px; background: var(--success);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-tech); font-size: 0.9rem; font-weight: 800; color: #000;
+            flex-shrink: 0;
+        }
+
+        #profile-n { font-size: 0.9rem; font-weight: 600; }
+
+        .pstat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+        .pstat { background: var(--bg); padding: 1rem; }
+        .pstat-lbl { font-family: var(--font-tech); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+        .pstat-val { font-family: var(--font-tech); font-size: 1.3rem; font-weight: 800; margin-top: 4px; }
+
+        .share-btn {
+            width: 100%; background: transparent; border: 1px solid var(--border);
+            color: var(--muted); padding: 12px; cursor: pointer;
+            font-family: var(--font-tech); font-size: 0.65rem; font-weight: 800;
+            letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.2s; margin-top: 1rem;
+        }
+        .share-btn:hover { border-color: #fff; color: #fff; }
+
+        .empty-state { color: var(--muted); font-size: 0.82rem; padding: 1.5rem 0; font-weight: 300; }
+
+        .faded-out { opacity: 0; filter: blur(30px); pointer-events: none; }
+        .hidden { display: none; }
+
+        @media (max-width: 900px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-main { grid-template-columns: 1fr; gap: 2rem; }
+            .container { padding: 3rem 5%; }
+        }
+    </style>
 </head>
 <body>
 
-<!-- ═══ AUTH ═══ -->
-<div id="auth-screen">
-  <nav class="auth-nav">
-    <div class="logo-text"><div class="logo-pill"></div>AttendEase</div>
-    <div class="auth-nav-right">
-      <div class="tag-chip">For Indian Students</div>
-    </div>
-  </nav>
-
-  <div class="auth-hero">
-    <div class="auth-eyebrow">✦ AI-Powered Attendance Tracker</div>
-    <h1 class="auth-h1">ATTEND<br><span class="accent">EASE.</span></h1>
-    <p class="auth-sub">Track subjects, get brutal AI advice, and never get barred from exams again.</p>
+<!-- ── AUTH ── -->
+<section class="auth-screen" id="auth-layer">
+    <h1 class="hero-title">NoBunk.</h1>
+    <p class="label-caps" style="margin-bottom: 3rem;">Know exactly how cooked you are</p>
     <a href="https://attendease-backend-wrag.onrender.com/auth/google" class="google-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-      </svg>
-      Continue with Google
+        <svg width="16" height="16" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
     </a>
-    <div class="auth-features">
-      <div class="feat-pill"><div class="feat-pip" style="background:var(--cyan)"></div>AI Verdict</div>
-      <div class="feat-pill"><div class="feat-pip" style="background:var(--yellow)"></div>Bunk Calculator</div>
-      <div class="feat-pill"><div class="feat-pip" style="background:var(--red)"></div>Danger Alerts</div>
-      <div class="feat-pill"><div class="feat-pip" style="background:var(--purple)"></div>Streak Tracker</div>
-      <div class="feat-pill"><div class="feat-pip" style="background:var(--green)"></div>Free Forever</div>
-    </div>
-  </div>
-
-  <div class="marquee-strip">
-    <div class="marquee-inner">
-      <span class="marquee-word"><span class="dot">●</span> Never Miss Your 75%</span>
-      <span class="marquee-word"><span class="dot">●</span> Know Your Safe Bunks</span>
-      <span class="marquee-word"><span class="dot">●</span> AI Powered Advice</span>
-      <span class="marquee-word"><span class="dot">●</span> Built For Indian Students</span>
-      <span class="marquee-word"><span class="dot">●</span> Free Forever</span>
-      <span class="marquee-word"><span class="dot">●</span> Never Miss Your 75%</span>
-      <span class="marquee-word"><span class="dot">●</span> Know Your Safe Bunks</span>
-      <span class="marquee-word"><span class="dot">●</span> AI Powered Advice</span>
-      <span class="marquee-word"><span class="dot">●</span> Built For Indian Students</span>
-      <span class="marquee-word"><span class="dot">●</span> Free Forever</span>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ APP ═══ -->
-<div id="app">
-  <nav class="topnav">
-    <div class="nav-logo"><div class="logo-pill"></div>AttendEase</div>
-    <div class="nav-pills">
-      <button class="nav-pill active">Dashboard</button>
-      <button class="nav-pill">Subjects</button>
-      <button class="nav-pill">Calendar</button>
-    </div>
-    <div class="nav-right">
-      <div class="user-chip">
-        <div class="user-av" id="nav-av">D</div>
-        <span class="user-nm" id="nav-name">—</span>
-      </div>
-    </div>
-  </nav>
-
-  <div class="main">
-    <div class="page-header reveal">
-      <div>
-        <div class="page-greeting" id="greeting">GOOD MORNING, <span class="name-accent">STUDENT</span></div>
-        <div class="page-date" id="date-sub">Loading your data...</div>
-      </div>
-      <div class="header-actions">
-        <button class="btn btn-outline" onclick="loadVerdict()">✦ AI Verdict</button>
-        <button class="btn btn-dark" onclick="shareCard()">↗ Share Card</button>
-      </div>
-    </div>
-
-    <div class="metrics reveal" style="transition-delay:0.1s">
-      <div class="metric">
-        <div class="metric-bar" style="background:var(--cyan)"></div>
-        <div class="metric-label">Overall</div>
-        <div class="metric-num" id="m-overall">—</div>
-        <div class="metric-sub">attendance %</div>
-      </div>
-      <div class="metric">
-        <div class="metric-bar" style="background:var(--green)"></div>
-        <div class="metric-label">Safe Bunks</div>
-        <div class="metric-num" id="m-bunks" style="color:var(--green)">—</div>
-        <div class="metric-sub">remaining</div>
-      </div>
-      <div class="metric">
-        <div class="metric-bar" style="background:var(--red)"></div>
-        <div class="metric-label">Danger</div>
-        <div class="metric-num" id="m-danger" style="color:var(--red)">—</div>
-        <div class="metric-sub">subjects at risk</div>
-      </div>
-      <div class="metric">
-        <div class="metric-bar" style="background:var(--purple)"></div>
-        <div class="metric-label">Subjects</div>
-        <div class="metric-num" id="m-total">—</div>
-        <div class="metric-sub">tracked</div>
-      </div>
-    </div>
-
-    <div class="content-grid">
-      <div>
-        <div class="card reveal" style="transition-delay:0.15s">
-          <div class="card-head">
-            <div class="card-lbl"><div class="lbl-dot" style="background:var(--cyan)"></div>Subject Tracker</div>
-            <button class="card-btn" onclick="loadDashboard()">Refresh ↻</button>
-          </div>
-          <div class="sub-list" id="subjects-list"><div class="empty-state">Loading subjects...</div></div>
-          <div class="add-row">
-            <input class="add-inp" type="text" id="new-subject" placeholder="Add a subject — e.g. DBMS, Networks...">
-            <button class="btn btn-dark" onclick="addSubject()" style="padding:9px 16px;white-space:nowrap;">+ Add</button>
-          </div>
+    <div class="marquee-wrap">
+        <div class="marquee-track">
+            <span class="marquee-item">✦ no bunk no problem</span>
+            <span class="marquee-item">✦ know your safe bunks</span>
+            <span class="marquee-item">✦ AI powered advice</span>
+            <span class="marquee-item">✦ built for Indian students</span>
+            <span class="marquee-item">✦ never get barred again</span>
+            <span class="marquee-item">✦ no bunk no problem</span>
+            <span class="marquee-item">✦ know your safe bunks</span>
+            <span class="marquee-item">✦ AI powered advice</span>
+            <span class="marquee-item">✦ built for Indian students</span>
+            <span class="marquee-item">✦ never get barred again</span>
         </div>
+    </div>
+</section>
 
-        <div class="card reveal" style="transition-delay:0.2s">
-          <div class="card-head">
-            <div class="card-lbl"><div class="lbl-dot" style="background:var(--green)"></div>Today's Classes</div>
-            <button class="card-btn" onclick="markAll()">Mark All →</button>
-          </div>
-          <div class="today-list" id="today-classes"><div class="empty-state">No subjects yet</div></div>
+<!-- ── APP ── -->
+<div id="app-layer" class="hidden" style="opacity:0;transition:1s;">
+    <nav>
+        <h2 style="font-size:1.8rem;font-style:normal;letter-spacing:0.05em;font-family:var(--font-tech);font-weight:800;">NB</h2>
+        <div style="display:flex;gap:2rem;">
+            <span class="nav-link" style="cursor:pointer;color:var(--muted);">DASHBOARD</span>
+            <span class="nav-link" style="cursor:pointer;color:var(--muted);">SUBJECTS</span>
+            <span class="nav-link" style="cursor:pointer;color:var(--muted);">ANALYTICS</span>
         </div>
-
-        <div class="card reveal" style="transition-delay:0.25s">
-          <div class="card-head">
-            <div class="card-lbl"><div class="lbl-dot" style="background:var(--red)"></div>Danger Alerts</div>
-          </div>
-          <div class="alert-list" id="alert-list"><div class="empty-state">No alerts — you're good 🎉</div></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="card reveal" style="transition-delay:0.15s">
-          <div class="card-head">
-            <div class="card-lbl"><div class="lbl-dot" style="background:var(--purple)"></div>AI Verdict</div>
-          </div>
-          <div class="verdict-box">
-            <div class="verdict-top">
-              <div class="score-bubble" id="verdict-score">—</div>
-              <div class="verdict-lbl">Safety Score / 10</div>
+        <div class="nav-right">
+            <div class="user-chip">
+                <div id="nav-av">D</div>
+                <span id="nav-name">—</span>
             </div>
-            <div class="verdict-txt" id="verdict-text">Click "AI Verdict" to get your personalized analysis.</div>
-          </div>
-          <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:0" onclick="loadVerdict()">Get AI Analysis ✦</button>
         </div>
+    </nav>
 
-        <div class="card reveal" style="transition-delay:0.2s">
-          <div class="card-head">
-            <div class="card-lbl"><div class="lbl-dot" style="background:var(--yellow)"></div>Daily Streak</div>
-          </div>
-          <div class="streak-box">
-            <div style="font-size:1.4rem">🔥</div>
+    <main class="container">
+        <header style="margin-bottom:4rem;">
+            <p id="date-sub" class="label-caps" style="margin-bottom:1rem;">—</p>
+            <h1 id="greeting" style="font-size:clamp(3rem,8vw,7rem);line-height:0.9;">Hello, Student.</h1>
+            <div style="display:flex;gap:10px;margin-top:2rem;">
+                <button onclick="loadVerdict()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 20px;cursor:pointer;font-family:var(--font-tech);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='var(--muted)'">✦ AI Verdict</button>
+                <button onclick="shareCard()" style="background:#fff;color:#000;border:none;padding:10px 20px;cursor:pointer;font-family:var(--font-tech);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:background 0.2s;" onmouseover="this.style.background='var(--success)'" onmouseout="this.style.background='#fff'">↗ Share</button>
+            </div>
+        </header>
+
+        <section class="metrics-grid">
+            <div class="m-card">
+                <p class="label-caps">Overall Attendance</p>
+                <div class="m-value" id="m-overall">—</div>
+            </div>
+            <div class="m-card">
+                <p class="label-caps">Safe Bunks Left</p>
+                <div class="m-value" id="m-bunks" style="color:var(--success)">—</div>
+            </div>
+            <div class="m-card">
+                <p class="label-caps" style="color:var(--danger);">Danger Subjects</p>
+                <div class="m-value" id="m-danger" style="color:var(--danger)">—</div>
+            </div>
+            <div class="m-card">
+                <p class="label-caps">Total Subjects</p>
+                <div class="m-value" id="m-total">—</div>
+            </div>
+        </section>
+
+        <div class="dashboard-main">
             <div>
-              <div class="streak-num" id="streak-num">0</div>
-              <div class="streak-lbl">day streak</div>
-            </div>
-          </div>
-          <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">This Week</div>
-          <div class="week-row">
-            <div class="wd"><div class="wd-bar" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.25)"></div><div class="wd-lbl">M</div></div>
-            <div class="wd"><div class="wd-bar" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.25)"></div><div class="wd-lbl">T</div></div>
-            <div class="wd"><div class="wd-bar" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.25)"></div><div class="wd-lbl">W</div></div>
-            <div class="wd"><div class="wd-bar" style="background:var(--yellow);border:1px solid rgba(0,0,0,0.1)"></div><div class="wd-lbl">T</div></div>
-            <div class="wd"><div class="wd-bar" style="background:var(--border)"></div><div class="wd-lbl">F</div></div>
-            <div class="wd"><div class="wd-bar" style="background:var(--border)"></div><div class="wd-lbl">S</div></div>
-            <div class="wd"><div class="wd-bar" style="background:var(--border)"></div><div class="wd-lbl">S</div></div>
-          </div>
-        </div>
+                <div class="glass-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2.5rem;">
+                        <h2 style="font-size:2rem;">Subject Analysis</h2>
+                        <button onclick="loadDashboard()" class="label-caps" style="background:none;border:none;cursor:pointer;color:var(--muted);text-decoration:underline;">Refresh</button>
+                    </div>
+                    <div id="subjects-list"><div class="empty-state">Loading subjects...</div></div>
+                    <div class="add-form">
+                        <input class="add-inp" type="text" id="new-subject" placeholder="Add subject — DBMS, Networks...">
+                        <button class="add-btn" onclick="addSubject()">+ Add</button>
+                    </div>
+                </div>
 
-        <div class="card reveal" style="transition-delay:0.25s">
-          <div class="card-head">
-            <div class="card-lbl"><div class="lbl-dot" style="background:var(--black)"></div>Profile Card</div>
-          </div>
-          <div class="profile-box">
-            <div class="profile-top">
-              <div class="profile-av" id="profile-av">D</div>
-              <div>
-                <div class="profile-name" id="profile-n">—</div>
-                <div class="profile-sub">ISE · 1st Year · Sem 2</div>
-              </div>
+                <div class="glass-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                        <h2 style="font-size:2rem;">Today's Classes</h2>
+                        <button onclick="markAll()" class="label-caps" style="background:none;border:none;cursor:pointer;color:var(--muted);text-decoration:underline;">Mark All</button>
+                    </div>
+                    <div id="today-classes"><div class="empty-state">No subjects yet</div></div>
+                </div>
+
+                <div class="glass-card">
+                    <div style="margin-bottom:1.5rem;">
+                        <h2 style="font-size:2rem;color:var(--danger);">Alerts</h2>
+                    </div>
+                    <div id="alert-list"><div class="empty-state">No alerts — you're good.</div></div>
+                </div>
             </div>
-            <div class="pstats">
-              <div class="pstat"><div class="pstat-lbl">Overall</div><div class="pstat-val" id="pc-overall" style="color:var(--cyan)">—</div></div>
-              <div class="pstat"><div class="pstat-lbl">Safe Bunks</div><div class="pstat-val" id="pc-bunks" style="color:var(--green)">—</div></div>
-              <div class="pstat"><div class="pstat-lbl">Streak</div><div class="pstat-val" id="pc-streak" style="color:var(--yellow)">0</div></div>
-              <div class="pstat"><div class="pstat-lbl">Danger</div><div class="pstat-val" id="pc-danger" style="color:var(--red)">—</div></div>
+
+            <div>
+                <div class="verdict-box">
+                    <p class="label-caps" style="color:#000;">The AI Verdict</p>
+                    <span id="verdict-score">—</span>
+                    <p id="verdict-text" style="font-size:0.78rem;color:#555;line-height:1.7;">Click "AI Verdict" to get your personalized analysis.</p>
+                </div>
+
+                <div class="streak-box">
+                    <div>
+                        <div class="streak-num" id="streak-num">0</div>
+                        <div class="streak-sub">Day Streak 🔥</div>
+                    </div>
+                    <div style="flex:1;border-left:1px solid var(--border);padding-left:1.5rem;">
+                        <p class="label-caps" style="margin-bottom:8px;">This Week</p>
+                        <div style="display:flex;gap:4px;">
+                            <div style="flex:1;height:16px;background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.2)"></div>
+                            <div style="flex:1;height:16px;background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.2)"></div>
+                            <div style="flex:1;height:16px;background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.2)"></div>
+                            <div style="flex:1;height:16px;background:rgba(255,170,0,0.2);border:1px solid rgba(255,170,0,0.3)"></div>
+                            <div style="flex:1;height:16px;background:var(--border)"></div>
+                            <div style="flex:1;height:16px;background:var(--border)"></div>
+                            <div style="flex:1;height:16px;background:var(--border)"></div>
+                        </div>
+                        <div style="display:flex;gap:4px;margin-top:4px;">
+                            <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">M</div>
+                            <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">T</div>
+                            <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">W</div>
+                            <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">T</div>
+                            <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">F</div>
+                            <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">S</div>
+                            <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">S</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-box">
+                    <div class="profile-top">
+                        <div id="profile-av">D</div>
+                        <div>
+                            <div id="profile-n" style="font-size:0.9rem;font-weight:600;">—</div>
+                            <div class="label-caps" style="margin-top:3px;">ISE · 1st Year · Sem 2</div>
+                        </div>
+                    </div>
+                    <div class="pstat-grid">
+                        <div class="pstat"><div class="pstat-lbl">Overall</div><div class="pstat-val" id="pc-overall" style="color:var(--success)">—</div></div>
+                        <div class="pstat"><div class="pstat-lbl">Safe Bunks</div><div class="pstat-val" id="pc-bunks" style="color:var(--success)">—</div></div>
+                        <div class="pstat"><div class="pstat-lbl">Streak</div><div class="pstat-val" id="pc-streak" style="color:var(--warn)">0</div></div>
+                        <div class="pstat"><div class="pstat-lbl">Danger</div><div class="pstat-val" id="pc-danger" style="color:var(--danger)">—</div></div>
+                    </div>
+                    <button class="share-btn" onclick="shareCard()">Copy & Share Profile ↗</button>
+                </div>
             </div>
-          </div>
-          <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:10px;" onclick="shareCard()">Copy & Share 📋</button>
         </div>
-      </div>
-    </div>
-  </div>
+    </main>
 </div>
 
 <script>
 const API = 'https://attendease-backend-wrag.onrender.com';
 let currentUser = null, streak = 0;
 
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
 function init() {
-  const p = new URLSearchParams(window.location.search);
-  const uid = p.get('user_id') || localStorage.getItem('user_id');
-  const uname = p.get('name') || localStorage.getItem('user_name');
-  const uemail = p.get('email') || localStorage.getItem('user_email');
-  if (uid) {
-    localStorage.setItem('user_id', uid);
-    localStorage.setItem('user_name', uname || '');
-    localStorage.setItem('user_email', uemail || '');
-    currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
-    updateStreak(); showApp();
-  }
+    const p = new URLSearchParams(window.location.search);
+    const uid = p.get('user_id') || localStorage.getItem('user_id');
+    const uname = p.get('name') || localStorage.getItem('user_name');
+    const uemail = p.get('email') || localStorage.getItem('user_email');
+    if (uid) {
+        localStorage.setItem('user_id', uid);
+        localStorage.setItem('user_name', uname || '');
+        localStorage.setItem('user_email', uemail || '');
+        currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
+        updateStreak(); showApp();
+    }
 }
 
 function updateStreak() {
-  const today = new Date().toDateString();
-  const last = localStorage.getItem('streak_date');
-  const stored = parseInt(localStorage.getItem('streak') || '0');
-  if (last !== today) {
-    streak = last === new Date(Date.now() - 86400000).toDateString() ? stored + 1 : 1;
-    localStorage.setItem('streak', streak);
-    localStorage.setItem('streak_date', today);
-  } else streak = stored;
-  document.getElementById('streak-num').textContent = streak;
-  document.getElementById('pc-streak').textContent = streak + ' 🔥';
+    const today = new Date().toDateString();
+    const last = localStorage.getItem('streak_date');
+    const stored = parseInt(localStorage.getItem('streak') || '0');
+    if (last !== today) {
+        streak = last === new Date(Date.now() - 86400000).toDateString() ? stored + 1 : 1;
+        localStorage.setItem('streak', streak);
+        localStorage.setItem('streak_date', today);
+    } else streak = stored;
+    document.getElementById('streak-num').textContent = streak;
+    document.getElementById('pc-streak').textContent = streak + ' 🔥';
 }
 
 function showApp() {
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  const name = currentUser.name;
-  const first = name.split(' ')[0];
-  const h = new Date().getHours();
-  const greet = h < 12 ? 'GOOD MORNING' : h < 17 ? 'GOOD AFTERNOON' : 'GOOD EVENING';
-  const days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const now = new Date();
-  document.getElementById('greeting').innerHTML = `${greet}, <span class="name-accent">${first.toUpperCase()}</span>`;
-  document.getElementById('date-sub').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-  document.getElementById('nav-name').textContent = first;
-  document.getElementById('nav-av').textContent = first[0].toUpperCase();
-  document.getElementById('profile-av').textContent = first[0].toUpperCase();
-  document.getElementById('profile-n').textContent = name;
+    const auth = document.getElementById('auth-layer');
+    const app = document.getElementById('app-layer');
+    auth.classList.add('faded-out');
+    setTimeout(() => {
+        auth.classList.add('hidden');
+        app.classList.remove('hidden');
+        setTimeout(() => { app.style.opacity = '1'; }, 50);
+    }, 800);
 
-  setTimeout(() => {
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  }, 100);
-
-  loadDashboard();
+    const name = currentUser.name;
+    const first = name.split(' ')[0];
+    const h = new Date().getHours();
+    const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const now = new Date();
+    document.getElementById('greeting').innerHTML = `${greet}, <em>${first}.</em>`;
+    document.getElementById('date-sub').textContent = `${days[now.getDay()]} // ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    document.getElementById('nav-av').textContent = first[0].toUpperCase();
+    document.getElementById('nav-name').textContent = first.toUpperCase();
+    document.getElementById('profile-av').textContent = first[0].toUpperCase();
+    document.getElementById('profile-n').textContent = name;
+    loadDashboard();
 }
 
 async function loadDashboard() {
-  try {
-    const res = await fetch(`${API}/dashboard/${currentUser.id}`);
-    const data = await res.json();
-    const bunks = data.subjects.reduce((s, x) => s + x.can_bunk, 0);
-    document.getElementById('m-overall').textContent = data.overall_percentage + '%';
-    document.getElementById('m-bunks').textContent = bunks;
-    document.getElementById('m-danger').textContent = data.danger_count;
-    document.getElementById('m-total').textContent = data.total_subjects;
-    document.getElementById('pc-overall').textContent = data.overall_percentage + '%';
-    document.getElementById('pc-bunks').textContent = bunks;
-    document.getElementById('pc-danger').textContent = data.danger_count;
-    renderSubjects(data.subjects);
-    renderToday(data.subjects);
-    renderAlerts(data.subjects);
-  } catch(e) { console.error(e); }
+    try {
+        const res = await fetch(`${API}/dashboard/${currentUser.id}`);
+        const data = await res.json();
+        const bunks = data.subjects.reduce((s, x) => s + x.can_bunk, 0);
+        document.getElementById('m-overall').textContent = data.overall_percentage + '%';
+        document.getElementById('m-bunks').textContent = bunks;
+        document.getElementById('m-danger').textContent = data.danger_count;
+        document.getElementById('m-total').textContent = data.total_subjects;
+        document.getElementById('pc-overall').textContent = data.overall_percentage + '%';
+        document.getElementById('pc-bunks').textContent = bunks;
+        document.getElementById('pc-danger').textContent = data.danger_count;
+        renderSubjects(data.subjects);
+        renderToday(data.subjects);
+        renderAlerts(data.subjects);
+    } catch(e) { console.error(e); }
 }
 
 function renderSubjects(subjects) {
-  const el = document.getElementById('subjects-list');
-  if (!subjects.length) { el.innerHTML = '<div class="empty-state">No subjects yet — add one below</div>'; return; }
-  el.innerHTML = subjects.map(s => {
-    const c = s.status === 'safe' ? 'var(--cyan)' : s.status === 'borderline' ? 'var(--yellow)' : 'var(--red)';
-    const bc = s.status === 'safe' ? 'bs' : s.status === 'borderline' ? 'bw' : 'bd';
-    const bt = s.can_bunk > 0 ? `bunk ${s.can_bunk} more` : `need ${s.needs} more`;
-    return `<div class="sub-item">
-      <div class="sub-line" style="background:${c}"></div>
-      <div class="sub-body">
-        <div class="sub-nm">${s.name}</div>
-        <div class="sub-info">${s.attended} attended · ${s.total} held · ${bt}</div>
-        <div class="sub-prog"><div class="sub-fill" style="width:${Math.min(s.percentage,100)}%;background:${c}"></div></div>
-      </div>
-      <div class="sub-right">
-        <div class="sub-pct" style="color:${c}">${s.percentage}%</div>
-        <div class="badge ${bc}">${s.status}</div>
-      </div>
-    </div>`;
-  }).join('');
+    const el = document.getElementById('subjects-list');
+    if (!subjects.length) { el.innerHTML = '<div class="empty-state">No subjects yet — add one below</div>'; return; }
+    el.innerHTML = subjects.map(s => {
+        const c = s.status === 'safe' ? 'var(--success)' : s.status === 'borderline' ? 'var(--warn)' : 'var(--danger)';
+        const bc = s.status === 'safe' ? 'bs' : s.status === 'borderline' ? 'bw' : 'bd';
+        const bt = s.can_bunk > 0 ? `bunk ${s.can_bunk} more` : `need ${s.needs} more`;
+        return `<div class="sub-row">
+            <div class="sub-top">
+                <span class="sub-name">${s.name}</span>
+                <div class="sub-right-col">
+                    <div class="sub-pct" style="color:${c}">${s.percentage}%</div>
+                    <div class="badge ${bc}">${s.status}</div>
+                </div>
+            </div>
+            <div class="sub-meta">${s.attended} attended · ${s.total} held · ${bt}</div>
+            <div class="prog-track"><div class="prog-fill" style="width:${Math.min(s.percentage,100)}%;background:${c}"></div></div>
+        </div>`;
+    }).join('');
 }
 
 function renderToday(subjects) {
-  const el = document.getElementById('today-classes');
-  if (!subjects.length) { el.innerHTML = '<div class="empty-state">No subjects yet</div>'; return; }
-  const today = new Date().toISOString().split('T')[0];
-  el.innerHTML = subjects.map(s => `
-    <div class="cls-row" id="cr-${s.id}">
-      <div class="cls-time">Today</div>
-      <div class="cls-nm">${s.name}</div>
-      ${s.status === 'safe' && s.can_bunk > 0
-        ? `<span class="bunk-tag">Safe Bunk</span>`
-        : `<button class="mark-btn" onclick="markAtt('${s.id}','${today}',this)">Mark</button>`}
-    </div>`).join('');
+    const el = document.getElementById('today-classes');
+    if (!subjects.length) { el.innerHTML = '<div class="empty-state">No subjects yet</div>'; return; }
+    const today = new Date().toISOString().split('T')[0];
+    el.innerHTML = subjects.map(s => `
+        <div class="cls-row" id="cr-${s.id}">
+            <div class="cls-time">Today</div>
+            <div class="cls-name">${s.name}</div>
+            ${s.status === 'safe' && s.can_bunk > 0
+                ? `<span class="bunk-tag">Safe Bunk</span>`
+                : `<button class="mark-btn" onclick="markAtt('${s.id}','${today}',this)">Mark</button>`}
+        </div>`).join('');
 }
 
 function renderAlerts(subjects) {
-  const el = document.getElementById('alert-list');
-  const bad = subjects.filter(s => s.status !== 'safe');
-  if (!bad.length) { el.innerHTML = '<div class="empty-state">No alerts — you\'re good 🎉</div>'; return; }
-  el.innerHTML = bad.map(s => {
-    const d = s.status === 'danger';
-    return `<div class="alert-row" style="background:${d ? 'rgba(232,54,74,0.05)' : 'rgba(245,197,24,0.06)'};border-color:${d ? 'rgba(232,54,74,0.2)' : 'rgba(245,197,24,0.3)'}">
-      <div style="width:5px;height:5px;border-radius:50%;background:${d ? 'var(--red)' : 'var(--yellow)'};flex-shrink:0;margin-top:5px"></div>
-      <div style="color:${d ? 'var(--red)' : '#9A7000'}">
-        <strong>${s.name}</strong> at ${s.percentage}% — ${d ? `attend ${s.needs} more to recover` : `1 more bunk = danger zone`}
-      </div>
-    </div>`;
-  }).join('');
+    const el = document.getElementById('alert-list');
+    const bad = subjects.filter(s => s.status !== 'safe');
+    if (!bad.length) { el.innerHTML = '<div class="empty-state">No alerts — you\'re good.</div>'; return; }
+    el.innerHTML = bad.map(s => {
+        const d = s.status === 'danger';
+        return `<div class="alert-item">
+            <div class="alert-dot" style="background:${d ? 'var(--danger)' : 'var(--warn)'}"></div>
+            <div style="color:${d ? 'var(--danger)' : 'var(--warn)'}">
+                <strong>${s.name}</strong> at ${s.percentage}% — ${d ? `attend ${s.needs} more to recover` : `1 more bunk = danger`}
+            </div>
+        </div>`;
+    }).join('');
 }
 
 async function markAtt(sid, date, btn) {
-  const done = btn.classList.contains('done');
-  try {
-    await fetch(`${API}/attendance`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subject_id: sid, date, status: done ? 'bunked' : 'attended' })
-    });
-    btn.classList.toggle('done');
-    btn.textContent = done ? 'Mark' : '✓ Done';
-    document.getElementById(`cr-${sid}`)?.classList.toggle('attended', !done);
-    loadDashboard();
-  } catch(e) { console.error(e); }
+    const done = btn.classList.contains('done');
+    try {
+        await fetch(`${API}/attendance`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject_id: sid, date, status: done ? 'bunked' : 'attended' })
+        });
+        btn.classList.toggle('done');
+        btn.textContent = done ? 'Mark' : '✓ Done';
+        document.getElementById(`cr-${sid}`)?.classList.toggle('attended', !done);
+        loadDashboard();
+    } catch(e) { console.error(e); }
 }
 
 function markAll() { document.querySelectorAll('.mark-btn:not(.done)').forEach(b => b.click()); }
 
 async function addSubject() {
-  const inp = document.getElementById('new-subject');
-  const name = inp.value.trim();
-  if (!name) return;
-  try {
-    await fetch(`${API}/subjects`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: currentUser.id, name, color: '#00D4C4' })
-    });
-    inp.value = ''; loadDashboard();
-  } catch(e) { console.error(e); }
+    const inp = document.getElementById('new-subject');
+    const name = inp.value.trim();
+    if (!name) return;
+    try {
+        await fetch(`${API}/subjects`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: currentUser.id, name, color: '#00ff88' })
+        });
+        inp.value = ''; loadDashboard();
+    } catch(e) { console.error(e); }
 }
 
 async function loadVerdict() {
-  document.getElementById('verdict-text').textContent = 'Analyzing your situation...';
-  document.getElementById('verdict-score').textContent = '...';
-  try {
-    const res = await fetch(`${API}/ai/verdict/${currentUser.id}`);
-    const d = await res.json();
-    document.getElementById('verdict-score').textContent = d.overall_score;
-    document.getElementById('verdict-text').textContent = `"${d.overall_verdict} ${d.advice}"`;
-  } catch(e) {
-    document.getElementById('verdict-text').textContent = 'Add Anthropic credits to enable AI verdict.';
-    document.getElementById('verdict-score').textContent = '—';
-  }
+    document.getElementById('verdict-text').textContent = 'Analyzing your situation...';
+    document.getElementById('verdict-score').textContent = '...';
+    try {
+        const res = await fetch(`${API}/ai/verdict/${currentUser.id}`);
+        const d = await res.json();
+        document.getElementById('verdict-score').textContent = d.overall_score + '/10';
+        document.getElementById('verdict-text').textContent = `"${d.overall_verdict} ${d.advice}"`;
+    } catch(e) {
+        document.getElementById('verdict-text').textContent = 'Add Anthropic credits to enable AI verdict.';
+        document.getElementById('verdict-score').textContent = '—';
+    }
 }
 
 function shareCard() {
-  const t = `ATTENDEASE REPORT\n\n${currentUser.name}\nOverall: ${document.getElementById('pc-overall').textContent}\nSafe Bunks: ${document.getElementById('pc-bunks').textContent}\nDanger: ${document.getElementById('pc-danger').textContent} subjects\nStreak: ${streak} days 🔥\n\nattendease-frontend.vercel.app`;
-  navigator.clipboard.writeText(t).then(() => {
-    const btn = event.currentTarget;
-    const orig = btn.textContent;
-    btn.textContent = 'Copied! ✅';
-    setTimeout(() => btn.textContent = orig, 2000);
-  });
+    const t = `NOBUNK REPORT\n\n${currentUser.name}\nOverall: ${document.getElementById('pc-overall').textContent}\nSafe Bunks: ${document.getElementById('pc-bunks').textContent}\nDanger: ${document.getElementById('pc-danger').textContent} subjects\nStreak: ${streak} days 🔥\n\nnobunk.vercel.app`;
+    navigator.clipboard.writeText(t).then(() => {
+        const btns = document.querySelectorAll('.share-btn, button');
+        alert('Copied to clipboard!');
+    });
 }
 
 init();
