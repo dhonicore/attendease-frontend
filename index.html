@@ -1,33 +1,37 @@
+
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AttendEase | Master Your Presence</title>
+<title>AttendEase</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
 
 <style>
-:root {
+
+:root{
 --bg:#111320;
 --card-bg:#1B1E2F;
 --peach:#FFA586;
 --crimson:#B51A2B;
---safe:#4ADE80;
---danger:#EF4444;
---text-main:#FFFFFF;
+--safe-green:#4ADE80;
+--danger-red:#EF4444;
 --text-dim:#94A3B8;
---border:rgba(255,165,134,0.1);
+--border:rgba(255,165,134,0.15);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
 background:var(--bg);
-color:var(--text-main);
+color:white;
 font-family:'Barlow',sans-serif;
-line-height:1.5;
 }
 
 h1,h2,h3,.condensed{
@@ -36,71 +40,85 @@ font-weight:900;
 text-transform:uppercase;
 }
 
-/* AUTH */
 #auth-screen{
 height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-background:radial-gradient(circle at top right,#1b1e2f,#111320);
 }
 
 .auth-card{
 background:var(--card-bg);
 padding:3rem;
-border-radius:24px;
+border-radius:20px;
 text-align:center;
 border:1px solid var(--border);
-max-width:400px;
-width:90%;
 }
 
-.logo-large{font-size:3rem;color:var(--peach)}
+.logo-large{
+font-size:3rem;
+color:var(--peach);
+}
 
 .google-btn{
 display:flex;
 align-items:center;
 justify-content:center;
-gap:12px;
+gap:10px;
 background:white;
 color:black;
 text-decoration:none;
 padding:12px 24px;
-border-radius:12px;
-font-weight:600;
+border-radius:10px;
 margin-top:2rem;
 }
 
-/* DASHBOARD */
 #dashboard{display:none}
 
 nav{
 position:sticky;
 top:0;
-background:rgba(17,19,32,0.9);
-border-bottom:1px solid var(--border);
+background:var(--card-bg);
 padding:1rem 5%;
 display:flex;
 justify-content:space-between;
 align-items:center;
+border-bottom:1px solid var(--border);
 }
 
-.nav-links{display:flex;gap:2rem}
-.nav-links a{color:var(--text-dim);text-decoration:none;font-size:.9rem}
-.nav-links a.active{color:var(--peach)}
-
-.nav-profile{display:flex;gap:12px;align-items:center}
-#nav-avatar{width:32px;height:32px;border-radius:50%;border:2px solid var(--peach)}
-
-main{padding:2rem 5%;max-width:1400px;margin:auto}
-
-.grid-layout{
-display:grid;
-grid-template-columns:1fr 350px;
+.nav-links{
+display:flex;
 gap:2rem;
 }
 
-/* METRICS */
+.nav-links a{
+color:var(--text-dim);
+text-decoration:none;
+}
+
+.nav-links a.active{
+color:var(--peach);
+}
+
+.nav-profile{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+#nav-avatar{
+width:36px;
+height:36px;
+border-radius:50%;
+border:2px solid var(--peach);
+}
+
+main{
+padding:2rem 5%;
+max-width:1400px;
+margin:auto;
+}
+
 .metrics-row{
 display:grid;
 grid-template-columns:repeat(4,1fr);
@@ -111,26 +129,32 @@ margin-bottom:2rem;
 .m-card{
 background:var(--card-bg);
 padding:1.5rem;
-border-radius:16px;
-border-left:4px solid var(--peach);
-}
-
-.value{font-size:2.2rem}
-
-/* CARD */
-.card{
-background:var(--card-bg);
-border-radius:20px;
-padding:1.5rem;
-margin-bottom:1.5rem;
+border-radius:14px;
 border:1px solid var(--border);
 }
 
-/* SUBJECT */
+.value{
+font-size:2rem;
+}
+
+.grid-layout{
+display:grid;
+grid-template-columns:1fr 350px;
+gap:2rem;
+}
+
+.card{
+background:var(--card-bg);
+padding:1.5rem;
+border-radius:14px;
+border:1px solid var(--border);
+margin-bottom:1.5rem;
+}
+
 .subject-item{
-background:rgba(255,255,255,0.03);
 padding:1rem;
-border-radius:12px;
+background:rgba(255,255,255,0.03);
+border-radius:10px;
 margin-bottom:1rem;
 }
 
@@ -138,45 +162,71 @@ margin-bottom:1rem;
 height:8px;
 background:#2D314D;
 border-radius:4px;
-margin:10px 0;
+margin:8px 0;
 overflow:hidden;
 }
 
-.progress-bar{height:100%;background:var(--peach)}
-
-.badge{
-padding:2px 8px;
-border-radius:4px;
-font-size:.7rem;
-font-weight:bold;
+.progress-bar{
+height:100%;
+background:var(--peach);
 }
 
-.badge-safe{background:var(--safe);color:black}
-.badge-warn{background:var(--peach);color:black}
-.badge-danger{background:var(--crimson);color:white}
+.badge{
+font-size:0.7rem;
+padding:2px 6px;
+border-radius:4px;
+}
 
-/* BUTTONS */
-.class-btn-group{display:flex;gap:10px;margin-top:10px}
+.class-btn-group{
+display:flex;
+gap:8px;
+margin-top:10px;
+}
 
 .btn-p{
 background:var(--peach);
 border:none;
-padding:8px 16px;
+padding:8px;
 border-radius:8px;
-cursor:pointer;
+font-weight:bold;
 flex:1;
+cursor:pointer;
 }
 
 .btn-a{
 background:transparent;
 border:1px solid var(--crimson);
 color:var(--crimson);
-padding:8px 16px;
+padding:8px;
 border-radius:8px;
-cursor:pointer;
 flex:1;
+cursor:pointer;
 }
+
+.profile-card{text-align:center}
+
+#profile-av{
+width:80px;
+height:80px;
+border-radius:50%;
+border:3px solid var(--peach);
+margin-bottom:10px;
+}
+
+.profile-stats{
+display:flex;
+justify-content:space-between;
+margin-top:1rem;
+}
+
+#streak-num{
+font-size:2rem;
+text-align:center;
+margin-bottom:10px;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -184,7 +234,7 @@ flex:1;
 <section id="auth-screen">
 <div class="auth-card">
 <h1 class="logo-large">AttendEase</h1>
-<p style="color:var(--text-dim)">Master your presence. Predict your freedom.</p>
+<p style="color:var(--text-dim)">Master your presence</p>
 
 <a href="https://attendease-backend-wrag.onrender.com/auth/google" class="google-btn">
 <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20">
@@ -197,9 +247,10 @@ Continue with Google
 <div id="dashboard">
 
 <nav>
+
 <h2 style="color:var(--peach)">AttendEase</h2>
 
-<div class="nav-links">
+<div class="nav-links condensed">
 <a class="active">Dashboard</a>
 <a>Subjects</a>
 </div>
@@ -214,8 +265,8 @@ Continue with Google
 <main>
 
 <header style="margin-bottom:2rem">
-<h1 id="greeting">WELCOME BACK</h1>
-<p id="date-sub" style="color:var(--peach)"></p>
+<h1 id="greeting">WELCOME</h1>
+<p id="date-sub"></p>
 </header>
 
 <div class="metrics-row">
@@ -226,7 +277,7 @@ Continue with Google
 </div>
 
 <div class="m-card">
-<h4>SAFE BUNKS</h4>
+<h4>BUNKS</h4>
 <span id="m-bunks" class="value">--</span>
 </div>
 
@@ -260,16 +311,37 @@ Continue with Google
 
 <aside>
 
-<div class="card profile-header">
+<div class="card profile-card">
 <img id="profile-av">
 <h3 id="profile-n"></h3>
 
-<div style="display:flex;justify-content:space-around;margin-top:1rem">
-<div><div id="pc-overall">--</div><small>Avg</small></div>
-<div><div id="pc-bunks">--</div><small>Bunks</small></div>
-<div><div id="pc-danger">--</div><small>Low</small></div>
+<div class="profile-stats condensed">
+
+<div>
+<span id="pc-overall">--</span>
+<br>
+<small>AVG</small>
 </div>
 
+<div>
+<span id="pc-bunks">--</span>
+<br>
+<small>Bunks</small>
+</div>
+
+<div>
+<span id="pc-danger">--</span>
+<br>
+<small>Low</small>
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+<h3>Tracking Streak</h3>
+<div id="streak-num">🔥 0 DAYS</div>
 </div>
 
 <div class="card">
@@ -285,13 +357,12 @@ Continue with Google
 </aside>
 
 </div>
+
 </main>
 </div>
 
 <script>
-
 const API='https://attendease-backend-wrag.onrender.com'
-
 let currentUser=null
 let streak=0
 
@@ -318,11 +389,6 @@ email:uemail
 showApp()
 updateStreak()
 
-}else{
-
-document.getElementById('auth-screen').style.display='flex'
-document.getElementById('dashboard').style.display='none'
-
 }
 
 }
@@ -333,21 +399,17 @@ document.getElementById('auth-screen').style.display='none'
 document.getElementById('dashboard').style.display='block'
 
 const name=currentUser.name
-const first=name.split(' ')[0].toUpperCase()
+const first=name.split(' ')[0]
 
 document.getElementById('nav-name').textContent=first
-document.getElementById('profile-n').textContent=name.toUpperCase()
+document.getElementById('profile-n').textContent=name
 
 const avatar=`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFA586&color=111320`
 
 document.getElementById('nav-avatar').src=avatar
 document.getElementById('profile-av').src=avatar
 
-const h=new Date().getHours()
-const greet=h<12?'GOOD MORNING':h<17?'GOOD AFTERNOON':'GOOD EVENING'
-
-document.getElementById('greeting').textContent=greet+', '+first
-
+document.getElementById('greeting').textContent="WELCOME "+first
 document.getElementById('date-sub').textContent=new Date().toDateString()
 
 loadDashboard()
@@ -374,32 +436,28 @@ streak=stored
 
 }
 
-document.getElementById('streak-num').textContent='🔥 '+streak+' DAYS'
+document.getElementById('streak-num').textContent=`🔥 ${streak} DAYS`
 
 }
 
 async function loadDashboard(){
-
-try{
 
 const res=await fetch(`${API}/dashboard/${currentUser.id}`)
 const data=await res.json()
 
 const bunks=data.subjects.reduce((s,x)=>s+x.can_bunk,0)
 
-document.getElementById('m-overall').textContent=data.overall_percentage+'%'
+document.getElementById('m-overall').textContent=data.overall_percentage+"%"
 document.getElementById('m-bunks').textContent=bunks
 document.getElementById('m-danger').textContent=data.danger_count
 document.getElementById('m-total').textContent=data.total_subjects
 
-document.getElementById('pc-overall').textContent=data.overall_percentage+'%'
+document.getElementById('pc-overall').textContent=data.overall_percentage+"%"
 document.getElementById('pc-bunks').textContent=bunks
 document.getElementById('pc-danger').textContent=data.danger_count
 
 renderSubjects(data.subjects)
 renderToday(data.subjects)
-
-}catch(e){console.error(e)}
 
 }
 
@@ -407,27 +465,31 @@ function renderSubjects(subjects){
 
 const el=document.getElementById('subjects-list')
 
-if(!subjects.length){
-
-el.innerHTML='<p>No subjects yet</p>'
-return
-
-}
-
 el.innerHTML=subjects.map(s=>{
 
-const c=s.status==='safe'?'var(--safe)':s.status==='borderline'?'var(--peach)':'var(--crimson)'
+const color=s.status==='safe'?'var(--safe-green)':'var(--danger-red)'
 
-return `<div class="subject-item">
+return `
+<div class="subject-item">
+
 <div style="display:flex;justify-content:space-between">
+
 <span class="condensed">${s.name}</span>
+
 <span class="badge">${s.status}</span>
+
 </div>
+
 <div class="progress-container">
-<div class="progress-bar" style="width:${Math.min(s.percentage,100)}%;background:${c}"></div>
+
+<div class="progress-bar" style="width:${Math.min(s.percentage,100)}%;background:${color}"></div>
+
 </div>
-<small>${s.percentage}%</small>
-</div>`
+
+<small>${s.percentage}% attendance</small>
+
+</div>
+`
 
 }).join('')
 
@@ -447,9 +509,9 @@ el.innerHTML=subjects.map(s=>`
 
 <div class="class-btn-group">
 
-<button class="btn-p" onclick="markAtt('${s.id}','${today}',this,'attended')">PRESENT</button>
+<button class="btn-p" onclick="markAtt('${s.id}','${today}','attended')">PRESENT</button>
 
-<button class="btn-a" onclick="markAtt('${s.id}','${today}',this,'bunked')">ABSENT</button>
+<button class="btn-a" onclick="markAtt('${s.id}','${today}','bunked')">ABSENT</button>
 
 </div>
 
@@ -459,7 +521,7 @@ el.innerHTML=subjects.map(s=>`
 
 }
 
-async function markAtt(sid,date,btn,status){
+async function markAtt(subject_id,date,status){
 
 await fetch(`${API}/attendance`,{
 
@@ -467,13 +529,7 @@ method:'POST',
 
 headers:{'Content-Type':'application/json'},
 
-body:JSON.stringify({
-
-subject_id:sid,
-date,
-status
-
-})
+body:JSON.stringify({subject_id,date,status})
 
 })
 
@@ -489,19 +545,20 @@ const res=await fetch(`${API}/ai/verdict/${currentUser.id}`)
 const d=await res.json()
 
 document.getElementById('verdict-score').textContent=d.overall_score
-document.getElementById('verdict-text').textContent=d.overall_verdict+' '+d.advice
+document.getElementById('verdict-text').textContent=d.overall_verdict+" "+d.advice
 
-}catch(e){
+}catch{
 
-document.getElementById('verdict-text').textContent='AI verdict unavailable.'
+document.getElementById('verdict-text').textContent='AI verdict unavailable'
 
 }
 
 }
 
 init()
-
 </script>
 
 </body>
 </html>
+
+
