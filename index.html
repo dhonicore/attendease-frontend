@@ -1,564 +1,1066 @@
-
-
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AttendEase</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
-
+<title>AttendEase — Know Your Fate</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
 <style>
-
-:root{
---bg:#111320;
---card-bg:#1B1E2F;
---peach:#FFA586;
---crimson:#B51A2B;
---safe-green:#4ADE80;
---danger-red:#EF4444;
---text-dim:#94A3B8;
---border:rgba(255,165,134,0.15);
+:root {
+  --white: #FFFFFF;
+  --off: #F5F3EE;
+  --black: #0A0A0A;
+  --cyan: #00E5D4;
+  --yellow: #FFE033;
+  --red: #FF3B5C;
+  --purple: #6E44FF;
+  --border: 2px solid var(--black);
+  --r: 14px;
+  --r-lg: 20px;
+  --shadow: 4px 4px 0px var(--black);
+  --shadow-lg: 6px 6px 0px var(--black);
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-body{
-background:var(--bg);
-color:white;
-font-family:'Barlow',sans-serif;
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  background: var(--off);
+  color: var(--black);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  cursor: default;
 }
 
-h1,h2,h3,.condensed{
-font-family:'Barlow Condensed',sans-serif;
-font-weight:900;
-text-transform:uppercase;
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--off); }
+::-webkit-scrollbar-thumb { background: var(--black); border-radius: 4px; }
+
+/* ── AUTH ── */
+#auth-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
 }
 
-#auth-screen{
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
+.auth-topbar {
+  padding: 1.25rem 2rem;
+  border-bottom: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--white);
+  position: sticky; top: 0; z-index: 10;
 }
 
-.auth-card{
-background:var(--card-bg);
-padding:3rem;
-border-radius:20px;
-text-align:center;
-border:1px solid var(--border);
+.brand {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.logo-large{
-font-size:3rem;
-color:var(--peach);
+.brand-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+  border: 2px solid var(--black);
+  display: inline-block;
 }
 
-.google-btn{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-background:white;
-color:black;
-text-decoration:none;
-padding:12px 24px;
-border-radius:10px;
-margin-top:2rem;
+.auth-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
 }
 
-#dashboard{display:none}
-
-nav{
-position:sticky;
-top:0;
-background:var(--card-bg);
-padding:1rem 5%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid var(--border);
+.auth-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--cyan);
+  border: var(--border);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  animation: fadeUp 0.5s 0.1s ease forwards;
 }
 
-.nav-links{
-display:flex;
-gap:2rem;
+.auth-h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(4rem, 11vw, 9rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.2s ease forwards;
 }
 
-.nav-links a{
-color:var(--text-dim);
-text-decoration:none;
+.auth-h1 em {
+  font-style: italic;
+  color: var(--purple);
 }
 
-.nav-links a.active{
-color:var(--peach);
+.auth-h1 .line-accent {
+  display: inline-block;
+  background: var(--yellow);
+  border: var(--border);
+  padding: 0 12px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  transform: rotate(-1deg);
+  display: inline-block;
 }
 
-.nav-profile{
-display:flex;
-align-items:center;
-gap:10px;
+.auth-sub {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #555;
+  max-width: 440px;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.3s ease forwards;
 }
 
-#nav-avatar{
-width:36px;
-height:36px;
-border-radius:50%;
-border:2px solid var(--peach);
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--black);
+  color: var(--white);
+  border: var(--border);
+  border-radius: var(--r);
+  padding: 14px 32px;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  animation: fadeUp 0.5s 0.4s ease forwards;
 }
 
-main{
-padding:2rem 5%;
-max-width:1400px;
-margin:auto;
+.google-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px var(--black);
 }
 
-.metrics-row{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:1.5rem;
-margin-bottom:2rem;
+.google-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--black);
 }
 
-.m-card{
-background:var(--card-bg);
-padding:1.5rem;
-border-radius:14px;
-border:1px solid var(--border);
+.auth-features {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.5s ease forwards;
 }
 
-.value{
-font-size:2rem;
+.feat-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 3px 3px 0px var(--black);
 }
 
-.grid-layout{
-display:grid;
-grid-template-columns:1fr 350px;
-gap:2rem;
+.feat-chip .dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--black); }
+
+/* BIG MARQUEE */
+.marquee-wrap {
+  border-top: var(--border);
+  border-bottom: var(--border);
+  background: var(--yellow);
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-top: 3rem;
 }
 
-.card{
-background:var(--card-bg);
-padding:1.5rem;
-border-radius:14px;
-border:1px solid var(--border);
-margin-bottom:1.5rem;
+.marquee-track {
+  display: inline-flex;
+  gap: 2rem;
+  animation: marquee 18s linear infinite;
 }
 
-.subject-item{
-padding:1rem;
-background:rgba(255,255,255,0.03);
-border-radius:10px;
-margin-bottom:1rem;
+.marquee-item {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.progress-container{
-height:8px;
-background:#2D314D;
-border-radius:4px;
-margin:8px 0;
-overflow:hidden;
+.marquee-sep { color: #aaa; }
+
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── APP ── */
+#app { display: none; }
+
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--white);
+  border-bottom: var(--border);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.progress-bar{
-height:100%;
-background:var(--peach);
+.nav-brand {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.badge{
-font-size:0.7rem;
-padding:2px 6px;
-border-radius:4px;
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--off);
+  border: var(--border);
+  border-radius: 10px;
+  padding: 4px;
 }
 
-.class-btn-group{
-display:flex;
-gap:8px;
-margin-top:10px;
+.nav-tab {
+  padding: 5px 16px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #888;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.12s;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  letter-spacing: 0.02em;
 }
 
-.btn-p{
-background:var(--peach);
-border:none;
-padding:8px;
-border-radius:8px;
-font-weight:bold;
-flex:1;
-cursor:pointer;
+.nav-tab.active {
+  background: var(--black);
+  color: var(--white);
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
 }
 
-.btn-a{
-background:transparent;
-border:1px solid var(--crimson);
-color:var(--crimson);
-padding:8px;
-border-radius:8px;
-flex:1;
-cursor:pointer;
+.nav-right { display: flex; align-items: center; gap: 10px; }
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--off);
+  border: var(--border);
+  border-radius: 10px;
+  padding: 5px 12px 5px 5px;
 }
 
-.profile-card{text-align:center}
-
-#profile-av{
-width:80px;
-height:80px;
-border-radius:50%;
-border:3px solid var(--peach);
-margin-bottom:10px;
+.nav-av {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--cyan);
+  border: 2px solid var(--black);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 900;
 }
 
-.profile-stats{
-display:flex;
-justify-content:space-between;
-margin-top:1rem;
+.nav-name { font-size: 0.82rem; font-weight: 800; }
+
+/* ── MAIN ── */
+.main { max-width: 1180px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+.hero-section {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
-#streak-num{
-font-size:2rem;
-text-align:center;
-margin-bottom:10px;
+.hero-left {}
+
+.hero-greeting {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
+.hero-greeting em { font-style: italic; color: var(--purple); }
+
+.hero-sub {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #777;
+  margin-top: 6px;
+}
+
+.hero-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--black);
+  color: var(--white);
+  border: var(--border);
+  border-radius: var(--r);
+  padding: 10px 20px;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all 0.12s;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.btn-primary:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px var(--black); }
+.btn-primary:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px var(--black); }
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--black);
+  border: var(--border);
+  border-radius: var(--r);
+  padding: 10px 20px;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all 0.12s;
+}
+
+.btn-secondary:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px var(--black); }
+
+/* ── METRICS ── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
+  margin-bottom: 1.75rem;
+}
+
+.metric {
+  background: var(--white);
+  border: var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  transition: all 0.12s;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0px var(--black); }
+
+.metric-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+.metric-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.metric-val {
+  font-family: 'Fraunces', serif;
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.metric-sub { font-size: 0.72rem; font-weight: 600; color: #999; margin-top: 4px; }
+
+/* ── CONTENT GRID ── */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.25rem;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--white);
+  border: var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.25rem;
+}
+
+.card-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1.5px solid #F0EDE8;
+}
+
+.card-title {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #999;
+  display: flex; align-items: center; gap: 7px;
+}
+
+.card-dot { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid var(--black); }
+
+.card-action {
+  font-size: 0.75rem; font-weight: 800;
+  color: var(--purple); cursor: pointer;
+  border: none; background: none;
+  font-family: 'Cabinet Grotesk', sans-serif;
+}
+
+/* ── SUBJECTS ── */
+.subject-list { display: flex; flex-direction: column; gap: 8px; }
+
+.subject-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r);
+  border: 1.5px solid #E8E5E0;
+  background: var(--off);
+  cursor: pointer;
+  transition: all 0.12s;
+  position: relative;
+  overflow: hidden;
+}
+
+.subject-row:hover { border-color: var(--black); box-shadow: 3px 3px 0px var(--black); transform: translate(-1px,-1px); }
+
+.sub-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.sub-name { font-size: 0.9rem; font-weight: 800; flex: 1; }
+.sub-meta { font-size: 0.68rem; color: #999; font-weight: 600; margin-top: 2px; }
+.sub-bar-wrap { width: 100%; height: 3px; background: #E8E5E0; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+.sub-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+.sub-right { text-align: right; flex-shrink: 0; }
+.sub-pct { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 900; }
+
+.badge {
+  display: inline-block;
+  font-size: 0.6rem; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 3px 8px; border-radius: 6px;
+  border: 1.5px solid var(--black);
+  margin-top: 3px;
+}
+
+.badge-safe { background: var(--cyan); color: var(--black); }
+.badge-warn { background: var(--yellow); color: var(--black); }
+.badge-danger { background: var(--red); color: var(--white); }
+
+/* ── TODAY ── */
+.today-list { display: flex; flex-direction: column; gap: 8px; }
+
+.class-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r);
+  border: 1.5px solid #E8E5E0;
+  background: var(--off);
+  transition: all 0.12s;
+}
+
+.class-row.attended { background: #E8FFF4; border-color: #00C48C; }
+
+.time-tag {
+  font-size: 0.68rem; font-weight: 900;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: #999; min-width: 42px;
+}
+
+.class-name-txt { font-size: 0.87rem; font-weight: 700; flex: 1; }
+
+.mark-btn {
+  font-size: 0.7rem; font-weight: 900;
+  padding: 5px 12px; border-radius: 8px;
+  border: 1.5px solid var(--black);
+  background: var(--white); color: var(--black);
+  cursor: pointer; font-family: 'Cabinet Grotesk', sans-serif;
+  box-shadow: 2px 2px 0px var(--black);
+  transition: all 0.12s; white-space: nowrap;
+}
+
+.mark-btn:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0px var(--black); }
+.mark-btn.done { background: #00C48C; color: var(--white); border-color: #009B6E; box-shadow: 2px 2px 0px #009B6E; }
+
+.bunk-chip {
+  font-size: 0.65rem; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 4px 10px; border-radius: 8px;
+  background: var(--yellow); color: var(--black);
+  border: 1.5px solid var(--black);
+  box-shadow: 2px 2px 0px var(--black);
+}
+
+/* ── ADD FORM ── */
+.add-form {
+  display: flex; gap: 8px;
+  margin-top: 1rem; padding-top: 1rem;
+  border-top: 1.5px solid #F0EDE8;
+}
+
+.add-input {
+  flex: 1; background: var(--off);
+  border: 1.5px solid #D0CDC8;
+  border-radius: var(--r); padding: 9px 12px;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--black); outline: none;
+  transition: border-color 0.15s;
+}
+
+.add-input:focus { border-color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
+.add-input::placeholder { color: #B0ADA8; }
+
+/* ── VERDICT ── */
+.verdict-wrap {
+  background: var(--purple);
+  border: var(--border);
+  border-radius: var(--r);
+  padding: 1.1rem; margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.verdict-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+
+.score-box {
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  background: var(--white);
+  border: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem; font-weight: 900; color: var(--purple);
+  flex-shrink: 0;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+}
+
+.verdict-label {
+  font-size: 0.65rem; font-weight: 900;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+
+.verdict-text {
+  font-size: 0.85rem; color: rgba(255,255,255,0.9);
+  line-height: 1.6; font-style: italic; font-weight: 500;
+}
+
+/* ── PROFILE ── */
+.profile-box {
+  background: var(--black);
+  border: var(--border);
+  border-radius: var(--r);
+  padding: 1.25rem; margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+
+.profile-top { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+
+.profile-av-box {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--cyan);
+  border: 2px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 900; color: var(--black);
+}
+
+.profile-name-txt { font-size: 0.95rem; font-weight: 900; color: var(--white); }
+.profile-detail-txt { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+.pstat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.pstat {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 8px 10px;
+}
+
+.pstat-label { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+.pstat-val { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900; color: var(--white); margin-top: 2px; }
+
+/* ── ALERTS ── */
+.alert-list { display: flex; flex-direction: column; gap: 6px; }
+
+.alert-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 10px 12px; border-radius: var(--r);
+  font-size: 0.82rem; font-weight: 600; line-height: 1.5;
+  border: 1.5px solid var(--black);
+  box-shadow: 2px 2px 0px var(--black);
+}
+
+/* ── STREAK ── */
+.streak-wrap {
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: var(--r);
+  padding: 10px 14px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.streak-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem; font-weight: 900;
+  color: var(--black); line-height: 1;
+}
+
+.streak-label { font-size: 0.72rem; font-weight: 800; color: rgba(0,0,0,0.6); }
+
+.week-grid { display: flex; gap: 5px; }
+.wday { flex: 1; }
+.wday-bar { height: 22px; border-radius: 5px; margin-bottom: 3px; border: 1.5px solid var(--black); transition: background 0.2s; }
+.wday-label { font-size: 0.6rem; color: #999; text-align: center; font-weight: 800; text-transform: uppercase; }
+
+.empty { text-align: center; padding: 1.5rem; color: #999; font-size: 0.82rem; font-weight: 600; }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .topnav { padding: 0 1rem; }
+  .nav-tabs { display: none; }
+  .main { padding: 1.25rem 1rem 3rem; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .content-grid { grid-template-columns: 1fr; }
+  .hero-section { flex-direction: column; }
+  .auth-h1 { font-size: clamp(3rem, 14vw, 6rem); }
+}
 </style>
-
 </head>
-
 <body>
 
-<section id="auth-screen">
-<div class="auth-card">
-<h1 class="logo-large">AttendEase</h1>
-<p style="color:var(--text-dim)">Master your presence</p>
+<!-- ── AUTH ── -->
+<div id="auth-screen">
+  <div class="auth-topbar">
+    <div class="brand"><div class="brand-dot"></div>AttendEase</div>
+    <div style="font-size:0.78rem;font-weight:700;color:#999;">For Indian College Students</div>
+  </div>
 
-<a href="https://attendease-backend-wrag.onrender.com/auth/google" class="google-btn">
-<img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20">
-Continue with Google
-</a>
+  <div class="auth-hero">
+    <div class="auth-tag">✦ AI-Powered Attendance Tracker</div>
+    <h1 class="auth-h1">
+      Know your<br>
+      <em>attendance</em><br>
+      <span class="line-accent">fate.</span>
+    </h1>
+    <p class="auth-sub">Track subjects, get brutal AI advice, and never get barred from exams again. Built for Indian college students.</p>
+    <a href="https://attendease-backend-wrag.onrender.com/auth/google" class="google-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Continue with Google
+    </a>
+    <div class="auth-features">
+      <div class="feat-chip"><div class="dot" style="background:var(--cyan)"></div>AI Verdict</div>
+      <div class="feat-chip"><div class="dot" style="background:var(--yellow)"></div>Bunk Calculator</div>
+      <div class="feat-chip"><div class="dot" style="background:var(--red)"></div>Danger Alerts</div>
+      <div class="feat-chip"><div class="dot" style="background:var(--purple)"></div>Streak Tracker</div>
+    </div>
+  </div>
 
-</div>
-</section>
-
-<div id="dashboard">
-
-<nav>
-
-<h2 style="color:var(--peach)">AttendEase</h2>
-
-<div class="nav-links condensed">
-<a class="active">Dashboard</a>
-<a>Subjects</a>
-</div>
-
-<div class="nav-profile">
-<span id="nav-name">Student</span>
-<img id="nav-avatar">
-</div>
-
-</nav>
-
-<main>
-
-<header style="margin-bottom:2rem">
-<h1 id="greeting">WELCOME</h1>
-<p id="date-sub"></p>
-</header>
-
-<div class="metrics-row">
-
-<div class="m-card">
-<h4>OVERALL</h4>
-<span id="m-overall" class="value">--</span>
-</div>
-
-<div class="m-card">
-<h4>BUNKS</h4>
-<span id="m-bunks" class="value">--</span>
-</div>
-
-<div class="m-card">
-<h4>DANGER</h4>
-<span id="m-danger" class="value">--</span>
-</div>
-
-<div class="m-card">
-<h4>SUBJECTS</h4>
-<span id="m-total" class="value">--</span>
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">✦ Never Miss Your 75%</span>
+      <span class="marquee-item marquee-sep">—</span>
+      <span class="marquee-item">✦ Know Your Safe Bunks</span>
+      <span class="marquee-item marquee-sep">—</span>
+      <span class="marquee-item">✦ AI Powered Advice</span>
+      <span class="marquee-item marquee-sep">—</span>
+      <span class="marquee-item">✦ Built For Indian Students</span>
+      <span class="marquee-item marquee-sep">—</span>
+      <span class="marquee-item">✦ Never Miss Your 75%</span>
+      <span class="marquee-item marquee-sep">—</span>
+      <span class="marquee-item">✦ Know Your Safe Bunks</span>
+      <span class="marquee-item marquee-sep">—</span>
+      <span class="marquee-item">✦ AI Powered Advice</span>
+      <span class="marquee-item marquee-sep">—</span>
+      <span class="marquee-item">✦ Built For Indian Students</span>
+      <span class="marquee-item marquee-sep">—</span>
+    </div>
+  </div>
 </div>
 
-</div>
+<!-- ── APP ── -->
+<div id="app">
+  <nav class="topnav">
+    <div class="nav-brand"><div class="brand-dot"></div>AttendEase</div>
+    <div class="nav-tabs">
+      <button class="nav-tab active">Dashboard</button>
+      <button class="nav-tab">Subjects</button>
+      <button class="nav-tab">Calendar</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user">
+        <div class="nav-av" id="nav-av">D</div>
+        <div class="nav-name" id="nav-name">—</div>
+      </div>
+    </div>
+  </nav>
 
-<div class="grid-layout">
+  <div class="main">
+    <div class="hero-section">
+      <div class="hero-left">
+        <div class="hero-greeting" id="greeting">Good morning, <em>Student</em></div>
+        <div class="hero-sub" id="date-sub">Loading your data...</div>
+      </div>
+      <div class="hero-right">
+        <button class="btn-secondary" onclick="loadVerdict()">✦ AI Verdict</button>
+        <button class="btn-primary" onclick="shareCard()">↗ Share Card</button>
+      </div>
+    </div>
 
-<section>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-accent" style="background:var(--cyan)"></div>
+        <div class="metric-label">Overall</div>
+        <div class="metric-val" id="m-overall">—</div>
+        <div class="metric-sub">attendance %</div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:#00C48C"></div>
+        <div class="metric-label">Safe Bunks</div>
+        <div class="metric-val" id="m-bunks">—</div>
+        <div class="metric-sub">remaining</div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:var(--red)"></div>
+        <div class="metric-label">Danger</div>
+        <div class="metric-val" id="m-danger" style="color:var(--red)">—</div>
+        <div class="metric-sub">subjects at risk</div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:var(--purple)"></div>
+        <div class="metric-label">Subjects</div>
+        <div class="metric-val" id="m-total">—</div>
+        <div class="metric-sub">tracked</div>
+      </div>
+    </div>
 
-<div class="card">
-<h3>Subject Tracker</h3>
-<div id="subjects-list"></div>
-</div>
+    <div class="content-grid">
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-dot" style="background:var(--cyan)"></div>Subject Tracker</div>
+            <button class="card-action" onclick="loadDashboard()">Refresh ↻</button>
+          </div>
+          <div class="subject-list" id="subjects-list"><div class="empty">Loading subjects...</div></div>
+          <div class="add-form">
+            <input class="add-input" type="text" id="new-subject" placeholder="Add subject (e.g. DBMS, Networks...)">
+            <button class="btn-primary" onclick="addSubject()">+ Add</button>
+          </div>
+        </div>
 
-<div id="verdict-box" class="card">
-<div id="verdict-score">--</div>
-<p id="verdict-text"></p>
-</div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-dot" style="background:#00C48C"></div>Today's Classes</div>
+            <button class="card-action" onclick="markAll()">Mark All →</button>
+          </div>
+          <div class="today-list" id="today-classes"><div class="empty">No subjects yet</div></div>
+        </div>
 
-</section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-dot" style="background:var(--red)"></div>Danger Alerts</div>
+          </div>
+          <div class="alert-list" id="alert-list"><div class="empty">No alerts — you're good 🎉</div></div>
+        </div>
+      </div>
 
-<aside>
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-dot" style="background:var(--purple)"></div>AI Verdict</div>
+          </div>
+          <div class="verdict-wrap">
+            <div class="verdict-top">
+              <div class="score-box" id="verdict-score">—</div>
+              <div class="verdict-label">Safety Score / 10</div>
+            </div>
+            <div class="verdict-text" id="verdict-text">Click "AI Verdict" to get your personalized analysis.</div>
+          </div>
+          <button class="btn-secondary" style="width:100%;text-align:center;" onclick="loadVerdict()">Get AI Analysis ✦</button>
+        </div>
 
-<div class="card profile-card">
-<img id="profile-av">
-<h3 id="profile-n"></h3>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-dot" style="background:var(--yellow)"></div>Daily Streak</div>
+          </div>
+          <div class="streak-wrap">
+            <div style="font-size:1.5rem">🔥</div>
+            <div>
+              <div class="streak-num" id="streak-num">0</div>
+              <div class="streak-label">day streak</div>
+            </div>
+          </div>
+          <div style="font-size:0.62rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:7px;">This Week</div>
+          <div class="week-grid">
+            <div class="wday"><div class="wday-bar" style="background:#E8FFF4"></div><div class="wday-label">M</div></div>
+            <div class="wday"><div class="wday-bar" style="background:#E8FFF4"></div><div class="wday-label">T</div></div>
+            <div class="wday"><div class="wday-bar" style="background:#E8FFF4"></div><div class="wday-label">W</div></div>
+            <div class="wday"><div class="wday-bar" style="background:var(--yellow)"></div><div class="wday-label">T</div></div>
+            <div class="wday"><div class="wday-bar" style="background:#F0EDE8"></div><div class="wday-label">F</div></div>
+            <div class="wday"><div class="wday-bar" style="background:#F0EDE8"></div><div class="wday-label">S</div></div>
+            <div class="wday"><div class="wday-bar" style="background:#F0EDE8"></div><div class="wday-label">S</div></div>
+          </div>
+        </div>
 
-<div class="profile-stats condensed">
-
-<div>
-<span id="pc-overall">--</span>
-<br>
-<small>AVG</small>
-</div>
-
-<div>
-<span id="pc-bunks">--</span>
-<br>
-<small>Bunks</small>
-</div>
-
-<div>
-<span id="pc-danger">--</span>
-<br>
-<small>Low</small>
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-<h3>Tracking Streak</h3>
-<div id="streak-num">🔥 0 DAYS</div>
-</div>
-
-<div class="card">
-<h3>Today's Classes</h3>
-<div id="today-classes"></div>
-</div>
-
-<div class="card">
-<h3>Alerts</h3>
-<div id="alert-list"></div>
-</div>
-
-</aside>
-
-</div>
-
-</main>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-dot" style="background:var(--black)"></div>Profile Card</div>
+          </div>
+          <div class="profile-box">
+            <div class="profile-top">
+              <div class="profile-av-box" id="profile-av">D</div>
+              <div>
+                <div class="profile-name-txt" id="profile-n">—</div>
+                <div class="profile-detail-txt">ISE · 1st Year · Sem 2</div>
+              </div>
+            </div>
+            <div class="pstat-grid">
+              <div class="pstat"><div class="pstat-label">Overall</div><div class="pstat-val" id="pc-overall" style="color:var(--cyan)">—</div></div>
+              <div class="pstat"><div class="pstat-label">Safe Bunks</div><div class="pstat-val" id="pc-bunks" style="color:#00C48C">—</div></div>
+              <div class="pstat"><div class="pstat-label">Streak</div><div class="pstat-val" id="pc-streak" style="color:var(--yellow)">0 🔥</div></div>
+              <div class="pstat"><div class="pstat-label">Danger</div><div class="pstat-val" id="pc-danger" style="color:var(--red)">—</div></div>
+            </div>
+          </div>
+          <button class="btn-secondary" style="width:100%;text-align:center;" onclick="shareCard()">Copy & Share 📋</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const API='https://attendease-backend-wrag.onrender.com'
-let currentUser=null
-let streak=0
+const API = 'https://attendease-backend-wrag.onrender.com';
+let currentUser = null, streak = 0;
 
-function init(){
-
-const p=new URLSearchParams(window.location.search)
-
-const uid=p.get('user_id')||localStorage.getItem('user_id')
-const uname=p.get('name')||localStorage.getItem('user_name')
-const uemail=p.get('email')||localStorage.getItem('user_email')
-
-if(uid){
-
-localStorage.setItem('user_id',uid)
-localStorage.setItem('user_name',uname||'')
-localStorage.setItem('user_email',uemail||'')
-
-currentUser={
-id:uid,
-name:decodeURIComponent(uname||'Student'),
-email:uemail
+function init() {
+  const p = new URLSearchParams(window.location.search);
+  const uid = p.get('user_id') || localStorage.getItem('user_id');
+  const uname = p.get('name') || localStorage.getItem('user_name');
+  const uemail = p.get('email') || localStorage.getItem('user_email');
+  if (uid) {
+    localStorage.setItem('user_id', uid);
+    localStorage.setItem('user_name', uname || '');
+    localStorage.setItem('user_email', uemail || '');
+    currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
+    updateStreak(); showApp();
+  }
 }
 
-showApp()
-updateStreak()
-
+function updateStreak() {
+  const today = new Date().toDateString();
+  const last = localStorage.getItem('streak_date');
+  const stored = parseInt(localStorage.getItem('streak') || '0');
+  if (last !== today) {
+    streak = last === new Date(Date.now() - 86400000).toDateString() ? stored + 1 : 1;
+    localStorage.setItem('streak', streak);
+    localStorage.setItem('streak_date', today);
+  } else streak = stored;
+  document.getElementById('streak-num').textContent = streak;
+  document.getElementById('pc-streak').textContent = streak + ' 🔥';
 }
 
+function showApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  const name = currentUser.name;
+  const first = name.split(' ')[0];
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  document.getElementById('greeting').innerHTML = `${greet}, <em>${first}</em>`;
+  document.getElementById('date-sub').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('nav-name').textContent = first;
+  document.getElementById('nav-av').textContent = first[0].toUpperCase();
+  document.getElementById('profile-av').textContent = first[0].toUpperCase();
+  document.getElementById('profile-n').textContent = name;
+  loadDashboard();
 }
 
-function showApp(){
-
-document.getElementById('auth-screen').style.display='none'
-document.getElementById('dashboard').style.display='block'
-
-const name=currentUser.name
-const first=name.split(' ')[0]
-
-document.getElementById('nav-name').textContent=first
-document.getElementById('profile-n').textContent=name
-
-const avatar=`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFA586&color=111320`
-
-document.getElementById('nav-avatar').src=avatar
-document.getElementById('profile-av').src=avatar
-
-document.getElementById('greeting').textContent="WELCOME "+first
-document.getElementById('date-sub').textContent=new Date().toDateString()
-
-loadDashboard()
-loadVerdict()
-
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API}/dashboard/${currentUser.id}`);
+    const data = await res.json();
+    const bunks = data.subjects.reduce((s, x) => s + x.can_bunk, 0);
+    document.getElementById('m-overall').textContent = data.overall_percentage + '%';
+    document.getElementById('m-bunks').textContent = bunks;
+    document.getElementById('m-danger').textContent = data.danger_count;
+    document.getElementById('m-total').textContent = data.total_subjects;
+    document.getElementById('pc-overall').textContent = data.overall_percentage + '%';
+    document.getElementById('pc-bunks').textContent = bunks;
+    document.getElementById('pc-danger').textContent = data.danger_count;
+    renderSubjects(data.subjects);
+    renderToday(data.subjects);
+    renderAlerts(data.subjects);
+  } catch(e) { console.error(e); }
 }
 
-function updateStreak(){
-
-const today=new Date().toDateString()
-const last=localStorage.getItem('streak_date')
-const stored=parseInt(localStorage.getItem('streak')||'0')
-
-if(last!==today){
-
-streak=last===new Date(Date.now()-86400000).toDateString()?stored+1:1
-
-localStorage.setItem('streak',streak)
-localStorage.setItem('streak_date',today)
-
-}else{
-
-streak=stored
-
+function renderSubjects(subjects) {
+  const el = document.getElementById('subjects-list');
+  if (!subjects.length) { el.innerHTML = '<div class="empty">No subjects yet — add one below</div>'; return; }
+  el.innerHTML = subjects.map(s => {
+    const c = s.status === 'safe' ? 'var(--cyan)' : s.status === 'borderline' ? 'var(--yellow)' : 'var(--red)';
+    const b = s.status === 'safe' ? 'badge-safe' : s.status === 'borderline' ? 'badge-warn' : 'badge-danger';
+    const bt = s.can_bunk > 0 ? `bunk ${s.can_bunk} more` : `need ${s.needs} more`;
+    return `<div class="subject-row">
+      <div class="sub-stripe" style="background:${c}"></div>
+      <div style="flex:1;min-width:0;">
+        <div class="sub-name">${s.name}</div>
+        <div class="sub-meta">${s.attended} attended · ${s.total} held · ${bt}</div>
+        <div class="sub-bar-wrap"><div class="sub-bar" style="width:${Math.min(s.percentage,100)}%;background:${c}"></div></div>
+      </div>
+      <div class="sub-right">
+        <div class="sub-pct" style="color:${c}">${s.percentage}%</div>
+        <div class="badge ${b}">${s.status}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-document.getElementById('streak-num').textContent=`🔥 ${streak} DAYS`
-
+function renderToday(subjects) {
+  const el = document.getElementById('today-classes');
+  if (!subjects.length) { el.innerHTML = '<div class="empty">No subjects yet</div>'; return; }
+  const today = new Date().toISOString().split('T')[0];
+  el.innerHTML = subjects.map(s => `
+    <div class="class-row" id="cr-${s.id}">
+      <div class="time-tag">Today</div>
+      <div class="class-name-txt">${s.name}</div>
+      ${s.status === 'safe' && s.can_bunk > 0
+        ? `<span class="bunk-chip">Safe Bunk</span>`
+        : `<button class="mark-btn" onclick="markAtt('${s.id}','${today}',this)">Mark</button>`}
+    </div>`).join('');
 }
 
-async function loadDashboard(){
-
-const res=await fetch(`${API}/dashboard/${currentUser.id}`)
-const data=await res.json()
-
-const bunks=data.subjects.reduce((s,x)=>s+x.can_bunk,0)
-
-document.getElementById('m-overall').textContent=data.overall_percentage+"%"
-document.getElementById('m-bunks').textContent=bunks
-document.getElementById('m-danger').textContent=data.danger_count
-document.getElementById('m-total').textContent=data.total_subjects
-
-document.getElementById('pc-overall').textContent=data.overall_percentage+"%"
-document.getElementById('pc-bunks').textContent=bunks
-document.getElementById('pc-danger').textContent=data.danger_count
-
-renderSubjects(data.subjects)
-renderToday(data.subjects)
-
+function renderAlerts(subjects) {
+  const el = document.getElementById('alert-list');
+  const bad = subjects.filter(s => s.status !== 'safe');
+  if (!bad.length) { el.innerHTML = '<div class="empty">No alerts — you\'re good 🎉</div>'; return; }
+  el.innerHTML = bad.map(s => {
+    const d = s.status === 'danger';
+    return `<div class="alert-item" style="background:${d ? '#FFF0F0' : '#FFFBEB'}">
+      <div style="width:5px;height:5px;border-radius:50%;background:${d ? 'var(--red)' : 'var(--yellow)'};flex-shrink:0;margin-top:6px;border:1.5px solid var(--black)"></div>
+      <div style="color:${d ? 'var(--red)' : '#B8860B'}">
+        <strong>${s.name}</strong> at ${s.percentage}% — ${d ? `attend ${s.needs} more to recover` : `borderline, 1 more bunk = danger`}
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function renderSubjects(subjects){
-
-const el=document.getElementById('subjects-list')
-
-el.innerHTML=subjects.map(s=>{
-
-const color=s.status==='safe'?'var(--safe-green)':'var(--danger-red)'
-
-return `
-<div class="subject-item">
-
-<div style="display:flex;justify-content:space-between">
-
-<span class="condensed">${s.name}</span>
-
-<span class="badge">${s.status}</span>
-
-</div>
-
-<div class="progress-container">
-
-<div class="progress-bar" style="width:${Math.min(s.percentage,100)}%;background:${color}"></div>
-
-</div>
-
-<small>${s.percentage}% attendance</small>
-
-</div>
-`
-
-}).join('')
-
+async function markAtt(sid, date, btn) {
+  const done = btn.classList.contains('done');
+  try {
+    await fetch(`${API}/attendance`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subject_id: sid, date, status: done ? 'bunked' : 'attended' })
+    });
+    btn.classList.toggle('done');
+    btn.textContent = done ? 'Mark' : '✓ Done';
+    document.getElementById(`cr-${sid}`)?.classList.toggle('attended', !done);
+    loadDashboard();
+  } catch(e) { console.error(e); }
 }
 
-function renderToday(subjects){
+function markAll() { document.querySelectorAll('.mark-btn:not(.done)').forEach(b => b.click()); }
 
-const el=document.getElementById('today-classes')
-
-const today=new Date().toISOString().split('T')[0]
-
-el.innerHTML=subjects.map(s=>`
-
-<div style="margin-bottom:1rem">
-
-<div class="condensed">${s.name}</div>
-
-<div class="class-btn-group">
-
-<button class="btn-p" onclick="markAtt('${s.id}','${today}','attended')">PRESENT</button>
-
-<button class="btn-a" onclick="markAtt('${s.id}','${today}','bunked')">ABSENT</button>
-
-</div>
-
-</div>
-
-`).join('')
-
+async function addSubject() {
+  const inp = document.getElementById('new-subject');
+  const name = inp.value.trim();
+  if (!name) return;
+  try {
+    await fetch(`${API}/subjects`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUser.id, name, color: '#00E5D4' })
+    });
+    inp.value = ''; loadDashboard();
+  } catch(e) { console.error(e); }
 }
 
-async function markAtt(subject_id,date,status){
-
-await fetch(`${API}/attendance`,{
-
-method:'POST',
-
-headers:{'Content-Type':'application/json'},
-
-body:JSON.stringify({subject_id,date,status})
-
-})
-
-loadDashboard()
-
+async function loadVerdict() {
+  document.getElementById('verdict-text').textContent = 'Analyzing...';
+  document.getElementById('verdict-score').textContent = '...';
+  try {
+    const res = await fetch(`${API}/ai/verdict/${currentUser.id}`);
+    const d = await res.json();
+    document.getElementById('verdict-score').textContent = d.overall_score;
+    document.getElementById('verdict-text').textContent = `"${d.overall_verdict} ${d.advice}"`;
+  } catch(e) {
+    document.getElementById('verdict-text').textContent = 'Add Anthropic credits to enable AI verdict.';
+    document.getElementById('verdict-score').textContent = '—';
+  }
 }
 
-async function loadVerdict(){
-
-try{
-
-const res=await fetch(`${API}/ai/verdict/${currentUser.id}`)
-const d=await res.json()
-
-document.getElementById('verdict-score').textContent=d.overall_score
-document.getElementById('verdict-text').textContent=d.overall_verdict+" "+d.advice
-
-}catch{
-
-document.getElementById('verdict-text').textContent='AI verdict unavailable'
-
+function shareCard() {
+  const t = `ATTENDEASE REPORT\n\n${currentUser.name}\nOverall: ${document.getElementById('pc-overall').textContent}\nSafe Bunks: ${document.getElementById('pc-bunks').textContent}\nDanger: ${document.getElementById('pc-danger').textContent} subjects\nStreak: ${streak} days 🔥\n\nattendease-frontend.vercel.app`;
+  navigator.clipboard.writeText(t).then(() => {
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied! ✅';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
 }
 
-}
-
-init()
+init();
 </script>
-
 </body>
 </html>
-
-
