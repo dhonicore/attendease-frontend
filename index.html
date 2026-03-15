@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AttendEase</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0F0F0F;
+    --surface: #1A1A1A;
+    --border: #2A2A2A;
+    --text: #F0F0F0;
+    --muted: #666;
+    --safe: #4ADE80;
+    --warn: #FBBF24;
+    --danger: #F87171;
+    --accent: #6366F1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* AUTH */
+  #auth-screen {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-height: 100vh; text-align: center; padding: 2rem;
+  }
+  #auth-screen h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  #auth-screen p { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.85rem; margin-bottom: 2rem; }
+  .google-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0.9rem 1.5rem;
+    font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 600;
+    color: var(--text); cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .google-btn:hover { border-color: var(--accent); background: #1f1f2e; }
+
+  /* LAYOUT */
+  #app { display: none; }
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 220px;
+    background: var(--surface); border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem; display: flex; flex-direction: column;
+  }
+  .logo { font-size: 1.2rem; font-weight: 800; margin-bottom: 2rem; padding: 0 0.5rem; }
+  .logo span { color: var(--muted); font-weight: 400; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 8px; font-size: 0.85rem;
+    color: var(--muted); cursor: pointer; margin-bottom: 2px; transition: all 0.15s;
+  }
+  .nav-item:hover, .nav-item.active { background: var(--border); color: var(--text); }
+  .sidebar-bottom { margin-top: auto; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .user-chip { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; }
+  .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); display: flex; align-items: center;
+    justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+  }
+  .user-name { font-size: 0.8rem; font-weight: 600; }
+  .user-detail { font-size: 0.65rem; color: var(--muted); }
+
+  .main { margin-left: 220px; padding: 2rem; }
+  .page-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .page-sub { font-size: 0.8rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 1.75rem; }
+
+  /* METRICS */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem;
+  }
+  .metric-label { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric-val { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; }
+  .metric-sub { font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
+
+  /* GRID */
+  .grid { display: grid; grid-template-columns: 1fr 300px; gap: 1rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .card-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .card-action { font-size: 0.75rem; color: var(--accent); cursor: pointer; }
+
+  /* SUBJECTS */
+  .subject-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    margin-bottom: 8px; position: relative; overflow: hidden;
+  }
+  .subject-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+  .subject-name { font-size: 0.9rem; font-weight: 600; flex: 1; }
+  .subject-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .subject-pct { font-size: 1rem; font-weight: 700; }
+  .badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+  .badge-safe { background: rgba(74,222,128,0.15); color: var(--safe); }
+  .badge-warn { background: rgba(251,191,36,0.15); color: var(--warn); }
+  .badge-danger { background: rgba(248,113,113,0.15); color: var(--danger); }
+  .bar-wrap { width: 80px; height: 3px; background: var(--border); border-radius: 2px; }
+  .bar-fill { height: 100%; border-radius: 2px; }
+
+  /* TODAY */
+  .class-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 6px;
+  }
+  .time-tag { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; min-width: 45px; }
+  .class-name { font-size: 0.85rem; font-weight: 600; flex: 1; }
+  .mark-btn {
+    font-size: 0.7rem; padding: 4px 10px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; transition: all 0.15s;
+  }
+  .mark-btn.attended { background: rgba(74,222,128,0.15); color: var(--safe); border-color: rgba(74,222,128,0.3); }
+
+  /* ADD SUBJECT */
+  .add-subject-form { display: flex; gap: 8px; margin-top: 1rem; }
+  .add-subject-form input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 12px; color: var(--text);
+    font-family: 'Syne', sans-serif; font-size: 0.85rem; outline: none;
+  }
+  .add-subject-form input:focus { border-color: var(--accent); }
+  .add-btn {
+    background: var(--accent); color: white; border: none;
+    border-radius: 8px; padding: 8px 16px; font-family: 'Syne', sans-serif;
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+
+  /* AI BOX */
+  .ai-box {
+    background: #1a1a2e; border: 1px solid #2a2a4a;
+    border-radius: 10px; padding: 12px 14px;
+    font-size: 0.82rem; color: #a0a0d0; line-height: 1.6;
+    font-style: italic; margin-bottom: 10px;
+  }
+
+  /* PROFILE CARD */
+  .profile-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem; background: var(--bg); }
+  .share-btn {
+    width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; font-size: 0.8rem; color: var(--muted);
+    cursor: pointer; font-family: 'Syne', sans-serif; margin-top: 8px; transition: all 0.15s;
+  }
+  .share-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .loading { text-align: center; padding: 3rem; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <h1>Attend<span style="color:#6366F1">ease</span></h1>
+  <p>// know exactly how cooked you are</p>
+  <a href="http://127.0.0.1:8000/auth/google" class="google-btn">
+    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Continue with Google
+  </a>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="sidebar">
+    <div class="logo">Attend<span>ease</span></div>
+    <div class="nav-item active">▦ Dashboard</div>
+    <div class="nav-item">📚 Subjects</div>
+    <div class="nav-item">📅 Calendar</div>
+    <div class="sidebar-bottom">
+      <div class="user-chip">
+        <div class="avatar" id="user-avatar">D</div>
+        <div>
+          <div class="user-name" id="user-name">Loading...</div>
+          <div class="user-detail">ISE · Sem 2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-title" id="greeting">Good morning 👋</div>
+    <div class="page-sub" id="date-sub">// loading your data...</div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Overall</div>
+        <div class="metric-val" id="m-overall">—</div>
+        <div class="metric-sub">attendance</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Safe bunks</div>
+        <div class="metric-val" id="m-bunks">—</div>
+        <div class="metric-sub">remaining</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Danger</div>
+        <div class="metric-val" id="m-danger" style="color:var(--danger)">—</div>
+        <div class="metric-sub">subjects</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Subjects</div>
+        <div class="metric-val" id="m-total">—</div>
+        <div class="metric-sub">tracked</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Subject Tracker</div>
+          </div>
+          <div id="subjects-list"><div class="loading">loading subjects...</div></div>
+          <div class="add-subject-form">
+            <input type="text" id="new-subject-name" placeholder="Add subject e.g. DBMS">
+            <button class="add-btn" onclick="addSubject()">+ Add</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Today's Classes</div>
+          </div>
+          <div id="today-classes"><div class="loading">no classes set up yet</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">AI Verdict</div></div>
+          <div class="ai-box" id="ai-verdict">loading verdict...</div>
+          <button class="share-btn" onclick="loadVerdict()">Refresh verdict ↻</button>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Profile Card</div></div>
+          <div class="profile-card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <div class="avatar" id="profile-avatar">D</div>
+              <div>
+                <div style="font-size:0.85rem;font-weight:600;" id="profile-name">—</div>
+                <div style="font-size:0.7rem;color:var(--muted);">ISE · 1st Year</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.75rem;">
+              <div style="color:var(--muted);">Overall</div><div style="text-align:right;font-weight:600;" id="pc-overall">—</div>
+              <div style="color:var(--muted);">Safe bunks</div><div style="text-align:right;font-weight:600;" id="pc-bunks">—</div>
+              <div style="color:var(--muted);">Subjects</div><div style="text-align:right;font-weight:600;" id="pc-subjects">—</div>
+              <div style="color:var(--muted);">Danger</div><div style="text-align:right;font-weight:600;color:var(--danger);" id="pc-danger">—</div>
+            </div>
+            <button class="share-btn" onclick="shareCard()">Share profile card 📋</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://attendease-backend-wrag.onrender.com';
+let currentUser = null;
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('user_id') || localStorage.getItem('user_id');
+  const userName = params.get('name') || localStorage.getItem('user_name');
+  const userEmail = params.get('email') || localStorage.getItem('user_email');
+
+  if (userId) {
+    localStorage.setItem('user_id', userId);
+    localStorage.setItem('user_name', userName || '');
+    localStorage.setItem('user_email', userEmail || '');
+    currentUser = { id: userId, name: userName, email: userEmail };
+    showApp();
+  }
+}
+
+function showApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  const name = currentUser.name || 'Student';
+  const initial = name[0].toUpperCase();
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  document.getElementById('greeting').textContent = `${greeting}, ${name.split(' ')[0]} 👋`;
+  document.getElementById('date-sub').textContent = `// ${new Date().toDateString()}`;
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('user-avatar').textContent = initial;
+  document.getElementById('profile-avatar').textContent = initial;
+  document.getElementById('profile-name').textContent = name;
+
+  loadDashboard();
+  loadVerdict();
+}
+
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API}/dashboard/${currentUser.id}`);
+    const data = await res.json();
+
+    document.getElementById('m-overall').textContent = data.overall_percentage + '%';
+    document.getElementById('m-danger').textContent = data.danger_count;
+    document.getElementById('m-total').textContent = data.total_subjects;
+
+    let totalBunks = data.subjects.reduce((sum, s) => sum + s.can_bunk, 0);
+    document.getElementById('m-bunks').textContent = totalBunks;
+    document.getElementById('pc-overall').textContent = data.overall_percentage + '%';
+    document.getElementById('pc-bunks').textContent = totalBunks;
+    document.getElementById('pc-subjects').textContent = data.total_subjects;
+    document.getElementById('pc-danger').textContent = data.danger_count;
+
+    renderSubjects(data.subjects);
+    renderToday(data.subjects);
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function renderSubjects(subjects) {
+  const el = document.getElementById('subjects-list');
+  if (!subjects.length) { el.innerHTML = '<div class="loading">no subjects yet — add one below</div>'; return; }
+
+  el.innerHTML = subjects.map(s => {
+    const color = s.status === 'safe' ? 'var(--safe)' : s.status === 'borderline' ? 'var(--warn)' : 'var(--danger)';
+    const badge = s.status === 'safe' ? 'badge-safe' : s.status === 'borderline' ? 'badge-warn' : 'badge-danger';
+    const bunkText = s.can_bunk > 0 ? `bunk ${s.can_bunk} more` : `attend ${s.needs} more`;
+    return `
+      <div class="subject-row">
+        <div class="subject-accent" style="background:${color}"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="subject-name">${s.name}</div>
+          <div class="subject-meta">${s.attended}/${s.total} · ${bunkText}</div>
+          <div class="bar-wrap" style="width:100%;margin-top:4px;">
+            <div class="bar-fill" style="width:${Math.min(s.percentage,100)}%;background:${color};"></div>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div class="subject-pct" style="color:${color}">${s.percentage}%</div>
+          <div class="badge ${badge}" style="margin-top:3px;">${s.status}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderToday(subjects) {
+  const el = document.getElementById('today-classes');
+  if (!subjects.length) { el.innerHTML = '<div class="loading">no subjects yet</div>'; return; }
+  const today = new Date().toISOString().split('T')[0];
+  el.innerHTML = subjects.map(s => `
+    <div class="class-row" id="class-${s.id}">
+      <div class="time-tag">today</div>
+      <div class="class-name">${s.name}</div>
+      <button class="mark-btn" onclick="markAttendance('${s.id}', '${today}', this)">Mark</button>
+    </div>`).join('');
+}
+
+async function markAttendance(subjectId, date, btn) {
+  const isAttended = btn.classList.contains('attended');
+  const status = isAttended ? 'bunked' : 'attended';
+  try {
+    await fetch(`${API}/attendance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subject_id: subjectId, date, status })
+    });
+    btn.classList.toggle('attended');
+    btn.textContent = isAttended ? 'Mark' : '✓ Done';
+    loadDashboard();
+  } catch(e) { console.error(e); }
+}
+
+async function addSubject() {
+  const input = document.getElementById('new-subject-name');
+  const name = input.value.trim();
+  if (!name) return;
+  try {
+    await fetch(`${API}/subjects`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUser.id, name, color: '#6366F1' })
+    });
+    input.value = '';
+    loadDashboard();
+  } catch(e) { console.error(e); }
+}
+
+async function loadVerdict() {
+  document.getElementById('ai-verdict').textContent = 'thinking...';
+  try {
+    const res = await fetch(`${API}/ai/verdict/${currentUser.id}`);
+    const data = await res.json();
+    document.getElementById('ai-verdict').textContent = `"${data.overall_verdict} ${data.advice}"`;
+  } catch(e) {
+    document.getElementById('ai-verdict').textContent = 'add credits to Anthropic to enable AI verdict.';
+  }
+}
+
+function shareCard() {
+  const text = `AttendEase Report\n${currentUser.name}\nOverall: ${document.getElementById('pc-overall').textContent}\nSafe bunks: ${document.getElementById('pc-bunks').textContent}\nDanger subjects: ${document.getElementById('pc-danger').textContent}\n\n// attendease.app`;
+  navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+}
+
+init();
+</script>
+</body>
+</html>
