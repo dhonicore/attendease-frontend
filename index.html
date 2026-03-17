@@ -54,7 +54,7 @@
         .marquee-item { font-family: var(--font-tech); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
         @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        /* ── DASHBOARD ── */
+        /* ── NAV ── */
         nav {
             position: sticky; top: 0; z-index: 1000; padding: 1.5rem 5%;
             display: flex; justify-content: space-between; align-items: center;
@@ -66,8 +66,27 @@
         .user-chip {
             display: flex; align-items: center; gap: 10px;
             border: 1px solid var(--border); padding: 6px 14px 6px 6px;
-            border-radius: 2px;
+            border-radius: 2px; cursor: pointer; position: relative;
+            transition: border-color 0.2s;
         }
+        .user-chip:hover { border-color: rgba(255,255,255,0.2); }
+
+        /* Dropdown menu */
+        .user-dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: #111; border: 1px solid var(--border);
+            min-width: 160px; display: none; z-index: 999;
+        }
+        .user-dropdown.open { display: block; }
+        .dropdown-item {
+            padding: 12px 16px; font-family: var(--font-tech); font-size: 0.65rem;
+            font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--muted); cursor: pointer; transition: all 0.15s;
+            border-bottom: 1px solid var(--border);
+        }
+        .dropdown-item:last-child { border-bottom: none; }
+        .dropdown-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .dropdown-item.danger:hover { color: var(--danger); }
 
         #nav-av {
             width: 26px; height: 26px; background: var(--success);
@@ -78,6 +97,7 @@
 
         #nav-name { font-family: var(--font-tech); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); }
 
+        /* ── LAYOUT ── */
         .container { max-width: 1300px; margin: 0 auto; padding: 5rem 5%; }
 
         .metrics-grid {
@@ -97,16 +117,17 @@
             padding: 2.5rem; margin-bottom: 2rem;
         }
 
+        /* ── SUBJECTS ── */
         .sub-row {
             margin-bottom: 2rem; padding-bottom: 2rem;
             border-bottom: 1px solid var(--border); transition: opacity 0.2s;
         }
         .sub-row:last-child { border-bottom: none; margin-bottom: 0; }
-        .sub-row:hover { opacity: 0.8; }
+        .sub-row:hover { opacity: 0.85; }
 
         .sub-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
         .sub-name { font-family: var(--font-body); font-weight: 300; font-size: 1rem; }
-        .sub-right-col { text-align: right; }
+        .sub-right-col { display: flex; align-items: center; gap: 12px; }
         .sub-pct { font-family: var(--font-tech); font-size: 0.85rem; font-weight: 800; }
         .sub-meta { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
 
@@ -116,12 +137,20 @@
         .badge {
             font-family: var(--font-tech); font-size: 0.55rem; font-weight: 800;
             letter-spacing: 0.12em; text-transform: uppercase;
-            padding: 3px 8px; border-radius: 1px; margin-top: 5px;
+            padding: 3px 8px; border-radius: 1px;
             display: inline-block;
         }
         .bs { background: rgba(0,255,136,0.1); color: var(--success); border: 1px solid rgba(0,255,136,0.2); }
         .bw { background: rgba(255,170,0,0.1); color: var(--warn); border: 1px solid rgba(255,170,0,0.2); }
         .bd { background: rgba(255,51,102,0.1); color: var(--danger); border: 1px solid rgba(255,51,102,0.2); }
+
+        /* Delete button on subject */
+        .del-btn {
+            background: transparent; border: none; color: rgba(255,255,255,0.15);
+            font-size: 0.9rem; cursor: pointer; padding: 2px 6px;
+            transition: color 0.2s; line-height: 1; flex-shrink: 0;
+        }
+        .del-btn:hover { color: var(--danger); }
 
         .add-form { display: flex; gap: 10px; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
         .add-inp {
@@ -138,15 +167,18 @@
         }
         .add-btn:hover { background: var(--success); }
 
+        /* ── TODAY ── */
         .cls-row {
             display: flex; align-items: center; gap: 1rem; padding: 1.25rem 0;
             border-bottom: 1px solid var(--border); transition: opacity 0.2s;
         }
         .cls-row:last-child { border-bottom: none; }
         .cls-row:hover { opacity: 0.8; }
-        .cls-row.attended { opacity: 0.5; }
+        .cls-row.attended { opacity: 0.45; }
 
-        .cls-time { font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); min-width: 45px; }
+        .cls-dot {
+            width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+        }
         .cls-name { font-size: 0.9rem; font-weight: 300; flex: 1; }
 
         .mark-btn {
@@ -165,6 +197,7 @@
             color: var(--warn); background: rgba(255,170,0,0.05);
         }
 
+        /* ── RIGHT COLUMN ── */
         .verdict-box { background: #fff; color: #000; padding: 3rem; text-align: center; margin-bottom: 2rem; }
         #verdict-score { font-size: 6rem; font-family: var(--font-vintage); font-style: italic; line-height: 0.9; display: block; margin: 1rem 0; }
         #verdict-text { font-size: 0.78rem; color: #555; line-height: 1.7; margin-top: 1rem; }
@@ -211,13 +244,49 @@
 
         .empty-state { color: var(--muted); font-size: 0.82rem; padding: 1.5rem 0; font-weight: 300; }
 
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: #fff; color: #000; padding: 12px 24px;
+            font-family: var(--font-tech); font-size: 0.65rem; font-weight: 800; letter-spacing: 0.15em;
+            text-transform: uppercase; opacity: 0; transition: all 0.3s; z-index: 9999; pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ── CONFIRM MODAL ── */
+        #confirm-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; align-items: center; justify-content: center; z-index: 5000;
+        }
+        #confirm-modal.open { display: flex; }
+        .confirm-box {
+            background: #111; border: 1px solid var(--border);
+            padding: 2.5rem; max-width: 360px; width: 90%; text-align: center;
+        }
+        .confirm-box h3 { font-family: var(--font-tech); font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+        .confirm-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+        .confirm-btns { display: flex; gap: 10px; }
+        .confirm-btns button {
+            flex: 1; padding: 12px; font-family: var(--font-tech); font-size: 0.65rem;
+            font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border: none;
+        }
+        #confirm-ok { background: var(--danger); color: #fff; }
+        #confirm-cancel { background: var(--border); color: var(--muted); }
+
+        /* ── UTIL ── */
         .faded-out { opacity: 0; filter: blur(30px); pointer-events: none; }
         .hidden { display: none; }
 
+        /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
             .dashboard-main { grid-template-columns: 1fr; gap: 2rem; }
             .container { padding: 3rem 5%; }
+        }
+        @media (max-width: 600px) {
+            nav { padding: 1rem 4%; }
+            .nav-links { display: none; }
+            .container { padding: 2rem 4%; }
         }
     </style>
 </head>
@@ -256,15 +325,23 @@
 <div id="app-layer" class="hidden" style="opacity:0;transition:1s;">
     <nav>
         <h2 style="font-size:1.8rem;font-style:normal;letter-spacing:0.05em;font-family:var(--font-tech);font-weight:800;">NB</h2>
-        <div style="display:flex;gap:2rem;">
-            <span class="nav-link" style="cursor:pointer;color:var(--muted);">DASHBOARD</span>
-            <span class="nav-link" style="cursor:pointer;color:var(--muted);">SUBJECTS</span>
-            <span class="nav-link" style="cursor:pointer;color:var(--muted);">ANALYTICS</span>
+        <div class="nav-links" style="display:flex;gap:2rem;">
+            <span class="nav-link" style="cursor:pointer;color:var(--muted);" onclick="scrollToSection('subjects-section')">SUBJECTS</span>
+            <span class="nav-link" style="cursor:pointer;color:var(--muted);" onclick="scrollToSection('today-section')">TODAY</span>
+            <span class="nav-link" style="cursor:pointer;color:var(--muted);" onclick="scrollToSection('alerts-section')">ALERTS</span>
         </div>
         <div class="nav-right">
-            <div class="user-chip">
+            <!-- User chip with dropdown -->
+            <div class="user-chip" onclick="toggleDropdown()">
                 <div id="nav-av">D</div>
                 <span id="nav-name">—</span>
+                <svg width="10" height="10" viewBox="0 0 10 10" style="margin-left:2px;opacity:0.4">
+                    <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="dropdown-item" onclick="event.stopPropagation(); shareCard()">↗ Share Profile</div>
+                    <div class="dropdown-item danger" onclick="event.stopPropagation(); signOut()">Sign Out</div>
+                </div>
             </div>
         </div>
     </nav>
@@ -273,12 +350,13 @@
         <header style="margin-bottom:4rem;">
             <p id="date-sub" class="label-caps" style="margin-bottom:1rem;">—</p>
             <h1 id="greeting" style="font-size:clamp(3rem,8vw,7rem);line-height:0.9;">Hello, Student.</h1>
-            <div style="display:flex;gap:10px;margin-top:2rem;">
+            <div style="display:flex;gap:10px;margin-top:2rem;flex-wrap:wrap;">
                 <button onclick="loadVerdict()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 20px;cursor:pointer;font-family:var(--font-tech);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='var(--muted)'">✦ AI Verdict</button>
                 <button onclick="shareCard()" style="background:#fff;color:#000;border:none;padding:10px 20px;cursor:pointer;font-family:var(--font-tech);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:background 0.2s;" onmouseover="this.style.background='var(--success)'" onmouseout="this.style.background='#fff'">↗ Share</button>
             </div>
         </header>
 
+        <!-- Metrics -->
         <section class="metrics-grid">
             <div class="m-card">
                 <p class="label-caps">Overall Attendance</p>
@@ -299,20 +377,24 @@
         </section>
 
         <div class="dashboard-main">
+            <!-- LEFT COLUMN -->
             <div>
-                <div class="glass-card">
+                <!-- Subject Analysis -->
+                <div class="glass-card" id="subjects-section">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2.5rem;">
                         <h2 style="font-size:2rem;">Subject Analysis</h2>
                         <button onclick="loadDashboard()" class="label-caps" style="background:none;border:none;cursor:pointer;color:var(--muted);text-decoration:underline;">Refresh</button>
                     </div>
                     <div id="subjects-list"><div class="empty-state">Loading subjects...</div></div>
                     <div class="add-form">
-                        <input class="add-inp" type="text" id="new-subject" placeholder="Add subject — DBMS, Networks...">
+                        <input class="add-inp" type="text" id="new-subject" placeholder="Add subject — DBMS, Networks..."
+                            onkeydown="if(event.key==='Enter') addSubject()">
                         <button class="add-btn" onclick="addSubject()">+ Add</button>
                     </div>
                 </div>
 
-                <div class="glass-card">
+                <!-- Today's Classes -->
+                <div class="glass-card" id="today-section">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
                         <h2 style="font-size:2rem;">Today's Classes</h2>
                         <button onclick="markAll()" class="label-caps" style="background:none;border:none;cursor:pointer;color:var(--muted);text-decoration:underline;">Mark All</button>
@@ -320,7 +402,8 @@
                     <div id="today-classes"><div class="empty-state">No subjects yet</div></div>
                 </div>
 
-                <div class="glass-card">
+                <!-- Alerts -->
+                <div class="glass-card" id="alerts-section">
                     <div style="margin-bottom:1.5rem;">
                         <h2 style="font-size:2rem;color:var(--danger);">Alerts</h2>
                     </div>
@@ -328,13 +411,18 @@
                 </div>
             </div>
 
+            <!-- RIGHT COLUMN -->
             <div>
+                <!-- AI Verdict -->
                 <div class="verdict-box">
                     <p class="label-caps" style="color:#000;">The AI Verdict</p>
                     <span id="verdict-score">—</span>
-                    <p id="verdict-text" style="font-size:0.78rem;color:#555;line-height:1.7;">Click "AI Verdict" to get your personalized analysis.</p>
+                    <p id="verdict-text" style="font-size:0.78rem;color:#555;line-height:1.7;">
+                        Click "AI Verdict" to get your personalized analysis.
+                    </p>
                 </div>
 
+                <!-- Streak -->
                 <div class="streak-box">
                     <div>
                         <div class="streak-num" id="streak-num">0</div>
@@ -342,15 +430,7 @@
                     </div>
                     <div style="flex:1;border-left:1px solid var(--border);padding-left:1.5rem;">
                         <p class="label-caps" style="margin-bottom:8px;">This Week</p>
-                        <div style="display:flex;gap:4px;">
-                            <div style="flex:1;height:16px;background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.2)"></div>
-                            <div style="flex:1;height:16px;background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.2)"></div>
-                            <div style="flex:1;height:16px;background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.2)"></div>
-                            <div style="flex:1;height:16px;background:rgba(255,170,0,0.2);border:1px solid rgba(255,170,0,0.3)"></div>
-                            <div style="flex:1;height:16px;background:var(--border)"></div>
-                            <div style="flex:1;height:16px;background:var(--border)"></div>
-                            <div style="flex:1;height:16px;background:var(--border)"></div>
-                        </div>
+                        <div id="week-bars" style="display:flex;gap:4px;"></div>
                         <div style="display:flex;gap:4px;margin-top:4px;">
                             <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">M</div>
                             <div style="flex:1;font-family:var(--font-tech);font-size:0.5rem;color:var(--muted);text-align:center;">T</div>
@@ -363,12 +443,13 @@
                     </div>
                 </div>
 
+                <!-- Profile -->
                 <div class="profile-box">
                     <div class="profile-top">
                         <div id="profile-av">D</div>
                         <div>
                             <div id="profile-n" style="font-size:0.9rem;font-weight:600;">—</div>
-                            <div class="label-caps" style="margin-top:3px;">ISE · 1st Year · Sem 2</div>
+                            <div class="label-caps" id="profile-meta" style="margin-top:3px;">—</div>
                         </div>
                     </div>
                     <div class="pstat-grid">
@@ -384,40 +465,96 @@
     </main>
 </div>
 
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<!-- ── CONFIRM MODAL ── -->
+<div id="confirm-modal">
+    <div class="confirm-box">
+        <h3 id="confirm-title">Are you sure?</h3>
+        <p id="confirm-msg">This action cannot be undone.</p>
+        <div class="confirm-btns">
+            <button id="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+            <button id="confirm-ok">Delete</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const API = 'https://attendease-backend-wrag.onrender.com';
 let currentUser = null, streak = 0;
+let confirmCallback = null;
+
+// ── INIT ──────────────────────────────────────────────
 
 function init() {
     const p = new URLSearchParams(window.location.search);
-    const uid = p.get('user_id') || localStorage.getItem('user_id');
-    const uname = p.get('name') || localStorage.getItem('user_name');
-    const uemail = p.get('email') || localStorage.getItem('user_email');
+    const uid   = p.get('user_id')  || localStorage.getItem('user_id');
+    const uname = p.get('name')     || localStorage.getItem('user_name');
+    const uemail= p.get('email')    || localStorage.getItem('user_email');
+
     if (uid) {
-        localStorage.setItem('user_id', uid);
-        localStorage.setItem('user_name', uname || '');
+        localStorage.setItem('user_id',    uid);
+        localStorage.setItem('user_name',  uname  || '');
         localStorage.setItem('user_email', uemail || '');
-        currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
-        updateStreak(); showApp();
+        currentUser = {
+            id:    uid,
+            name:  decodeURIComponent(uname  || 'Student'),
+            email: decodeURIComponent(uemail || '')
+        };
+        // Clean URL params without reload
+        if (p.get('user_id')) {
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+        updateStreak();
+        showApp();
     }
+    // else: stay on auth screen
 }
 
+// ── STREAK ───────────────────────────────────────────
+
 function updateStreak() {
-    const today = new Date().toDateString();
-    const last = localStorage.getItem('streak_date');
+    const today  = new Date().toDateString();
+    const last   = localStorage.getItem('streak_date');
     const stored = parseInt(localStorage.getItem('streak') || '0');
     if (last !== today) {
         streak = last === new Date(Date.now() - 86400000).toDateString() ? stored + 1 : 1;
         localStorage.setItem('streak', streak);
         localStorage.setItem('streak_date', today);
-    } else streak = stored;
+    } else {
+        streak = stored;
+    }
     document.getElementById('streak-num').textContent = streak;
-    document.getElementById('pc-streak').textContent = streak + ' 🔥';
+    document.getElementById('pc-streak').textContent  = streak + ' 🔥';
+    renderWeekBars();
 }
+
+function renderWeekBars() {
+    const wrap = document.getElementById('week-bars');
+    const today = new Date().getDay(); // 0=Sun
+    // Map Sun=0..Sat=6 to Mon=0..Sun=6
+    const todayIdx = today === 0 ? 6 : today - 1;
+    let html = '';
+    for (let i = 0; i < 7; i++) {
+        let style = '';
+        if (i < todayIdx) {
+            style = 'background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.2)';
+        } else if (i === todayIdx) {
+            style = 'background:rgba(0,255,136,0.4);border:1px solid rgba(0,255,136,0.5)';
+        } else {
+            style = 'background:var(--border);border:1px solid transparent';
+        }
+        html += `<div style="flex:1;height:16px;${style}"></div>`;
+    }
+    wrap.innerHTML = html;
+}
+
+// ── SHOW APP ─────────────────────────────────────────
 
 function showApp() {
     const auth = document.getElementById('auth-layer');
-    const app = document.getElementById('app-layer');
+    const app  = document.getElementById('app-layer');
     auth.classList.add('faded-out');
     setTimeout(() => {
         auth.classList.add('hidden');
@@ -425,53 +562,86 @@ function showApp() {
         setTimeout(() => { app.style.opacity = '1'; }, 50);
     }, 800);
 
-    const name = currentUser.name;
+    const name  = currentUser.name;
     const first = name.split(' ')[0];
-    const h = new Date().getHours();
+    const h     = new Date().getHours();
     const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const now = new Date();
+    const days  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const now   = new Date();
+
     document.getElementById('greeting').innerHTML = `${greet}, <em>${first}.</em>`;
     document.getElementById('date-sub').textContent = `${days[now.getDay()]} // ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-    document.getElementById('nav-av').textContent = first[0].toUpperCase();
+    document.getElementById('nav-av').textContent   = first[0].toUpperCase();
     document.getElementById('nav-name').textContent = first.toUpperCase();
     document.getElementById('profile-av').textContent = first[0].toUpperCase();
-    document.getElementById('profile-n').textContent = name;
+    document.getElementById('profile-n').textContent  = name;
+
+    // Load user profile meta from backend
+    loadUserProfile();
     loadDashboard();
 }
 
+async function loadUserProfile() {
+    try {
+        const res  = await fetch(`${API}/users/${currentUser.id}`);
+        const data = await res.json();
+        const user = data.user || data;
+        const college = user.college || 'College';
+        const year    = user.year    || '';
+        const sem     = user.semester ? `Sem ${user.semester}` : '';
+        const section = user.section ? `Sec ${user.section}` : '';
+        const parts   = [college, year, sem, section].filter(Boolean);
+        document.getElementById('profile-meta').textContent = parts.join(' · ');
+    } catch(e) {
+        document.getElementById('profile-meta').textContent = '—';
+    }
+}
+
+// ── DASHBOARD ────────────────────────────────────────
+
 async function loadDashboard() {
     try {
-        const res = await fetch(`${API}/dashboard/${currentUser.id}`);
+        const res  = await fetch(`${API}/dashboard/${currentUser.id}`);
         const data = await res.json();
-        const bunks = data.subjects.reduce((s, x) => s + x.can_bunk, 0);
-        document.getElementById('m-overall').textContent = data.overall_percentage + '%';
-        document.getElementById('m-bunks').textContent = bunks;
-        document.getElementById('m-danger').textContent = data.danger_count;
-        document.getElementById('m-total').textContent = data.total_subjects;
-        document.getElementById('pc-overall').textContent = data.overall_percentage + '%';
-        document.getElementById('pc-bunks').textContent = bunks;
-        document.getElementById('pc-danger').textContent = data.danger_count;
-        renderSubjects(data.subjects);
-        renderToday(data.subjects);
-        renderAlerts(data.subjects);
-    } catch(e) { console.error(e); }
+        const bunks = data.subjects.reduce((s, x) => s + (x.can_bunk || 0), 0);
+
+        document.getElementById('m-overall').textContent = (data.overall_percentage || 0) + '%';
+        document.getElementById('m-bunks').textContent   = bunks;
+        document.getElementById('m-danger').textContent  = data.danger_count || 0;
+        document.getElementById('m-total').textContent   = data.total_subjects || 0;
+        document.getElementById('pc-overall').textContent= (data.overall_percentage || 0) + '%';
+        document.getElementById('pc-bunks').textContent  = bunks;
+        document.getElementById('pc-danger').textContent = data.danger_count || 0;
+
+        renderSubjects(data.subjects || []);
+        renderToday(data.subjects    || []);
+        renderAlerts(data.subjects   || []);
+    } catch(e) {
+        console.error('Dashboard load failed:', e);
+        showToast('Could not load dashboard');
+    }
 }
+
+// ── RENDER SUBJECTS ───────────────────────────────────
 
 function renderSubjects(subjects) {
     const el = document.getElementById('subjects-list');
-    if (!subjects.length) { el.innerHTML = '<div class="empty-state">No subjects yet — add one below</div>'; return; }
+    if (!subjects.length) {
+        el.innerHTML = '<div class="empty-state">No subjects yet — add one below</div>';
+        return;
+    }
     el.innerHTML = subjects.map(s => {
-        const c = s.status === 'safe' ? 'var(--success)' : s.status === 'borderline' ? 'var(--warn)' : 'var(--danger)';
+        const c  = s.status === 'safe' ? 'var(--success)' : s.status === 'borderline' ? 'var(--warn)' : 'var(--danger)';
         const bc = s.status === 'safe' ? 'bs' : s.status === 'borderline' ? 'bw' : 'bd';
-        const bt = s.can_bunk > 0 ? `bunk ${s.can_bunk} more` : `need ${s.needs} more`;
-        return `<div class="sub-row">
+        const bt = s.can_bunk > 0 ? `can bunk ${s.can_bunk} more` : `need ${s.needs || 0} more`;
+        return `<div class="sub-row" id="sub-${s.id}">
             <div class="sub-top">
                 <span class="sub-name">${s.name}</span>
                 <div class="sub-right-col">
-                    <div class="sub-pct" style="color:${c}">${s.percentage}%</div>
-                    <div class="badge ${bc}">${s.status}</div>
+                    <span class="sub-pct" style="color:${c}">${s.percentage}%</span>
+                    <span class="badge ${bc}">${s.status}</span>
+                    <button class="del-btn" onclick="confirmDelete('${s.id}','${s.name}')" title="Delete subject">✕</button>
                 </div>
             </div>
             <div class="sub-meta">${s.attended} attended · ${s.total} held · ${bt}</div>
@@ -480,85 +650,204 @@ function renderSubjects(subjects) {
     }).join('');
 }
 
+// ── RENDER TODAY ──────────────────────────────────────
+
 function renderToday(subjects) {
     const el = document.getElementById('today-classes');
-    if (!subjects.length) { el.innerHTML = '<div class="empty-state">No subjects yet</div>'; return; }
+    if (!subjects.length) {
+        el.innerHTML = '<div class="empty-state">No subjects yet</div>';
+        return;
+    }
     const today = new Date().toISOString().split('T')[0];
-    el.innerHTML = subjects.map(s => `
-        <div class="cls-row" id="cr-${s.id}">
-            <div class="cls-time">Today</div>
+    el.innerHTML = subjects.map(s => {
+        const dotColor = s.status === 'safe' ? 'var(--success)' : s.status === 'borderline' ? 'var(--warn)' : 'var(--danger)';
+        const canSafeBunk = s.status === 'safe' && s.can_bunk > 0;
+        return `<div class="cls-row" id="cr-${s.id}">
+            <div class="cls-dot" style="background:${dotColor}"></div>
             <div class="cls-name">${s.name}</div>
-            ${s.status === 'safe' && s.can_bunk > 0
+            ${canSafeBunk
                 ? `<span class="bunk-tag">Safe Bunk</span>`
-                : `<button class="mark-btn" onclick="markAtt('${s.id}','${today}',this)">Mark</button>`}
-        </div>`).join('');
+                : `<button class="mark-btn" id="mb-${s.id}" onclick="markAtt('${s.id}','${today}',this)">Mark</button>`}
+        </div>`;
+    }).join('');
 }
 
+// ── RENDER ALERTS ─────────────────────────────────────
+
 function renderAlerts(subjects) {
-    const el = document.getElementById('alert-list');
+    const el  = document.getElementById('alert-list');
     const bad = subjects.filter(s => s.status !== 'safe');
-    if (!bad.length) { el.innerHTML = '<div class="empty-state">No alerts — you\'re good.</div>'; return; }
+    if (!bad.length) {
+        el.innerHTML = `<div class="empty-state">No alerts — you're good.</div>`;
+        return;
+    }
     el.innerHTML = bad.map(s => {
         const d = s.status === 'danger';
         return `<div class="alert-item">
             <div class="alert-dot" style="background:${d ? 'var(--danger)' : 'var(--warn)'}"></div>
             <div style="color:${d ? 'var(--danger)' : 'var(--warn)'}">
-                <strong>${s.name}</strong> at ${s.percentage}% — ${d ? `attend ${s.needs} more to recover` : `1 more bunk = danger`}
+                <strong>${s.name}</strong> — ${s.percentage}%
+                &nbsp;·&nbsp; ${d ? `attend ${s.needs || '?'} more to recover` : `1 more bunk = danger zone`}
             </div>
         </div>`;
     }).join('');
 }
 
+// ── MARK ATTENDANCE ───────────────────────────────────
+
 async function markAtt(sid, date, btn) {
     const done = btn.classList.contains('done');
+    btn.disabled = true;
+    btn.textContent = '...';
     try {
         await fetch(`${API}/attendance`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ subject_id: sid, date, status: done ? 'bunked' : 'attended' })
         });
         btn.classList.toggle('done');
         btn.textContent = done ? 'Mark' : '✓ Done';
         document.getElementById(`cr-${sid}`)?.classList.toggle('attended', !done);
+        btn.disabled = false;
         loadDashboard();
-    } catch(e) { console.error(e); }
+    } catch(e) {
+        console.error(e);
+        btn.textContent = 'Error';
+        btn.disabled = false;
+    }
 }
 
-function markAll() { document.querySelectorAll('.mark-btn:not(.done)').forEach(b => b.click()); }
+function markAll() {
+    document.querySelectorAll('.mark-btn:not(.done)').forEach(b => b.click());
+}
+
+// ── ADD SUBJECT ───────────────────────────────────────
 
 async function addSubject() {
-    const inp = document.getElementById('new-subject');
+    const inp  = document.getElementById('new-subject');
     const name = inp.value.trim();
     if (!name) return;
+    inp.disabled = true;
     try {
-        await fetch(`${API}/subjects`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+        const res = await fetch(`${API}/subjects`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: currentUser.id, name, color: '#00ff88' })
         });
-        inp.value = ''; loadDashboard();
+        if (res.ok) {
+            inp.value = '';
+            showToast('Subject added');
+            loadDashboard();
+        }
     } catch(e) { console.error(e); }
+    inp.disabled = false;
 }
 
+// ── DELETE SUBJECT ────────────────────────────────────
+
+function confirmDelete(subjectId, subjectName) {
+    document.getElementById('confirm-title').textContent = 'Delete Subject?';
+    document.getElementById('confirm-msg').textContent   = `"${subjectName}" and all its attendance records will be permanently deleted.`;
+    document.getElementById('confirm-ok').onclick = () => { closeConfirm(); deleteSubject(subjectId); };
+    document.getElementById('confirm-modal').classList.add('open');
+}
+
+function closeConfirm() {
+    document.getElementById('confirm-modal').classList.remove('open');
+}
+
+async function deleteSubject(subjectId) {
+    // Optimistically remove from UI
+    const row = document.getElementById(`sub-${subjectId}`);
+    if (row) row.style.opacity = '0.3';
+    try {
+        const res = await fetch(`${API}/subjects/${subjectId}`, { method: 'DELETE' });
+        if (res.ok) {
+            showToast('Subject deleted');
+            loadDashboard();
+        } else {
+            if (row) row.style.opacity = '1';
+            showToast('Delete failed — try again');
+        }
+    } catch(e) {
+        if (row) row.style.opacity = '1';
+        showToast('Delete failed — try again');
+    }
+}
+
+// ── AI VERDICT ────────────────────────────────────────
+
 async function loadVerdict() {
-    document.getElementById('verdict-text').textContent = 'Analyzing your situation...';
+    document.getElementById('verdict-text').textContent  = 'Analyzing your situation...';
     document.getElementById('verdict-score').textContent = '...';
     try {
         const res = await fetch(`${API}/ai/verdict/${currentUser.id}`);
-        const d = await res.json();
-        document.getElementById('verdict-score').textContent = d.overall_score + '/10';
-        document.getElementById('verdict-text').textContent = `"${d.overall_verdict} ${d.advice}"`;
+        const d   = await res.json();
+        document.getElementById('verdict-score').textContent = (d.overall_score || '?') + '/10';
+        document.getElementById('verdict-text').textContent  = (d.overall_verdict || '') + ' ' + (d.advice || '');
     } catch(e) {
-        document.getElementById('verdict-text').textContent = 'Add Anthropic credits to enable AI verdict.';
+        document.getElementById('verdict-text').textContent  = 'AI verdict failed — check backend logs.';
         document.getElementById('verdict-score').textContent = '—';
     }
 }
 
+// ── SHARE ─────────────────────────────────────────────
+
 function shareCard() {
-    const t = `NOBUNK REPORT\n\n${currentUser.name}\nOverall: ${document.getElementById('pc-overall').textContent}\nSafe Bunks: ${document.getElementById('pc-bunks').textContent}\nDanger: ${document.getElementById('pc-danger').textContent} subjects\nStreak: ${streak} days 🔥\n\nnobunk.vercel.app`;
-    navigator.clipboard.writeText(t).then(() => {
-        const btns = document.querySelectorAll('.share-btn, button');
-        alert('Copied to clipboard!');
-    });
+    const t = [
+        'NOBUNK REPORT',
+        '',
+        currentUser.name,
+        'Overall: '    + document.getElementById('pc-overall').textContent,
+        'Safe Bunks: ' + document.getElementById('pc-bunks').textContent,
+        'Danger: '     + document.getElementById('pc-danger').textContent + ' subjects',
+        'Streak: '     + streak + ' days 🔥',
+        '',
+        'nobunk.vercel.app'
+    ].join('\n');
+    navigator.clipboard.writeText(t).then(() => showToast('Copied to clipboard!'));
 }
+
+// ── SIGN OUT ──────────────────────────────────────────
+
+function signOut() {
+    localStorage.clear();
+    currentUser = null;
+    // Redirect to auth
+    window.location.href = '/';
+}
+
+// ── NAV SCROLL ────────────────────────────────────────
+
+function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── DROPDOWN ─────────────────────────────────────────
+
+function toggleDropdown() {
+    document.getElementById('user-dropdown').classList.toggle('open');
+}
+
+// Close dropdown if clicking outside
+document.addEventListener('click', e => {
+    const chip = document.querySelector('.user-chip');
+    if (chip && !chip.contains(e.target)) {
+        document.getElementById('user-dropdown').classList.remove('open');
+    }
+});
+
+// ── TOAST ─────────────────────────────────────────────
+
+function showToast(msg, duration = 2500) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── BOOT ─────────────────────────────────────────────
 
 init();
 </script>
