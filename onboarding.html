@@ -15,7 +15,6 @@
   --success: #00ff88;
   --warn: #ffaa00;
   --danger: #ff3366;
-  --purple: #7C5CF5;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +37,6 @@ body {
   padding: 0 1.25rem;
 }
 
-/* TOP BAR */
 .topbar {
   padding: 1.5rem 0 1rem;
   display: flex;
@@ -61,7 +59,6 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* PROGRESS BAR */
 .progress-track {
   height: 2px;
   background: rgba(255,255,255,0.06);
@@ -77,10 +74,8 @@ body {
   transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* SCREEN */
 .screen { display: none; flex: 1; flex-direction: column; }
 .screen.active { display: flex; }
-
 .screen-content { flex: 1; }
 
 .step-label {
@@ -109,7 +104,6 @@ body {
   margin-bottom: 2rem;
 }
 
-/* FORM FIELDS */
 .field { margin-bottom: 1rem; }
 
 .field label {
@@ -158,12 +152,38 @@ body {
 
 .upload-box:hover { border-color: var(--success); }
 .upload-box.uploaded { border-color: var(--success); border-style: solid; background: rgba(0,255,136,0.05); }
+.upload-box.error { border-color: var(--danger); background: rgba(255,51,102,0.05); }
 
 .upload-icon { font-size: 2rem; margin-bottom: 0.75rem; }
 .upload-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
 .upload-sub { font-size: 0.78rem; color: var(--muted); }
 
 input[type="file"] { display: none; }
+
+/* SCREENSHOT SLOTS */
+.ss-slots { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
+
+.ss-slot {
+  border: 1.5px dashed rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 1.25rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--card);
+}
+
+.ss-slot:hover { border-color: var(--success); }
+.ss-slot.uploaded { border-color: var(--success); border-style: solid; background: rgba(0,255,136,0.05); }
+
+.ss-slot-icon { font-size: 1.5rem; flex-shrink: 0; }
+.ss-slot-text { flex: 1; }
+.ss-slot-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 2px; }
+.ss-slot-sub { font-size: 0.72rem; color: var(--muted); }
+.ss-slot-check { font-size: 1.2rem; color: var(--success); display: none; }
+.ss-slot.uploaded .ss-slot-check { display: block; }
 
 /* SECTION PICKER */
 .section-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
@@ -228,7 +248,13 @@ input[type="file"] { display: none; }
   margin: 3px;
 }
 
-/* ATTENDANCE IMPORT */
+.lab-chip {
+  background: rgba(255,170,0,0.08);
+  border-color: rgba(255,170,0,0.2);
+  color: var(--warn);
+}
+
+/* IMPORT OPTIONS */
 .import-option {
   padding: 1rem;
   border-radius: 12px;
@@ -244,12 +270,7 @@ input[type="file"] { display: none; }
 .import-option-sub { font-size: 0.75rem; color: var(--muted); }
 
 /* LOADING */
-.loading-state {
-  text-align: center;
-  padding: 2rem;
-  display: none;
-}
-
+.loading-state { text-align: center; padding: 2rem; display: none; }
 .loading-state.visible { display: block; }
 
 .spinner {
@@ -262,8 +283,29 @@ input[type="file"] { display: none; }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
-
 .loading-text { font-size: 0.85rem; color: var(--muted); }
+
+/* RESULT BOX */
+.result-box {
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+}
+
+.result-box.success { background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.2); color: var(--success); }
+.result-box.error   { background: rgba(255,51,102,0.06); border: 1px solid rgba(255,51,102,0.2); color: var(--danger); }
+
+/* SUBJECTS TABLE IN RESULT */
+.imported-list { margin-top: 10px; }
+.imported-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.78rem;
+}
+.imported-item:last-child { border-bottom: none; }
+.imported-name { font-weight: 500; }
+.imported-pct { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.75rem; }
 
 /* BUTTONS */
 .btn-row { padding: 1rem 0 2rem; }
@@ -303,7 +345,7 @@ input[type="file"] { display: none; }
 
 .btn-skip:hover { color: var(--text); }
 
-/* SUCCESS */
+/* SUCCESS SCREEN */
 .success-icon { font-size: 3rem; margin-bottom: 1rem; }
 
 .summary-card {
@@ -378,14 +420,8 @@ input[type="file"] { display: none; }
           <label>Semester</label>
           <select id="semester">
             <option value="">Select</option>
-            <option>Sem 1</option>
-            <option>Sem 2</option>
-            <option>Sem 3</option>
-            <option>Sem 4</option>
-            <option>Sem 5</option>
-            <option>Sem 6</option>
-            <option>Sem 7</option>
-            <option>Sem 8</option>
+            <option>Sem 1</option><option>Sem 2</option><option>Sem 3</option><option>Sem 4</option>
+            <option>Sem 5</option><option>Sem 6</option><option>Sem 7</option><option>Sem 8</option>
           </select>
         </div>
       </div>
@@ -404,11 +440,11 @@ input[type="file"] { display: none; }
     <div class="screen-content">
       <div class="step-label">Timetable</div>
       <div class="screen-title">Upload your timetable</div>
-      <div class="screen-sub">Upload the timetable PDF from your college. AI will extract your subjects and schedule automatically.</div>
+      <div class="screen-sub">Upload your section's timetable — PDF or image. AI will extract your subjects automatically.</div>
       <div class="upload-box" id="tt-box" onclick="document.getElementById('tt-file').click()">
         <div class="upload-icon">📄</div>
-        <div class="upload-title">Tap to upload timetable PDF</div>
-        <div class="upload-sub">AI reads it and extracts your subjects</div>
+        <div class="upload-title">Tap to upload timetable</div>
+        <div class="upload-sub">PDF or image — AI reads your subjects</div>
       </div>
       <input type="file" id="tt-file" accept=".pdf,image/*" onchange="uploadTimetable(this)">
       <div class="loading-state" id="tt-loading">
@@ -448,7 +484,7 @@ input[type="file"] { display: none; }
         <div class="spinner"></div>
         <div class="loading-text">Detecting holidays...</div>
       </div>
-      <div id="coe-result" style="display:none;"></div>
+      <div id="coe-result"></div>
     </div>
     <div class="btn-row">
       <button class="btn-next" onclick="goTo(4)">Continue →</button>
@@ -462,32 +498,67 @@ input[type="file"] { display: none; }
       <div class="step-label">Past Attendance</div>
       <div class="screen-title">Import your attendance</div>
       <div class="screen-sub">Semester already started? Import your current attendance so NoBunk knows where you stand.</div>
-      <div class="import-option" onclick="showScreenshot()">
-        <div class="import-option-title">📸 Upload screenshot from college app</div>
-        <div class="import-option-sub">AI reads your attendance automatically — fastest option</div>
-      </div>
-      <div class="import-option" onclick="showManual()">
-        <div class="import-option-title">✏️ Enter manually</div>
-        <div class="import-option-sub">Type in classes attended and total for each subject</div>
-      </div>
-      <div id="screenshot-section" style="display:none;margin-top:1rem;">
-        <div class="upload-box" id="ss-box" onclick="document.getElementById('ss-file').click()">
-          <div class="upload-icon">📱</div>
-          <div class="upload-title">Tap to upload attendance screenshot</div>
-          <div class="upload-sub">From your college app or portal</div>
+
+      <!-- Import method chooser -->
+      <div id="import-chooser">
+        <div class="import-option" onclick="showScreenshot()">
+          <div class="import-option-title">📸 Upload screenshots from college app</div>
+          <div class="import-option-sub">Upload 1 or 2 screenshots — AI reads everything automatically</div>
         </div>
-        <input type="file" id="ss-file" accept="image/*" onchange="uploadScreenshot(this)">
+        <div class="import-option" onclick="showManual()">
+          <div class="import-option-title">✏️ Enter manually</div>
+          <div class="import-option-sub">Type in classes attended and total for each subject</div>
+        </div>
+      </div>
+
+      <!-- SCREENSHOT SECTION -->
+      <div id="screenshot-section" style="display:none;margin-top:1rem;">
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">
+          Your college portal may split theory and labs across pages. Upload both screenshots — we'll merge them automatically.
+        </p>
+
+        <!-- Slot 1 -->
+        <div class="ss-slot" id="ss-slot-1" onclick="document.getElementById('ss-file-1').click()">
+          <div class="ss-slot-icon">📱</div>
+          <div class="ss-slot-text">
+            <div class="ss-slot-title">Screenshot 1</div>
+            <div class="ss-slot-sub" id="ss-sub-1">Theory subjects (scroll to top)</div>
+          </div>
+          <div class="ss-slot-check">✓</div>
+        </div>
+        <input type="file" id="ss-file-1" accept="image/*" onchange="slotFileChosen(1, this)">
+
+        <!-- Slot 2 -->
+        <div class="ss-slot" id="ss-slot-2" onclick="document.getElementById('ss-file-2').click()">
+          <div class="ss-slot-icon">📱</div>
+          <div class="ss-slot-text">
+            <div class="ss-slot-title">Screenshot 2 <span style="color:var(--muted);font-weight:400;">(optional)</span></div>
+            <div class="ss-slot-sub" id="ss-sub-2">Labs / next page — if you have one</div>
+          </div>
+          <div class="ss-slot-check">✓</div>
+        </div>
+        <input type="file" id="ss-file-2" accept="image/*" onchange="slotFileChosen(2, this)">
+
+        <!-- Upload button -->
+        <button class="btn-next" id="ss-upload-btn" onclick="uploadScreenshots()" disabled style="margin-top:1rem;">
+          Import Attendance →
+        </button>
+
         <div class="loading-state" id="ss-loading">
           <div class="spinner"></div>
-          <div class="loading-text">AI is reading your attendance...</div>
+          <div class="loading-text" id="ss-loading-text">AI is reading your screenshots...</div>
         </div>
-        <div id="ss-result" style="display:none;"></div>
+
+        <div id="ss-result"></div>
       </div>
+
+      <!-- MANUAL SECTION -->
       <div id="manual-section" style="display:none;margin-top:1rem;">
         <div id="manual-subjects-list"></div>
         <button class="btn-next" onclick="saveManualAttendance()" style="margin-top:0.5rem;">Save Attendance →</button>
       </div>
     </div>
+
     <div class="btn-row" id="s4-btn-row">
       <button class="btn-skip" onclick="goTo(5)">Skip — I'll track from today</button>
     </div>
@@ -516,16 +587,29 @@ let timetableData = null;
 let selectedSection = null;
 let currentStep = 1;
 
+// Files chosen for screenshot slots
+const ssFiles = { 1: null, 2: null };
+
 function init() {
   const p = new URLSearchParams(window.location.search);
-  const uid = p.get('user_id');
-  const uname = p.get('name');
+  const uid    = p.get('user_id');
+  const uname  = p.get('name');
   const uemail = p.get('email');
   if (uid) {
     currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
-    localStorage.setItem('user_id', uid);
-    localStorage.setItem('user_name', uname || '');
+    localStorage.setItem('user_id',    uid);
+    localStorage.setItem('user_name',  uname  || '');
     localStorage.setItem('user_email', uemail || '');
+  } else {
+    // Try localStorage fallback
+    const storedId = localStorage.getItem('user_id');
+    if (storedId) {
+      currentUser = {
+        id:    storedId,
+        name:  decodeURIComponent(localStorage.getItem('user_name') || 'Student'),
+        email: localStorage.getItem('user_email') || ''
+      };
+    }
   }
 }
 
@@ -535,23 +619,28 @@ function goTo(step) {
   document.getElementById(`s${step}`).classList.add('active');
   document.getElementById('step-counter').textContent = `Step ${step} of 5`;
   document.getElementById('progress-fill').style.width = `${step * 20}%`;
+  window.scrollTo(0, 0);
   if (step === 5) buildSummary();
 }
 
+// ── STEP 1 ────────────────────────────────────────────
+
 async function saveProfile() {
   const college = document.getElementById('college').value.trim();
-  const year = document.getElementById('year').value;
-  const semester = document.getElementById('semester').value;
-  const minAtt = parseInt(document.getElementById('min-attendance').value) || 75;
+  const year    = document.getElementById('year').value;
+  const semester= document.getElementById('semester').value;
+  const minAtt  = parseInt(document.getElementById('min-attendance').value) || 75;
   if (!college || !year || !semester) { alert('Please fill in all fields'); return; }
   try {
     await fetch(`${API}/onboarding/profile`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: currentUser.id, college, year, semester, section: '', min_attendance: minAtt })
     });
-    goTo(2);
-  } catch(e) { console.error(e); goTo(2); }
+  } catch(e) { console.error(e); }
+  goTo(2);
 }
+
+// ── STEP 2: TIMETABLE ────────────────────────────────
 
 async function uploadTimetable(input) {
   const file = input.files[0];
@@ -559,7 +648,7 @@ async function uploadTimetable(input) {
   const box = document.getElementById('tt-box');
   box.classList.add('uploaded');
   box.querySelector('.upload-title').textContent = file.name;
-  box.querySelector('.upload-sub').textContent = 'AI is reading...';
+  box.querySelector('.upload-sub').textContent = 'Reading...';
   document.getElementById('tt-loading').classList.add('visible');
 
   const formData = new FormData();
@@ -572,19 +661,22 @@ async function uploadTimetable(input) {
     document.getElementById('tt-loading').classList.remove('visible');
     if (timetableData.error) {
       box.querySelector('.upload-sub').textContent = 'Could not read. Try another file or skip.';
+      box.classList.remove('uploaded');
+      box.classList.add('error');
       return;
     }
+    box.querySelector('.upload-sub').textContent = '✓ Subjects extracted';
     renderSections(timetableData);
   } catch(e) {
     document.getElementById('tt-loading').classList.remove('visible');
-    box.querySelector('.upload-sub').textContent = 'Error reading file. Try skip.';
+    box.querySelector('.upload-sub').textContent = 'Error — try again or skip.';
   }
 }
 
 function renderSections(data) {
   const sections = data.sections || ['DEFAULT'];
-  const picker = document.getElementById('section-picker');
-  const list = document.getElementById('section-list');
+  const picker   = document.getElementById('section-picker');
+  const list     = document.getElementById('section-list');
   picker.style.display = 'block';
   list.innerHTML = sections.map(s => `
     <div class="section-option" onclick="selectSection('${s}')" id="sec-${s}">
@@ -612,17 +704,18 @@ function selectSection(section) {
 async function saveTimetable() {
   if (!selectedSection || !timetableData) return;
   const subjects = timetableData.subjects_by_section?.[selectedSection] || [];
-  const schedule = timetableData.schedule_by_section?.[selectedSection] || {};
   try {
     await fetch(`${API}/onboarding/save-timetable`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: currentUser.id, section: selectedSection, subjects, schedule })
+      body: JSON.stringify({ user_id: currentUser.id, section: selectedSection, subjects, schedule: {} })
     });
-    goTo(3);
-  } catch(e) { goTo(3); }
+  } catch(e) { console.error(e); }
+  goTo(3);
 }
 
 function skipTimetable() { goTo(3); }
+
+// ── STEP 3: COE ──────────────────────────────────────
 
 async function uploadCOE(input) {
   const file = input.files[0];
@@ -634,83 +727,142 @@ async function uploadCOE(input) {
   const formData = new FormData();
   formData.append('file', file);
   try {
-    const res = await fetch(`${API}/onboarding/coe/${currentUser.id}`, {
-      method: 'POST', body: formData
-    });
+    const res  = await fetch(`${API}/onboarding/coe/${currentUser.id}`, { method: 'POST', body: formData });
     const data = await res.json();
     document.getElementById('coe-loading').classList.remove('visible');
+    const result = document.getElementById('coe-result');
     if (data.holidays_added > 0) {
-      const result = document.getElementById('coe-result');
-      result.style.display = 'block';
-      result.innerHTML = `<div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:12px 14px;font-size:0.82rem;color:var(--success);">✓ Detected ${data.holidays_added} holidays from your COE</div>`;
+      result.innerHTML = `<div class="result-box success">✓ Detected ${data.holidays_added} holidays from your COE</div>`;
+    } else {
+      result.innerHTML = `<div class="result-box error">No holidays found — you can skip this</div>`;
     }
   } catch(e) {
     document.getElementById('coe-loading').classList.remove('visible');
   }
 }
 
+// ── STEP 4: SCREENSHOT ───────────────────────────────
+
 function showScreenshot() {
+  document.getElementById('import-chooser').style.display = 'none';
   document.getElementById('screenshot-section').style.display = 'block';
   document.getElementById('manual-section').style.display = 'none';
   document.getElementById('s4-btn-row').style.display = 'none';
 }
 
+function slotFileChosen(slot, input) {
+  const file = input.files[0];
+  if (!file) return;
+  ssFiles[slot] = file;
+
+  const slotEl = document.getElementById(`ss-slot-${slot}`);
+  const subEl  = document.getElementById(`ss-sub-${slot}`);
+  slotEl.classList.add('uploaded');
+  subEl.textContent = file.name;
+
+  // Enable upload button as soon as slot 1 has a file
+  if (ssFiles[1]) {
+    document.getElementById('ss-upload-btn').disabled = false;
+  }
+}
+
+async function uploadScreenshots() {
+  if (!ssFiles[1]) return;
+
+  const btn = document.getElementById('ss-upload-btn');
+  btn.disabled = true;
+
+  const loading    = document.getElementById('ss-loading');
+  const loadingTxt = document.getElementById('ss-loading-text');
+  const result     = document.getElementById('ss-result');
+
+  loading.classList.add('visible');
+  result.innerHTML = '';
+
+  const hasTwo = !!ssFiles[2];
+  loadingTxt.textContent = hasTwo
+    ? 'AI is reading both screenshots...'
+    : 'AI is reading your screenshot...';
+
+  const formData = new FormData();
+  formData.append('files', ssFiles[1]);
+  if (ssFiles[2]) formData.append('files', ssFiles[2]);
+
+  try {
+    const res  = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {
+      method: 'POST', body: formData
+    });
+    const data = await res.json();
+    loading.classList.remove('visible');
+
+    if (data.error) {
+      result.innerHTML = `<div class="result-box error">❌ ${data.error}</div>`;
+      btn.disabled = false;
+      return;
+    }
+
+    // Build result UI
+    const subjects = data.subjects || [];
+    let html = `<div class="result-box success">✓ ${data.message}</div>`;
+
+    if (subjects.length > 0) {
+      html += `<div class="imported-list">`;
+      subjects.forEach(s => {
+        const pct = s.total > 0 ? Math.round((s.attended / s.total) * 100) : 0;
+        const isLab = s.name.endsWith(' Lab');
+        const color = pct >= 75 ? 'var(--success)' : pct >= 65 ? 'var(--warn)' : 'var(--danger)';
+        html += `<div class="imported-item">
+          <span class="imported-name">${s.name}${isLab ? ' <span style="font-size:0.65rem;color:var(--warn);">LAB</span>' : ''}</span>
+          <span class="imported-pct" style="color:${color}">${s.attended}/${s.total} · ${pct}%</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    result.innerHTML = html;
+    setTimeout(() => goTo(5), 2500);
+
+  } catch(e) {
+    loading.classList.remove('visible');
+    result.innerHTML = `<div class="result-box error">Something went wrong — try again or skip</div>`;
+    btn.disabled = false;
+  }
+}
+
+// ── STEP 4: MANUAL ───────────────────────────────────
+
 async function showManual() {
+  document.getElementById('import-chooser').style.display = 'none';
   document.getElementById('manual-section').style.display = 'block';
   document.getElementById('screenshot-section').style.display = 'none';
   document.getElementById('s4-btn-row').style.display = 'none';
+
   try {
-    const res = await fetch(`${API}/subjects/${currentUser.id}`);
+    const res  = await fetch(`${API}/subjects/${currentUser.id}`);
     const data = await res.json();
     const list = document.getElementById('manual-subjects-list');
     if (!data.subjects || data.subjects.length === 0) {
-      list.innerHTML = '<div style="color:var(--muted);font-size:0.82rem;">No subjects found. Add subjects first from the timetable step.</div>';
+      list.innerHTML = '<div style="color:var(--muted);font-size:0.82rem;padding:1rem 0;">No subjects found. Add subjects in the timetable step first.</div>';
       return;
     }
     list.innerHTML = data.subjects.map(s => `
       <div class="manual-subject">
         <div class="manual-subject-name">${s.name}</div>
         <div class="manual-fields">
-          <div><label>Classes Held</label><input type="number" id="total-${s.id}" placeholder="e.g. 40"></div>
-          <div><label>Attended</label><input type="number" id="att-${s.id}" placeholder="e.g. 32"></div>
+          <div><label>Classes Held</label><input type="number" id="total-${s.id}" placeholder="e.g. 40" min="0"></div>
+          <div><label>Attended</label><input type="number" id="att-${s.id}" placeholder="e.g. 32" min="0"></div>
         </div>
       </div>`).join('');
   } catch(e) { console.error(e); }
 }
 
-async function uploadScreenshot(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const box = document.getElementById('ss-box');
-  box.classList.add('uploaded');
-  box.querySelector('.upload-title').textContent = 'Screenshot uploaded';
-  document.getElementById('ss-loading').classList.add('visible');
-  const formData = new FormData();
-  formData.append('file', file);
-  try {
-    const res = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {
-      method: 'POST', body: formData
-    });
-    const data = await res.json();
-    document.getElementById('ss-loading').classList.remove('visible');
-    const result = document.getElementById('ss-result');
-    result.style.display = 'block';
-    if (data.message) {
-      result.innerHTML = `<div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:12px 14px;font-size:0.82rem;color:var(--success);">✓ ${data.message}</div>`;
-      setTimeout(() => goTo(5), 1500);
-    }
-  } catch(e) {
-    document.getElementById('ss-loading').classList.remove('visible');
-  }
-}
-
 async function saveManualAttendance() {
   try {
-    const res = await fetch(`${API}/subjects/${currentUser.id}`);
+    const res  = await fetch(`${API}/subjects/${currentUser.id}`);
     const data = await res.json();
     for (const s of data.subjects || []) {
-      const total = parseInt(document.getElementById(`total-${s.id}`)?.value) || 0;
-      const attended = parseInt(document.getElementById(`att-${s.id}`)?.value) || 0;
+      const total    = parseInt(document.getElementById(`total-${s.id}`)?.value) || 0;
+      const attended = parseInt(document.getElementById(`att-${s.id}`)?.value)   || 0;
       if (total > 0) {
         for (let i = 0; i < attended; i++) {
           await fetch(`${API}/attendance`, {
@@ -718,7 +870,8 @@ async function saveManualAttendance() {
             body: JSON.stringify({ subject_id: s.id, date: `2026-01-${String(i+1).padStart(2,'0')}`, status: 'attended' })
           });
         }
-        for (let i = 0; i < (total - attended); i++) {
+        const bunked = total - attended;
+        for (let i = 0; i < bunked; i++) {
           await fetch(`${API}/attendance`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ subject_id: s.id, date: `2026-02-${String(i+1).padStart(2,'0')}`, status: 'bunked' })
@@ -730,13 +883,15 @@ async function saveManualAttendance() {
   } catch(e) { goTo(5); }
 }
 
+// ── STEP 5: SUMMARY ──────────────────────────────────
+
 function buildSummary() {
   const college = document.getElementById('college').value || '—';
-  const year = document.getElementById('year').value || '—';
-  const semester = document.getElementById('semester').value || '—';
-  const minAtt = document.getElementById('min-attendance').value || '75';
+  const year    = document.getElementById('year').value    || '—';
+  const semester= document.getElementById('semester').value|| '—';
+  const minAtt  = document.getElementById('min-attendance').value || '75';
   document.getElementById('summary-card').innerHTML = `
-    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${currentUser.name}</span></div>
+    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${currentUser?.name || '—'}</span></div>
     <div class="summary-row"><span class="summary-label">College</span><span class="summary-val">${college}</span></div>
     <div class="summary-row"><span class="summary-label">Year & Sem</span><span class="summary-val">${year} · ${semester}</span></div>
     <div class="summary-row"><span class="summary-label">Min Attendance</span><span class="summary-val">${minAtt}%</span></div>
@@ -745,7 +900,11 @@ function buildSummary() {
 }
 
 function goToDashboard() {
-  window.location.href = `index.html?user_id=${currentUser.id}&name=${encodeURIComponent(currentUser.name)}&email=${currentUser.email}`;
+  if (currentUser) {
+    window.location.href = `index.html?user_id=${currentUser.id}&name=${encodeURIComponent(currentUser.name)}&email=${encodeURIComponent(currentUser.email || '')}`;
+  } else {
+    window.location.href = 'index.html';
+  }
 }
 
 init();
