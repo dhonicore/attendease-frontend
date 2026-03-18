@@ -7,34 +7,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0a;
-            --card: #111111;
-            --border: #1e1e1e;
-            --border2: #2a2a2a;
-            --text: #ededed;
+            --bg: #050505;
+            --card: #0c0c0c;
+            --card2: #111111;
+            --border: #1a1a1a;
+            --border2: #242424;
+            --text: #f2f2f2;
             --dim: #666666;
-            --dim2: #444444;
-            --safe: #00ff88;
-            --danger: #ff3333;
-            --warn: #facc15;
+            --dim2: #333333;
+            --safe: #00ffa3;
+            --danger: #ff4d4d;
+            --warn: #ffcc00;
             --mono: 'JetBrains Mono', monospace;
             --sans: 'Space Grotesk', sans-serif;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 
-        /* ─────────────────────────────────────────────
+        /* ═══════════════════════════════════════
            CINEMATIC OVERLAY
-        ───────────────────────────────────────────── */
+        ═══════════════════════════════════════ */
         #cinematic {
             position: fixed; inset: 0; background: #000;
             z-index: 9999; display: none;
             flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem;
         }
         #cinematic.active { display: flex; }
-        .cin-logo { font-family: var(--mono); font-size: clamp(2.5rem,10vw,5rem); font-weight: 600; letter-spacing: -0.02em; opacity: 0; animation: cinUp 0.5s 0.15s forwards; }
+        .cin-logo { font-family: var(--mono); font-size: clamp(2.5rem,10vw,5rem); font-weight: 600; opacity: 0; animation: cinUp 0.5s 0.15s forwards; }
         @keyframes cinUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
         .cin-status { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim); opacity: 0; animation: cinFade 0.4s 0.6s forwards; }
         @keyframes cinFade { from{opacity:0} to{opacity:1} }
@@ -48,257 +49,230 @@
         .cin-dot:nth-child(3) { animation: cinPulse 0.9s 1.5s infinite; }
         @keyframes cinPulse { 0%,100%{background:var(--dim2);transform:scale(1)} 50%{background:var(--safe);transform:scale(1.5)} }
 
-        /* ─────────────────────────────────────────────
+        /* ═══════════════════════════════════════
            AUTH SCREEN
-        ───────────────────────────────────────────── */
+        ═══════════════════════════════════════ */
         #auth-layer {
             position: fixed; inset: 0;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: var(--bg); z-index: 100;
             transition: opacity 0.6s, filter 0.6s;
         }
-        .auth-logo { font-family: var(--mono); font-size: clamp(3rem,15vw,7rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .auth-logo { font-family: var(--mono); font-size: clamp(3.5rem,15vw,8rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
         .auth-tag { font-family: var(--mono); font-size: 0.68rem; color: var(--dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 3rem; }
-        .auth-btn { display: inline-flex; align-items: center; gap: 10px; background: #fff; color: #000; padding: 14px 28px; font-family: var(--sans); font-size: 0.82rem; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.2s; }
-        .auth-btn:hover { background: var(--safe); }
+        .auth-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: #fff; color: #000;
+            padding: 14px 32px; border-radius: 12px;
+            font-family: var(--sans); font-size: 0.85rem; font-weight: 600;
+            text-decoration: none; transition: all 0.2s;
+            box-shadow: 0 8px 32px rgba(255,255,255,0.08);
+        }
+        .auth-btn:hover { background: var(--safe); transform: translateY(-1px); box-shadow: 0 12px 40px rgba(0,255,163,0.2); }
         .auth-ticker { position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid var(--border); padding: 10px 0; overflow: hidden; white-space: nowrap; }
         .auth-ticker-track { display: inline-flex; gap: 4rem; animation: ticker 25s linear infinite; }
         .auth-ticker-item { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim2); }
         @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-        /* ─────────────────────────────────────────────
+        /* ═══════════════════════════════════════
            APP LAYER
-        ───────────────────────────────────────────── */
+        ═══════════════════════════════════════ */
         #app-layer { opacity: 0; transition: opacity 0.6s; }
         #app-layer.visible { opacity: 1; }
 
-        /* ─────────────────────────────────────────────
+        /* ═══════════════════════════════════════
            DESKTOP NAV
-        ───────────────────────────────────────────── */
+        ═══════════════════════════════════════ */
         .d-nav {
             position: sticky; top: 0; z-index: 50;
-            height: 52px; padding: 0 2.5rem;
+            height: 56px; padding: 0 2.5rem;
             display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid var(--border);
-            background: rgba(10,10,10,0.94); backdrop-filter: blur(16px);
+            background: rgba(5,5,5,0.95); backdrop-filter: blur(20px);
         }
-
-        .d-nav-logo { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
-
+        .d-nav-logo { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; }
         .d-nav-links { display: flex; gap: 0; }
         .d-nav-link { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); padding: 0 1.2rem; cursor: pointer; border-left: 1px solid var(--border); transition: color 0.15s; }
         .d-nav-link:hover { color: var(--text); }
-
-        .d-nav-right { display: flex; align-items: center; gap: 0; }
-
-        .user-pill { display: flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border: 1px solid var(--border); cursor: pointer; position: relative; transition: border-color 0.2s; }
-        .user-pill:hover { border-color: var(--border2); }
-        #nav-av { width: 22px; height: 22px; background: var(--safe); display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 0.6rem; font-weight: 700; color: #000; flex-shrink: 0; }
-        #nav-name { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; color: var(--dim); }
-
-        .dropdown { position: absolute; top: calc(100% + 4px); right: 0; background: #161616; border: 1px solid var(--border2); min-width: 140px; display: none; z-index: 100; }
+        .user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border: 1px solid var(--border2); border-radius: 100px; cursor: pointer; position: relative; transition: border-color 0.2s; }
+        .user-pill:hover { border-color: #333; }
+        #nav-av { width: 24px; height: 24px; background: var(--safe); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 0.62rem; font-weight: 700; color: #000; flex-shrink: 0; }
+        #nav-name { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--dim); }
+        .dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: #111; border: 1px solid var(--border2); border-radius: 12px; min-width: 160px; display: none; z-index: 100; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
         .dropdown.open { display: block; }
-        .dd-item { padding: 10px 14px; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); cursor: pointer; border-bottom: 1px solid var(--border); transition: color 0.15s; }
+        .dd-item { padding: 12px 16px; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); cursor: pointer; border-bottom: 1px solid var(--border); transition: all 0.15s; }
         .dd-item:last-child { border-bottom: none; }
-        .dd-item:hover { color: var(--text); }
+        .dd-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
         .dd-item.red:hover { color: var(--danger); }
 
-        /* ─────────────────────────────────────────────
-           DESKTOP TWO-COLUMN LAYOUT
-        ───────────────────────────────────────────── */
-        .d-layout {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            min-height: calc(100vh - 52px);
-        }
+        /* ═══════════════════════════════════════
+           LAYOUTS
+        ═══════════════════════════════════════ */
+        .d-layout { display: grid; grid-template-columns: 1fr 340px; min-height: calc(100vh - 56px); }
+        .d-main { border-right: 1px solid var(--border); padding: 2.5rem 2.5rem; min-width: 0; }
+        .d-side { padding: 2rem 1.75rem; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; display: flex; flex-direction: column; gap: 1.25rem; }
+        .m-layout { padding: 24px 20px; max-width: 480px; margin: 0 auto; }
 
-        .d-main {
-            border-right: 1px solid var(--border);
-            padding: 2rem 2.5rem;
-            min-width: 0;
-        }
-
-        .d-side {
-            padding: 2rem 1.5rem;
-            position: sticky; top: 52px;
-            height: calc(100vh - 52px);
-            overflow-y: auto;
-            display: flex; flex-direction: column; gap: 1.5rem;
-        }
-
-        /* ─────────────────────────────────────────────
-           MOBILE LAYOUT
-        ───────────────────────────────────────────── */
-        .m-layout { padding: 20px; max-width: 520px; margin: 0 auto; }
-
-        /* ─────────────────────────────────────────────
-           SHOW/HIDE BASED ON SCREEN
-        ───────────────────────────────────────────── */
         @media (min-width: 900px) {
             .d-nav { display: flex; }
             .d-layout { display: grid; }
             .m-layout { display: none; }
         }
-
         @media (max-width: 899px) {
             .d-nav { display: none; }
             .d-layout { display: none; }
             .m-layout { display: block; }
         }
 
-        /* ─────────────────────────────────────────────
-           SHARED COMPONENTS (used in both layouts)
-        ───────────────────────────────────────────── */
+        /* ═══════════════════════════════════════
+           SHARED COMPONENTS
+        ═══════════════════════════════════════ */
 
         /* Header */
-        .c-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-top: 0.5rem; }
-        .c-header-left p { font-family: var(--mono); font-size: 0.78rem; color: var(--dim); margin-bottom: 4px; }
-        .c-header-left h1 { font-size: 1.4rem; font-weight: 600; line-height: 1.2; }
+        .c-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+        .c-header-left p { color: var(--dim); font-size: 0.9rem; margin-bottom: 2px; text-transform: lowercase; }
+        .c-header-left h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.3px; }
         .c-header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-        .streak-pill { font-family: var(--mono); font-size: 0.65rem; color: var(--dim); border: 1px solid var(--border2); padding: 4px 10px; border-radius: 3px; }
+        .streak-pill { font-family: var(--mono); background: var(--card); border: 1px solid var(--border2); padding: 6px 14px; border-radius: 100px; font-size: 0.72rem; display: flex; align-items: center; gap: 6px; color: var(--dim); }
         .streak-pill span { color: var(--safe); font-weight: 600; }
 
-        /* Mobile user button */
-        .m-user-btn { background: var(--card); border: 1px solid var(--border2); color: var(--dim); font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; padding: 5px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.15s; position: relative; }
-        .m-user-btn:hover { border-color: var(--border2); color: var(--text); }
-        #m-user-av { width: 20px; height: 20px; background: var(--safe); color: #000; font-family: var(--sans); font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        /* Mobile user btn */
+        .m-user-btn { background: var(--card); border: 1px solid var(--border2); color: var(--dim); font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; padding: 6px 14px 6px 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; border-radius: 100px; position: relative; transition: border-color 0.15s; }
+        .m-user-btn:hover { border-color: #333; color: var(--text); }
+        #m-user-av { width: 22px; height: 22px; background: var(--safe); border-radius: 50%; color: #000; font-family: var(--sans); font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
-        /* Stats row */
-        .c-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 1.5rem; }
-        .c-stat { background: var(--card); padding: 14px 16px; }
-        .c-stat-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
-        .c-stat-val { font-family: var(--mono); font-size: 1.4rem; font-weight: 600; line-height: 1; }
+        /* Stats grid — 2x2 */
+        .c-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.75rem; }
+        .c-stat-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 16px; }
+        .c-stat-label { font-size: 0.68rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; display: block; }
+        .c-stat-val { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; line-height: 1; }
         .c-stat-val.green { color: var(--safe); }
         .c-stat-val.red { color: var(--danger); }
 
         /* Week bar */
-        .c-week { display: flex; gap: 4px; margin-bottom: 1.5rem; }
-        .c-week-cell { flex: 1; height: 28px; background: var(--card); border: 1px solid var(--border); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.5rem; color: var(--dim2); }
-        .c-week-cell.past { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.2); }
+        .c-week { display: flex; gap: 6px; margin-bottom: 1.75rem; }
+        .c-week-cell { flex: 1; height: 32px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.52rem; color: var(--dim2); transition: all 0.2s; }
+        .c-week-cell.past { background: rgba(0,255,163,0.08); border-color: rgba(0,255,163,0.2); color: var(--safe); }
         .c-week-cell.today { background: var(--safe); border-color: var(--safe); color: #000; font-weight: 600; }
 
         /* Verdict */
-        .c-verdict { border-left: 2px solid var(--safe); padding: 0 0 0 14px; margin-bottom: 1.5rem; }
-        .c-verdict-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--dim); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .c-verdict-score { font-family: var(--mono); font-size: 0.7rem; color: var(--safe); font-weight: 600; }
-        .c-verdict-text { font-size: 0.88rem; line-height: 1.6; color: #aaa; font-weight: 400; }
-        .c-verdict-btn { background: none; border: none; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); cursor: pointer; padding: 0; margin-top: 8px; transition: color 0.15s; display: block; }
+        .c-verdict { background: linear-gradient(135deg, #0e0e0e, #050505); border: 1px solid var(--border); border-left: 3px solid var(--safe); padding: 20px 22px; border-radius: 12px; margin-bottom: 1.75rem; }
+        .c-verdict-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .c-verdict-label { font-size: 0.68rem; color: var(--safe); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .c-verdict-score { font-family: var(--mono); font-size: 0.75rem; color: var(--safe); font-weight: 600; }
+        .c-verdict-text { font-size: 0.9rem; color: #aaa; line-height: 1.6; margin-bottom: 10px; }
+        .c-verdict-btn { background: none; border: none; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); cursor: pointer; transition: color 0.15s; padding: 0; }
         .c-verdict-btn:hover { color: var(--safe); }
 
-        /* Section label */
-        .c-section { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--dim); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .c-section button { background: none; border: none; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim2); cursor: pointer; transition: color 0.15s; }
+        /* Section header */
+        .c-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding: 0 4px; }
+        .c-section h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); }
+        .c-section button { background: none; border: none; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim2); cursor: pointer; transition: color 0.15s; }
         .c-section button:hover { color: var(--safe); }
 
-        /* Subject list */
-        .c-sub-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 1.5rem; }
-        .c-sub-item { background: var(--card); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; position: relative; transition: background 0.15s; animation: fadeIn 0.3s both; }
-        .c-sub-item:hover { background: #141414; }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
-        .c-sub-left { flex: 1; min-width: 0; }
-        .c-sub-name { font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .c-sub-skips { font-family: var(--mono); font-size: 0.62rem; color: var(--dim); }
-        .c-sub-skips span { font-weight: 600; }
-        .c-sub-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-        .c-sub-pct { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; line-height: 1; }
+        /* Subject cards */
+        .c-sub-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+        .c-sub-card { background: var(--card); border: 1px solid var(--border); padding: 18px 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; transition: border-color 0.2s; animation: fadeIn 0.3s both; }
+        .c-sub-card:hover { border-color: var(--border2); }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+        .c-sub-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 14px 0 0 14px; }
+        .c-sub-left { flex: 1; min-width: 0; padding-left: 4px; }
+        .c-sub-name { font-size: 0.95rem; font-weight: 500; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .c-sub-skips { font-family: var(--mono); font-size: 0.68rem; color: var(--dim); }
+        .c-sub-skips b { font-weight: 600; }
+        .c-sub-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .c-sub-pct { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; line-height: 1; }
         .c-sub-pct.green { color: var(--safe); }
         .c-sub-pct.yellow { color: var(--warn); }
         .c-sub-pct.red { color: var(--danger); }
-        .c-sub-del { background: none; border: none; color: var(--dim2); font-size: 0.72rem; cursor: pointer; padding: 4px; transition: color 0.15s; line-height: 1; }
-        .c-sub-del:hover { color: var(--danger); }
-        .c-sub-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--border); overflow: hidden; }
-        .c-sub-bar-fill { height: 100%; transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .c-sub-del { background: none; border: none; color: var(--dim2); font-size: 0.75rem; cursor: pointer; padding: 4px 6px; transition: color 0.15s; line-height: 1; border-radius: 4px; }
+        .c-sub-del:hover { color: var(--danger); background: rgba(255,77,77,0.08); }
 
         /* Add subject */
-        .c-add { display: flex; gap: 8px; margin-bottom: 1.5rem; }
-        .c-add-inp { flex: 1; background: var(--card); border: 1px solid var(--border2); padding: 11px 14px; font-family: var(--sans); font-size: 0.85rem; color: var(--text); outline: none; border-radius: 4px; transition: border-color 0.2s; }
+        .c-add { display: flex; gap: 10px; margin-bottom: 2rem; }
+        .c-add-inp { flex: 1; background: var(--card); border: 1px solid var(--border); padding: 12px 16px; font-family: var(--sans); font-size: 0.88rem; color: var(--text); outline: none; border-radius: 12px; transition: border-color 0.2s; }
         .c-add-inp::placeholder { color: var(--dim2); }
-        .c-add-inp:focus { border-color: #333; }
-        .c-add-btn { background: var(--card); border: 1px solid var(--border2); color: var(--text); padding: 11px 18px; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: all 0.15s; }
+        .c-add-inp:focus { border-color: var(--border2); }
+        .c-add-btn { background: var(--card); border: 1px solid var(--border2); color: var(--text); padding: 12px 20px; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 12px; transition: all 0.15s; white-space: nowrap; }
         .c-add-btn:hover { background: var(--safe); color: #000; border-color: var(--safe); }
 
         /* Today list */
-        .c-today-list { margin-bottom: 1.5rem; }
-        .c-today-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); transition: opacity 0.2s; }
+        .c-today-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 2rem; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+        .c-today-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
         .c-today-item:last-child { border-bottom: none; }
-        .c-today-item.attended { opacity: 0.4; }
-        .c-today-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-        .c-today-name { flex: 1; font-size: 0.88rem; font-weight: 500; }
-        .mark-btn { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 14px; cursor: pointer; background: transparent; border: 1px solid var(--border2); color: var(--dim); border-radius: 3px; transition: all 0.15s; }
+        .c-today-item:hover { background: rgba(255,255,255,0.015); }
+        .c-today-item.attended { opacity: 0.38; }
+        .c-today-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .c-today-name { flex: 1; font-size: 0.9rem; font-weight: 500; }
+        .mark-btn { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 7px 16px; cursor: pointer; background: transparent; border: 1px solid var(--border2); color: var(--dim); border-radius: 8px; transition: all 0.15s; }
         .mark-btn:hover { border-color: var(--safe); color: var(--safe); }
-        .mark-btn.done { border-color: var(--safe); color: var(--safe); background: rgba(0,255,136,0.06); }
-        .skip-tag { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 10px; border-radius: 3px; background: rgba(250,204,21,0.08); border: 1px solid rgba(250,204,21,0.2); color: var(--warn); }
+        .mark-btn.done { border-color: var(--safe); color: var(--safe); background: rgba(0,255,163,0.06); }
+        .skip-tag { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border-radius: 8px; background: rgba(255,204,0,0.08); border: 1px solid rgba(255,204,0,0.2); color: var(--warn); }
 
         /* Alerts */
-        .c-alert-list { margin-bottom: 1.5rem; }
-        .c-alert-item { padding: 11px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; line-height: 1.55; }
+        .c-alert-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 2rem; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+        .c-alert-item { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-start; font-size: 0.84rem; line-height: 1.55; }
         .c-alert-item:last-child { border-bottom: none; }
-        .c-alert-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+        .c-alert-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
 
         /* Import button */
-        .c-import-btn { display: block; width: 100%; background: var(--card); border: 1px solid var(--border2); color: var(--dim); padding: 14px; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: all 0.2s; text-align: center; margin-bottom: 1.5rem; }
-        .c-import-btn:hover { border-color: var(--safe); color: var(--safe); }
+        .c-import-btn { display: block; width: 100%; background: var(--card); border: 1px solid var(--border2); color: var(--dim); padding: 16px; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-radius: 14px; transition: all 0.2s; text-align: center; margin-bottom: 2rem; }
+        .c-import-btn:hover { border-color: var(--safe); color: var(--safe); box-shadow: 0 0 20px rgba(0,255,163,0.06); }
 
-        /* Profile card (sidebar) */
-        .s-profile { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; }
-        .s-profile-top { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
-        .s-profile-av { width: 32px; height: 32px; background: var(--safe); display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 0.75rem; font-weight: 700; color: #000; border-radius: 2px; flex-shrink: 0; }
-        .s-profile-name { font-size: 0.88rem; font-weight: 600; }
-        .s-profile-meta { font-family: var(--mono); font-size: 0.56rem; color: var(--dim); margin-top: 2px; }
-        .s-pstats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); margin-bottom: 1rem; border-radius: 2px; overflow: hidden; }
-        .s-pstat { background: var(--bg); padding: 0.75rem; }
-        .s-pstat-label { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); margin-bottom: 3px; }
-        .s-pstat-val { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; line-height: 1; }
-        .s-share-btn { width: 100%; padding: 9px; background: transparent; border: 1px solid var(--border2); color: var(--dim); font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; border-radius: 3px; transition: all 0.15s; }
-        .s-share-btn:hover { border-color: var(--text); color: var(--text); }
+        /* ── SIDEBAR COMPONENTS ── */
+        .s-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem; }
 
-        /* Sidebar verdict */
-        .s-verdict { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; }
-        .s-verdict-label { font-family: var(--mono); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--dim); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
-        .s-verdict-score { font-family: var(--mono); font-size: 0.68rem; color: var(--safe); font-weight: 600; }
-        .s-verdict-text { font-size: 0.82rem; line-height: 1.6; color: #888; margin-bottom: 0.75rem; }
+        .s-verdict { background: linear-gradient(135deg, #0e0e0e, #050505); border: 1px solid var(--border); border-left: 3px solid var(--safe); border-radius: 12px; padding: 1.25rem; }
+        .s-verdict-label { font-size: 0.65rem; color: var(--safe); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .s-verdict-score { font-family: var(--mono); }
+        .s-verdict-text { font-size: 0.82rem; color: #888; line-height: 1.6; margin-bottom: 10px; }
         .s-verdict-btn { background: none; border: none; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); cursor: pointer; transition: color 0.15s; }
         .s-verdict-btn:hover { color: var(--safe); }
 
-        /* Sidebar stats */
-        .s-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-        .s-stat { background: var(--card); padding: 12px 14px; }
-        .s-stat-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); margin-bottom: 5px; }
-        .s-stat-val { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; line-height: 1; }
+        .s-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .s-stat { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: 12px; }
+        .s-stat-label { font-size: 0.62rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; display: block; }
+        .s-stat-val { font-family: var(--mono); font-size: 1.3rem; font-weight: 600; line-height: 1; }
         .s-stat-val.green { color: var(--safe); }
         .s-stat-val.red { color: var(--danger); }
 
-        /* Streak (sidebar) */
-        .s-streak { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; }
-        .s-streak-num { font-family: var(--mono); font-size: 2.5rem; font-weight: 600; color: var(--safe); line-height: 1; }
-        .s-streak-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-top: 2px; margin-bottom: 0.9rem; }
-        .s-week { display: flex; gap: 3px; margin-bottom: 3px; }
-        .s-week-cell { flex: 1; height: 12px; background: #161616; border: 1px solid var(--border); border-radius: 1px; }
-        .s-week-cell.past { background: rgba(0,255,136,0.15); border-color: rgba(0,255,136,0.25); }
+        .s-streak-num { font-family: var(--mono); font-size: 2.8rem; font-weight: 600; color: var(--safe); line-height: 1; }
+        .s-streak-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-top: 2px; margin-bottom: 1rem; }
+        .s-week { display: flex; gap: 4px; margin-bottom: 4px; }
+        .s-week-cell { flex: 1; height: 14px; background: #161616; border: 1px solid var(--border); border-radius: 3px; }
+        .s-week-cell.past { background: rgba(0,255,163,0.15); border-color: rgba(0,255,163,0.25); }
         .s-week-cell.today { background: var(--safe); border-color: var(--safe); }
-        .s-week-labels { display: flex; gap: 3px; }
-        .s-week-lbl { flex: 1; font-family: var(--mono); font-size: 0.46rem; text-align: center; color: var(--dim2); }
+        .s-week-labels { display: flex; gap: 4px; }
+        .s-week-lbl { flex: 1; font-family: var(--mono); font-size: 0.48rem; text-align: center; color: var(--dim2); }
 
-        /* ─────────────────────────────────────────────
-           TOAST & MODALS
-        ───────────────────────────────────────────── */
-        #toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(12px); background: #1a1a1a; border: 1px solid var(--border2); padding: 9px 18px; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--safe); opacity: 0; transition: all 0.25s; z-index: 9000; pointer-events: none; border-radius: 3px; }
+        .s-profile-top { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+        .s-profile-av { width: 36px; height: 36px; background: var(--safe); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 0.8rem; font-weight: 700; color: #000; flex-shrink: 0; }
+        .s-profile-name { font-size: 0.9rem; font-weight: 600; }
+        .s-profile-meta { font-family: var(--mono); font-size: 0.56rem; color: var(--dim); margin-top: 2px; }
+        .s-pstats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+        .s-pstat { background: var(--bg); padding: 10px 12px; }
+        .s-pstat-label { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); margin-bottom: 3px; }
+        .s-pstat-val { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; line-height: 1; }
+        .s-share-btn { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--border2); color: var(--dim); font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; border-radius: 8px; transition: all 0.15s; }
+        .s-share-btn:hover { border-color: #444; color: var(--text); }
+
+        /* ── TOAST & MODALS ── */
+        #toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(12px); background: #111; border: 1px solid var(--border2); border-radius: 100px; padding: 10px 20px; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--safe); opacity: 0; transition: all 0.25s; z-index: 9000; pointer-events: none; }
         #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 5000; }
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 5000; backdrop-filter: blur(4px); }
         .modal-bg.open { display: flex; }
-        .modal { background: #111; border: 1px solid var(--border2); padding: 1.75rem; max-width: 380px; width: 90%; border-radius: 6px; }
+        .modal { background: #0e0e0e; border: 1px solid var(--border2); padding: 1.75rem; max-width: 380px; width: 90%; border-radius: 20px; box-shadow: 0 32px 64px rgba(0,0,0,0.6); }
         .modal-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
         .modal-sub { font-family: var(--mono); font-size: 0.63rem; line-height: 1.6; color: var(--dim); margin-bottom: 1.25rem; }
         .modal-btns { display: flex; gap: 8px; }
-        .modal-btns button { flex: 1; padding: 11px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: none; border-radius: 3px; }
+        .modal-btns button { flex: 1; padding: 12px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: none; border-radius: 10px; }
         #confirm-ok { background: var(--danger); color: #fff; }
-        #confirm-cancel { background: #1e1e1e; color: var(--dim); border: 1px solid var(--border2) !important; }
+        #confirm-cancel { background: #1a1a1a; color: var(--dim); border: 1px solid var(--border2) !important; }
 
-        .import-drop { border: 1px dashed #2a2a2a; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; border-radius: 4px; margin-bottom: 1rem; }
-        .import-drop:hover, .import-drop.has-files { border-color: var(--safe); background: rgba(0,255,136,0.03); }
-        .import-drop-icon { font-size: 1.4rem; margin-bottom: 6px; }
+        .import-drop { border: 1px dashed #222; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; border-radius: 12px; margin-bottom: 1rem; }
+        .import-drop:hover, .import-drop.has-files { border-color: var(--safe); background: rgba(0,255,163,0.03); }
+        .import-drop-icon { font-size: 1.5rem; margin-bottom: 6px; }
         .import-drop-title { font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
         .import-drop-sub { font-family: var(--mono); font-size: 0.56rem; color: var(--dim2); margin-top: 3px; }
         .import-file-item { font-family: var(--mono); font-size: 0.6rem; color: var(--safe); padding: 5px 0; border-bottom: 1px solid var(--border); }
@@ -308,7 +282,7 @@
 
         .hidden { display: none !important; }
         .faded { opacity: 0; pointer-events: none; filter: blur(10px); }
-        .empty-state { font-family: var(--mono); font-size: 0.63rem; color: var(--dim); padding: 0.75rem 0; }
+        .empty-state { font-family: var(--mono); font-size: 0.63rem; color: var(--dim); padding: 1rem 0; }
     </style>
 </head>
 <body>
@@ -326,7 +300,7 @@
     <div class="auth-logo">NoBunk</div>
     <div class="auth-tag">know exactly how cooked you are</div>
     <a href="https://attendease-backend-wrag.onrender.com/auth/google" class="auth-btn" onclick="startCinematic(event)">
-        <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         Continue with Google
     </a>
     <div class="auth-ticker">
@@ -339,119 +313,109 @@
 <!-- APP -->
 <div id="app-layer" class="hidden">
 
-    <!-- ── DESKTOP NAV ── -->
+    <!-- DESKTOP NAV -->
     <nav class="d-nav">
         <div class="d-nav-logo">NoBunk</div>
         <div class="d-nav-links">
-            <span class="d-nav-link" onclick="document.getElementById('d-subjects').scrollIntoView({behavior:'smooth'})">Inventory</span>
+            <span class="d-nav-link" onclick="document.getElementById('d-inventory').scrollIntoView({behavior:'smooth'})">Inventory</span>
             <span class="d-nav-link" onclick="document.getElementById('d-today').scrollIntoView({behavior:'smooth'})">Today</span>
             <span class="d-nav-link" onclick="document.getElementById('d-alerts').scrollIntoView({behavior:'smooth'})">Alerts</span>
         </div>
-        <div class="d-nav-right">
-            <div class="user-pill" onclick="toggleDropdown('d-dropdown')">
-                <div id="nav-av">D</div>
-                <span id="nav-name">—</span>
-                <div class="dropdown" id="d-dropdown">
-                    <div class="dd-item" onclick="closeAllDropdowns();openImportModal()">↑ Import</div>
-                    <div class="dd-item" onclick="closeAllDropdowns();shareCard()">↗ Share</div>
-                    <div class="dd-item red" onclick="closeAllDropdowns();signOut()">Sign Out</div>
-                </div>
+        <div class="user-pill" onclick="toggleDropdown('d-dd')">
+            <div id="nav-av">D</div>
+            <span id="nav-name">—</span>
+            <div class="dropdown" id="d-dd">
+                <div class="dd-item" onclick="closeAllDD();openImportModal()">↑ Import</div>
+                <div class="dd-item" onclick="closeAllDD();shareCard()">↗ Share</div>
+                <div class="dd-item red" onclick="closeAllDD();signOut()">Sign Out</div>
             </div>
         </div>
     </nav>
 
-    <!-- ── DESKTOP TWO-COLUMN ── -->
+    <!-- DESKTOP GRID -->
     <div class="d-layout">
-
-        <!-- LEFT MAIN -->
         <div class="d-main">
 
-            <!-- Header -->
             <div class="c-header">
                 <div class="c-header-left">
-                    <p id="d-greeting-sub">Wassup,</p>
-                    <h1 id="d-header-name">—</h1>
+                    <p>wassup,</p>
+                    <h1 id="d-name">—</h1>
                 </div>
                 <div class="c-header-right">
-                    <div class="streak-pill">STREAK_<span id="d-streak-val">0</span>_DAYS 🔥</div>
+                    <div class="streak-pill">🔥 <span id="d-streak">0</span> DAYS</div>
                 </div>
             </div>
 
-            <!-- Stats -->
             <div class="c-stats">
-                <div class="c-stat"><div class="c-stat-label">Overall</div><div class="c-stat-val" id="d-overall">—</div></div>
-                <div class="c-stat"><div class="c-stat-label">Safe Bunks</div><div class="c-stat-val green" id="d-bunks">—</div></div>
-                <div class="c-stat"><div class="c-stat-label">Danger</div><div class="c-stat-val red" id="d-danger">—</div></div>
+                <div class="c-stat-card"><span class="c-stat-label">Overall</span><div class="c-stat-val" id="d-overall">—</div></div>
+                <div class="c-stat-card"><span class="c-stat-label">Bunks Left</span><div class="c-stat-val green" id="d-bunks">—</div></div>
+                <div class="c-stat-card"><span class="c-stat-label">Danger Subjects</span><div class="c-stat-val red" id="d-danger">—</div></div>
+                <div class="c-stat-card"><span class="c-stat-label">Total Subjects</span><div class="c-stat-val" id="d-total">—</div></div>
             </div>
 
-            <!-- Week bar -->
             <div class="c-week" id="d-week"></div>
 
-            <!-- Verdict -->
             <div class="c-verdict">
-                <div class="c-verdict-label">System Verdict <span class="c-verdict-score" id="d-verdict-score"></span></div>
-                <p class="c-verdict-text" id="d-verdict-text">Click below to get your AI analysis.</p>
-                <button class="c-verdict-btn" onclick="loadVerdict('d')">→ Run Analysis</button>
+                <div class="c-verdict-top">
+                    <div class="c-verdict-label">AI Verdict</div>
+                    <span class="c-verdict-score" id="d-vscore"></span>
+                </div>
+                <p class="c-verdict-text" id="d-vtext">Click below to get your personalized analysis.</p>
+                <button class="c-verdict-btn" onclick="loadVerdict()">→ Run Analysis</button>
             </div>
 
-            <!-- Subjects -->
-            <div id="d-subjects">
-                <div class="c-section">Inventory <button onclick="loadDashboard()">↻ refresh</button></div>
-                <div class="c-sub-list" id="d-subjects-list"><div class="empty-state">Loading...</div></div>
+            <div id="d-inventory">
+                <div class="c-section"><h3>Inventory</h3><button onclick="loadDashboard()">↻ refresh</button></div>
+                <div class="c-sub-list" id="d-subjects"><div class="empty-state">Loading...</div></div>
                 <div class="c-add">
-                    <input class="c-add-inp" id="d-new-subject" type="text" placeholder="Add subject — Maths, Python..." onkeydown="if(event.key==='Enter')addSubject()">
-                    <button class="c-add-btn" onclick="addSubject()">+ Add</button>
+                    <input class="c-add-inp" id="d-new-sub" type="text" placeholder="Add subject — Maths, Python..." onkeydown="if(event.key==='Enter')addSub('d')">
+                    <button class="c-add-btn" onclick="addSub('d')">+ Add</button>
                 </div>
             </div>
 
-            <!-- Today -->
             <div id="d-today">
-                <div class="c-section">Today's Queue <button onclick="markAll()">mark all →</button></div>
-                <div class="c-today-list" id="d-today-list"><div class="empty-state">No subjects yet</div></div>
+                <div class="c-section"><h3>Today's Queue</h3><button onclick="markAll()">mark all →</button></div>
+                <div class="c-today-list" id="d-today-list"><div class="empty-state" style="padding:14px 18px">No subjects yet</div></div>
             </div>
 
-            <!-- Alerts -->
             <div id="d-alerts">
-                <div class="c-section">Alerts</div>
-                <div class="c-alert-list" id="d-alerts-list"><div class="empty-state">All clear.</div></div>
+                <div class="c-section"><h3>Alerts</h3></div>
+                <div class="c-alert-list" id="d-alerts-list"><div class="empty-state" style="padding:14px 18px">All clear.</div></div>
             </div>
 
             <button class="c-import-btn" onclick="openImportModal()">↑ Import Attendance from Screenshot</button>
 
         </div>
 
-        <!-- RIGHT SIDEBAR -->
+        <!-- SIDEBAR -->
         <div class="d-side">
 
-            <!-- Verdict card -->
             <div class="s-verdict">
-                <div class="s-verdict-label">System Verdict <span class="s-verdict-score" id="s-verdict-score"></span></div>
-                <p class="s-verdict-text" id="s-verdict-text">Click to get your AI analysis.</p>
-                <button class="s-verdict-btn" onclick="loadVerdict('s')">→ Run Analysis</button>
+                <div class="s-verdict-label">AI Verdict <span class="s-verdict-score" id="s-vscore"></span></div>
+                <p class="s-verdict-text" id="s-vtext">Click to get your analysis.</p>
+                <button class="s-verdict-btn" onclick="loadVerdict()">→ Run Analysis</button>
             </div>
 
-            <!-- Stats card -->
             <div class="s-stats">
-                <div class="s-stat"><div class="s-stat-label">Overall</div><div class="s-stat-val" id="s-overall">—</div></div>
-                <div class="s-stat"><div class="s-stat-label">Bunks</div><div class="s-stat-val green" id="s-bunks">—</div></div>
-                <div class="s-stat"><div class="s-stat-label">Danger</div><div class="s-stat-val red" id="s-danger">—</div></div>
+                <div class="s-stat"><span class="s-stat-label">Overall</span><div class="s-stat-val" id="s-overall">—</div></div>
+                <div class="s-stat"><span class="s-stat-label">Bunks</span><div class="s-stat-val green" id="s-bunks">—</div></div>
+                <div class="s-stat"><span class="s-stat-label">Danger</span><div class="s-stat-val red" id="s-danger">—</div></div>
+                <div class="s-stat"><span class="s-stat-label">Subjects</span><div class="s-stat-val" id="s-total">—</div></div>
             </div>
 
-            <!-- Streak -->
-            <div class="s-streak">
-                <div class="s-streak-num" id="s-streak-num">0</div>
+            <div class="s-card">
+                <div class="s-streak-num" id="s-streak">0</div>
                 <div class="s-streak-label">Day Streak 🔥</div>
                 <div class="s-week" id="s-week"></div>
                 <div class="s-week-labels"><div class="s-week-lbl">M</div><div class="s-week-lbl">T</div><div class="s-week-lbl">W</div><div class="s-week-lbl">T</div><div class="s-week-lbl">F</div><div class="s-week-lbl">S</div><div class="s-week-lbl">S</div></div>
             </div>
 
-            <!-- Profile -->
-            <div class="s-profile">
+            <div class="s-card">
                 <div class="s-profile-top">
-                    <div class="s-profile-av" id="s-profile-av">D</div>
+                    <div class="s-profile-av" id="s-av">D</div>
                     <div>
-                        <div class="s-profile-name" id="s-profile-name">—</div>
-                        <div class="s-profile-meta" id="s-profile-meta">—</div>
+                        <div class="s-profile-name" id="s-name">—</div>
+                        <div class="s-profile-meta" id="s-meta">—</div>
                     </div>
                 </div>
                 <div class="s-pstats">
@@ -466,64 +430,66 @@
         </div>
     </div>
 
-    <!-- ── MOBILE LAYOUT ── -->
+    <!-- MOBILE LAYOUT -->
     <div class="m-layout">
 
-        <!-- Mobile header -->
         <div class="c-header">
             <div class="c-header-left">
-                <p id="m-greeting-sub">Wassup,</p>
-                <h1 id="m-header-name">—</h1>
+                <p>wassup,</p>
+                <h1 id="m-name">—</h1>
             </div>
             <div class="c-header-right">
-                <div class="streak-pill">STREAK_<span id="m-streak-val">0</span>_DAYS 🔥</div>
-                <div style="position:relative;">
-                    <button class="m-user-btn" onclick="toggleDropdown('m-dropdown')">
-                        <div id="m-user-av">D</div>
+                <div class="streak-pill">🔥 <span id="m-streak">0</span> DAYS</div>
+                <div style="position:relative">
+                    <button class="m-user-btn" onclick="toggleDropdown('m-dd')">
+                        <div id="m-av">D</div>
                         <span id="m-nav-name">—</span> ▾
                     </button>
-                    <div class="dropdown" id="m-dropdown">
-                        <div class="dd-item" onclick="closeAllDropdowns();openImportModal()">↑ Import</div>
-                        <div class="dd-item" onclick="closeAllDropdowns();shareCard()">↗ Share</div>
-                        <div class="dd-item red" onclick="closeAllDropdowns();signOut()">Sign Out</div>
+                    <div class="dropdown" id="m-dd">
+                        <div class="dd-item" onclick="closeAllDD();openImportModal()">↑ Import</div>
+                        <div class="dd-item" onclick="closeAllDD();shareCard()">↗ Share</div>
+                        <div class="dd-item red" onclick="closeAllDD();signOut()">Sign Out</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="c-stats">
-            <div class="c-stat"><div class="c-stat-label">Overall</div><div class="c-stat-val" id="m-overall">—</div></div>
-            <div class="c-stat"><div class="c-stat-label">Bunks</div><div class="c-stat-val green" id="m-bunks">—</div></div>
-            <div class="c-stat"><div class="c-stat-label">Danger</div><div class="c-stat-val red" id="m-danger">—</div></div>
+            <div class="c-stat-card"><span class="c-stat-label">Overall</span><div class="c-stat-val" id="m-overall">—</div></div>
+            <div class="c-stat-card"><span class="c-stat-label">Bunks Left</span><div class="c-stat-val green" id="m-bunks">—</div></div>
+            <div class="c-stat-card"><span class="c-stat-label">Danger</span><div class="c-stat-val red" id="m-danger">—</div></div>
+            <div class="c-stat-card"><span class="c-stat-label">Subjects</span><div class="c-stat-val" id="m-total">—</div></div>
         </div>
 
         <div class="c-week" id="m-week"></div>
 
         <div class="c-verdict">
-            <div class="c-verdict-label">System Verdict <span class="c-verdict-score" id="m-verdict-score"></span></div>
-            <p class="c-verdict-text" id="m-verdict-text">Click below to get your AI analysis.</p>
-            <button class="c-verdict-btn" onclick="loadVerdict('m')">→ Run Analysis</button>
+            <div class="c-verdict-top">
+                <div class="c-verdict-label">AI Verdict</div>
+                <span class="c-verdict-score" id="m-vscore"></span>
+            </div>
+            <p class="c-verdict-text" id="m-vtext">Click below to get your analysis.</p>
+            <button class="c-verdict-btn" onclick="loadVerdict()">→ Run Analysis</button>
         </div>
 
-        <div class="c-section">Inventory <button onclick="loadDashboard()">↻ refresh</button></div>
-        <div class="c-sub-list" id="m-subjects-list"><div class="empty-state">Loading...</div></div>
+        <div class="c-section"><h3>Inventory</h3><button onclick="loadDashboard()">↻ refresh</button></div>
+        <div class="c-sub-list" id="m-subjects"><div class="empty-state">Loading...</div></div>
         <div class="c-add">
-            <input class="c-add-inp" id="m-new-subject" type="text" placeholder="Add subject — Maths, Python..." onkeydown="if(event.key==='Enter')addSubjectMobile()">
-            <button class="c-add-btn" onclick="addSubjectMobile()">+ Add</button>
+            <input class="c-add-inp" id="m-new-sub" type="text" placeholder="Add subject — Maths, Python..." onkeydown="if(event.key==='Enter')addSub('m')">
+            <button class="c-add-btn" onclick="addSub('m')">+ Add</button>
         </div>
 
-        <div class="c-section">Today's Queue <button onclick="markAll()">mark all →</button></div>
-        <div class="c-today-list" id="m-today-list"><div class="empty-state">No subjects yet</div></div>
+        <div class="c-section"><h3>Today's Queue</h3><button onclick="markAll()">mark all →</button></div>
+        <div class="c-today-list" id="m-today-list"><div class="empty-state" style="padding:14px 18px">No subjects yet</div></div>
 
-        <div class="c-section">Alerts</div>
-        <div class="c-alert-list" id="m-alerts-list"><div class="empty-state">All clear.</div></div>
+        <div class="c-section"><h3>Alerts</h3></div>
+        <div class="c-alert-list" id="m-alerts-list"><div class="empty-state" style="padding:14px 18px">All clear.</div></div>
 
         <button class="c-import-btn" onclick="openImportModal()">↑ Import Attendance from Screenshot</button>
 
     </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 <!-- CONFIRM MODAL -->
@@ -542,7 +508,7 @@
 <div class="modal-bg" id="import-modal">
     <div class="modal">
         <div class="modal-title">Import Attendance</div>
-        <div class="modal-sub">Upload 1 or 2 screenshots from your college portal. We'll read and merge them automatically.</div>
+        <div class="modal-sub">Upload 1 or 2 screenshots from your college portal. We'll read and merge automatically.</div>
         <div class="import-drop" id="import-drop" onclick="document.getElementById('import-files').click()">
             <div class="import-drop-icon">📱</div>
             <div class="import-drop-title">Select Screenshots</div>
@@ -552,8 +518,8 @@
         <div id="import-file-list"></div>
         <div class="import-result" id="import-result"></div>
         <div class="modal-btns" style="margin-top:1rem;">
-            <button style="background:#1e1e1e;color:#666;border:1px solid #2a2a2a;flex:1;padding:11px;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;" onclick="closeImportModal()">Cancel</button>
-            <button id="import-go" onclick="runImport()" disabled style="background:var(--safe);color:#000;flex:1;padding:11px;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border:none;border-radius:3px;opacity:0.4;">Import →</button>
+            <button style="background:#1a1a1a;color:#555;border:1px solid #242424;flex:1;padding:12px;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:10px;" onclick="closeImportModal()">Cancel</button>
+            <button id="import-go" onclick="runImport()" disabled style="background:var(--safe);color:#000;flex:1;padding:12px;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border:none;border-radius:10px;opacity:0.4;">Import →</button>
         </div>
     </div>
 </div>
@@ -562,144 +528,109 @@
 const API = 'https://attendease-backend-wrag.onrender.com';
 let currentUser = null, streak = 0;
 
-// ── CINEMATIC ─────────────────────────────────────────
-function startCinematic(e) {
-    document.getElementById('cinematic').classList.add('active');
-}
+function startCinematic(e) { document.getElementById('cinematic').classList.add('active'); }
 
-// ── INIT ──────────────────────────────────────────────
 function init() {
     const p = new URLSearchParams(window.location.search);
     const uid   = p.get('user_id')  || localStorage.getItem('user_id');
     const uname = p.get('name')     || localStorage.getItem('user_name');
     const uemail= p.get('email')    || localStorage.getItem('user_email');
     if (!uid) return;
-    localStorage.setItem('user_id',    uid);
-    localStorage.setItem('user_name',  uname  || '');
-    localStorage.setItem('user_email', uemail || '');
-    currentUser = { id: uid, name: decodeURIComponent(uname||'Student'), email: decodeURIComponent(uemail||'') };
+    localStorage.setItem('user_id', uid);
+    localStorage.setItem('user_name', uname||'');
+    localStorage.setItem('user_email', uemail||'');
+    currentUser = { id:uid, name:decodeURIComponent(uname||'Student'), email:decodeURIComponent(uemail||'') };
     if (p.get('user_id')) window.history.replaceState({}, '', window.location.pathname);
     updateStreak();
     showApp();
 }
 
-// ── STREAK ────────────────────────────────────────────
 function updateStreak() {
-    const today  = new Date().toDateString();
-    const last   = localStorage.getItem('streak_date');
-    const stored = parseInt(localStorage.getItem('streak') || '0');
+    const today = new Date().toDateString();
+    const last  = localStorage.getItem('streak_date');
+    const stored= parseInt(localStorage.getItem('streak')||'0');
     if (last !== today) {
         streak = last === new Date(Date.now()-86400000).toDateString() ? stored+1 : 1;
         localStorage.setItem('streak', streak);
         localStorage.setItem('streak_date', today);
     } else streak = stored;
-    document.getElementById('d-streak-val').textContent = streak;
-    document.getElementById('m-streak-val').textContent = streak;
-    document.getElementById('s-streak-num').textContent = streak;
-    document.getElementById('s-pc-streak').textContent  = streak + ' 🔥';
-    renderWeekBars();
+    ['d-streak','m-streak','s-streak'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=streak; });
+    document.getElementById('s-pc-streak').textContent = streak + ' 🔥';
+    renderWeeks();
 }
 
-function renderWeekBars() {
-    const days = ['M','T','W','T','F','S','S'];
-    const d  = new Date().getDay();
-    const ti = d === 0 ? 6 : d - 1;
-    const html = days.map((lbl, i) => {
-        const cls = i < ti ? 'past' : i === ti ? 'today' : '';
-        return `<div class="c-week-cell ${cls}">${lbl}</div>`;
-    }).join('');
-    document.getElementById('d-week').innerHTML = html;
-    document.getElementById('m-week').innerHTML = html;
-    // Sidebar week (no labels inside cells)
-    document.getElementById('s-week').innerHTML = days.map((_,i) => {
-        const cls = i < ti ? 'past' : i === ti ? 'today' : '';
-        return `<div class="s-week-cell ${cls}"></div>`;
-    }).join('');
+function renderWeeks() {
+    const days=['M','T','W','T','F','S','S'];
+    const d=new Date().getDay(), ti=d===0?6:d-1;
+    const mobileHtml = days.map((l,i)=>`<div class="c-week-cell ${i<ti?'past':i===ti?'today':''}">${l}</div>`).join('');
+    document.getElementById('d-week').innerHTML = mobileHtml;
+    document.getElementById('m-week').innerHTML = mobileHtml;
+    document.getElementById('s-week').innerHTML = days.map((_,i)=>`<div class="s-week-cell ${i<ti?'past':i===ti?'today':''}"></div>`).join('');
 }
 
-// ── SHOW APP ──────────────────────────────────────────
 function showApp() {
-    const auth = document.getElementById('auth-layer');
-    const app  = document.getElementById('app-layer');
-    auth.classList.add('faded');
+    document.getElementById('auth-layer').classList.add('faded');
     setTimeout(() => {
-        auth.classList.add('hidden');
-        app.classList.remove('hidden');
-        setTimeout(() => app.classList.add('visible'), 50);
+        document.getElementById('auth-layer').classList.add('hidden');
+        document.getElementById('app-layer').classList.remove('hidden');
+        setTimeout(() => document.getElementById('app-layer').classList.add('visible'), 50);
     }, 600);
-
-    const name  = currentUser.name;
-    const first = name.split(' ')[0];
-
-    // Desktop
-    document.getElementById('d-header-name').textContent = name;
-    document.getElementById('nav-av').textContent        = first[0].toUpperCase();
-    document.getElementById('nav-name').textContent      = first.toUpperCase();
-    // Mobile
-    document.getElementById('m-header-name').textContent = name;
-    document.getElementById('m-user-av').textContent     = first[0].toUpperCase();
-    document.getElementById('m-nav-name').textContent    = first.toUpperCase();
-    // Sidebar
-    document.getElementById('s-profile-av').textContent  = first[0].toUpperCase();
-    document.getElementById('s-profile-name').textContent= name;
-
+    const name=currentUser.name, first=name.split(' ')[0];
+    document.getElementById('d-name').textContent  = name;
+    document.getElementById('m-name').textContent  = name;
+    document.getElementById('s-name').textContent  = name;
+    document.getElementById('nav-av').textContent  = first[0].toUpperCase();
+    document.getElementById('nav-name').textContent= first.toUpperCase();
+    document.getElementById('m-av').textContent    = first[0].toUpperCase();
+    document.getElementById('m-nav-name').textContent = first.toUpperCase();
+    document.getElementById('s-av').textContent    = first[0].toUpperCase();
     loadUserProfile();
     loadDashboard();
 }
 
 async function loadUserProfile() {
     try {
-        const res  = await fetch(`${API}/users/${currentUser.id}`);
-        const data = await res.json();
-        const u    = data.user || data;
-        const parts= [u.college, u.year, u.semester?`Sem ${u.semester}`:'', u.section?`Sec ${u.section}`:''].filter(Boolean);
-        const meta = parts.join(' · ') || '—';
-        document.getElementById('s-profile-meta').textContent = meta;
-    } catch(e) {}
+        const res = await fetch(`${API}/users/${currentUser.id}`);
+        const data= await res.json();
+        const u   = data.user||data;
+        const meta= [u.college,u.year,u.semester?`Sem ${u.semester}`:'',u.section?`Sec ${u.section}`:''].filter(Boolean).join(' · ')||'—';
+        document.getElementById('s-meta').textContent = meta;
+    } catch(e){}
 }
 
-// ── DASHBOARD ─────────────────────────────────────────
 async function loadDashboard() {
     try {
-        const res  = await fetch(`${API}/dashboard/${currentUser.id}`);
-        const data = await res.json();
-        const bunks = data.subjects.reduce((s,x) => s+(x.can_bunk||0), 0);
-        const overall = (data.overall_percentage||0) + '%';
-        const dangerN = data.danger_count || 0;
+        const res = await fetch(`${API}/dashboard/${currentUser.id}`);
+        const data= await res.json();
+        const bunks = data.subjects.reduce((s,x)=>s+(x.can_bunk||0),0);
+        const pct   = (data.overall_percentage||0)+'%';
+        const dan   = data.danger_count||0;
+        const tot   = data.total_subjects||0;
 
-        // Desktop
-        document.getElementById('d-overall').textContent = overall;
-        document.getElementById('d-bunks').textContent   = bunks;
-        document.getElementById('d-danger').textContent  = dangerN;
-        // Mobile
-        document.getElementById('m-overall').textContent = overall;
-        document.getElementById('m-bunks').textContent   = bunks;
-        document.getElementById('m-danger').textContent  = dangerN;
-        // Sidebar
-        document.getElementById('s-overall').textContent    = overall;
-        document.getElementById('s-bunks').textContent      = bunks;
-        document.getElementById('s-danger').textContent     = dangerN;
-        document.getElementById('s-pc-overall').textContent = overall;
-        document.getElementById('s-pc-bunks').textContent   = bunks;
-        document.getElementById('s-pc-danger').textContent  = dangerN;
+        ['d','m','s'].forEach(p => {
+            const o=document.getElementById(`${p}-overall`), b=document.getElementById(`${p}-bunks`), d=document.getElementById(`${p}-danger`), t=document.getElementById(`${p}-total`);
+            if(o) o.textContent=pct; if(b) b.textContent=bunks; if(d) d.textContent=dan; if(t) t.textContent=tot;
+        });
+        document.getElementById('s-pc-overall').textContent=pct;
+        document.getElementById('s-pc-bunks').textContent=bunks;
+        document.getElementById('s-pc-danger').textContent=dan;
 
-        const subjects = data.subjects || [];
-        renderSubjects(subjects);
-        renderToday(subjects);
-        renderAlerts(subjects);
-    } catch(e) { showToast('Load failed'); }
+        renderSubjects(data.subjects||[]);
+        renderToday(data.subjects||[]);
+        renderAlerts(data.subjects||[]);
+    } catch(e){ showToast('Load failed'); }
 }
 
-// ── RENDER SUBJECTS ───────────────────────────────────
 function subjectHTML(subjects) {
     if (!subjects.length) return '<div class="empty-state">No subjects yet — add one below</div>';
-    return subjects.map((s, i) => {
-        const c   = s.status==='safe'?'green':s.status==='borderline'?'yellow':'red';
-        const col = s.status==='safe'?'var(--safe)':s.status==='borderline'?'var(--warn)':'var(--danger)';
-        const skips = s.can_bunk > 0
-            ? `SKIPS_AVAIL: <span style="color:${col};font-weight:600">${String(s.can_bunk).padStart(2,'0')}</span>`
-            : `NEED: <span style="color:var(--danger);font-weight:600">${String(s.needs||0).padStart(2,'0')}_MORE</span>`;
-        return `<div class="c-sub-item" style="animation-delay:${i*0.04}s">
+    return subjects.map((s,i)=>{
+        const c  = s.status==='safe'?'green':s.status==='borderline'?'yellow':'red';
+        const col= s.status==='safe'?'var(--safe)':s.status==='borderline'?'var(--warn)':'var(--danger)';
+        const skips = s.can_bunk>0
+            ? `SKIPS_AVAIL: <b style="color:${col}">${String(s.can_bunk).padStart(2,'0')}</b>`
+            : `NEED: <b style="color:var(--danger)">${String(s.needs||0).padStart(2,'0')} MORE</b>`;
+        return `<div class="c-sub-card" style="animation-delay:${i*0.04}s">
+            <div class="c-sub-accent" style="background:${col}"></div>
             <div class="c-sub-left">
                 <div class="c-sub-name">${s.name}</div>
                 <div class="c-sub-skips">${skips}</div>
@@ -708,30 +639,26 @@ function subjectHTML(subjects) {
                 <div class="c-sub-pct ${c}">${s.percentage}%</div>
                 <button class="c-sub-del" onclick="confirmDelete('${s.id}','${s.name.replace(/'/g,"\\'")}')">✕</button>
             </div>
-            <div class="c-sub-bar"><div class="c-sub-bar-fill" style="width:${Math.min(s.percentage,100)}%;background:${col}"></div></div>
         </div>`;
     }).join('');
 }
 
 function renderSubjects(subjects) {
     const html = subjectHTML(subjects);
-    document.getElementById('d-subjects-list').innerHTML = html;
-    document.getElementById('m-subjects-list').innerHTML = html;
+    document.getElementById('d-subjects').innerHTML = html;
+    document.getElementById('m-subjects').innerHTML = html;
 }
 
-// ── RENDER TODAY ──────────────────────────────────────
 function todayHTML(subjects) {
-    if (!subjects.length) return '<div class="empty-state">No subjects yet</div>';
+    if (!subjects.length) return '<div class="empty-state" style="padding:14px 18px">No subjects yet</div>';
     const today = new Date().toISOString().split('T')[0];
-    return subjects.map(s => {
-        const col = s.status==='safe'?'var(--safe)':s.status==='borderline'?'var(--warn)':'var(--danger)';
-        const canBunk = s.status==='safe' && s.can_bunk>0;
+    return subjects.map(s=>{
+        const col=s.status==='safe'?'var(--safe)':s.status==='borderline'?'var(--warn)':'var(--danger)';
+        const canBunk=s.status==='safe'&&s.can_bunk>0;
         return `<div class="c-today-item" id="cr-${s.id}">
             <div class="c-today-dot" style="background:${col}"></div>
             <div class="c-today-name">${s.name}</div>
-            ${canBunk
-                ? `<span class="skip-tag">skip ok</span>`
-                : `<button class="mark-btn" id="mb-${s.id}" onclick="markAtt('${s.id}','${today}',this)">Mark</button>`}
+            ${canBunk?`<span class="skip-tag">skip ok</span>`:`<button class="mark-btn" id="mb-${s.id}" onclick="markAtt('${s.id}','${today}',this)">Mark</button>`}
         </div>`;
     }).join('');
 }
@@ -742,13 +669,11 @@ function renderToday(subjects) {
     document.getElementById('m-today-list').innerHTML = html;
 }
 
-// ── RENDER ALERTS ─────────────────────────────────────
 function alertsHTML(subjects) {
-    const bad = subjects.filter(s => s.status !== 'safe');
-    if (!bad.length) return '<div class="empty-state">All clear — you\'re good.</div>';
-    return bad.map(s => {
-        const d   = s.status==='danger';
-        const col = d ? 'var(--danger)' : 'var(--warn)';
+    const bad=subjects.filter(s=>s.status!=='safe');
+    if (!bad.length) return '<div class="empty-state" style="padding:14px 18px">All clear — you\'re good.</div>';
+    return bad.map(s=>{
+        const d=s.status==='danger', col=d?'var(--danger)':'var(--warn)';
         return `<div class="c-alert-item">
             <div class="c-alert-dot" style="background:${col}"></div>
             <div style="color:${col}"><strong>${s.name}</strong> · ${s.percentage}% — ${d?`need ${s.needs||'?'} more to recover`:`1 more bunk → danger`}</div>
@@ -762,52 +687,33 @@ function renderAlerts(subjects) {
     document.getElementById('m-alerts-list').innerHTML = html;
 }
 
-// ── MARK ATTENDANCE ───────────────────────────────────
 async function markAtt(sid, date, btn) {
-    const done = btn.classList.contains('done');
+    const done=btn.classList.contains('done');
     btn.disabled=true; btn.textContent='...';
     try {
-        await fetch(`${API}/attendance`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({subject_id:sid,date,status:done?'bunked':'attended'}) });
-        btn.classList.toggle('done');
-        btn.textContent = done ? 'Mark' : '✓ Done';
-        document.querySelectorAll(`#cr-${sid}`).forEach(el => el.classList.toggle('attended', !done));
-        btn.disabled=false;
-        loadDashboard();
-    } catch(e) { btn.textContent='Error'; btn.disabled=false; }
+        await fetch(`${API}/attendance`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject_id:sid,date,status:done?'bunked':'attended'})});
+        btn.classList.toggle('done'); btn.textContent=done?'Mark':'✓ Done';
+        document.querySelectorAll(`#cr-${sid}`).forEach(el=>el.classList.toggle('attended',!done));
+        btn.disabled=false; loadDashboard();
+    } catch(e){ btn.textContent='Error'; btn.disabled=false; }
 }
 
-function markAll() { document.querySelectorAll('.mark-btn:not(.done)').forEach(b => b.click()); }
+function markAll() { document.querySelectorAll('.mark-btn:not(.done)').forEach(b=>b.click()); }
 
-// ── ADD SUBJECT ───────────────────────────────────────
-async function addSubject() {
-    const inp  = document.getElementById('d-new-subject');
-    const name = inp.value.trim();
-    if (!name) return;
-    inp.disabled=true;
+async function addSub(prefix) {
+    const inp=document.getElementById(`${prefix}-new-sub`), name=inp.value.trim();
+    if (!name) return; inp.disabled=true;
     try {
-        const res = await fetch(`${API}/subjects`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({user_id:currentUser.id,name,color:'#00ff88'}) });
-        if (res.ok) { inp.value=''; showToast('Subject added'); loadDashboard(); }
-    } catch(e) {}
+        const res=await fetch(`${API}/subjects`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUser.id,name,color:'#00ffa3'})});
+        if(res.ok){inp.value='';showToast('Subject added');loadDashboard();}
+    } catch(e){}
     inp.disabled=false;
 }
 
-async function addSubjectMobile() {
-    const inp  = document.getElementById('m-new-subject');
-    const name = inp.value.trim();
-    if (!name) return;
-    inp.disabled=true;
-    try {
-        const res = await fetch(`${API}/subjects`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({user_id:currentUser.id,name,color:'#00ff88'}) });
-        if (res.ok) { inp.value=''; showToast('Subject added'); loadDashboard(); }
-    } catch(e) {}
-    inp.disabled=false;
-}
-
-// ── DELETE ────────────────────────────────────────────
 function confirmDelete(id, name) {
-    document.getElementById('confirm-title').textContent = 'Delete Subject?';
-    document.getElementById('confirm-msg').textContent   = `"${name}" will be permanently deleted.`;
-    document.getElementById('confirm-ok').onclick = () => { closeConfirm(); deleteSubject(id); };
+    document.getElementById('confirm-title').textContent='Delete Subject?';
+    document.getElementById('confirm-msg').textContent=`"${name}" will be permanently deleted.`;
+    document.getElementById('confirm-ok').onclick=()=>{closeConfirm();deleteSubject(id);};
     document.getElementById('confirm-modal').classList.add('open');
 }
 
@@ -815,110 +721,83 @@ function closeConfirm() { document.getElementById('confirm-modal').classList.rem
 
 async function deleteSubject(id) {
     try {
-        const res = await fetch(`${API}/subjects/${id}`, {method:'DELETE'});
-        if (res.ok) { showToast('Deleted'); loadDashboard(); }
-    } catch(e) { showToast('Delete failed'); }
+        const res=await fetch(`${API}/subjects/${id}`,{method:'DELETE'});
+        if(res.ok){showToast('Deleted');loadDashboard();}
+    } catch(e){showToast('Delete failed');}
 }
 
-// ── AI VERDICT ────────────────────────────────────────
-async function loadVerdict(prefix) {
-    const textEl  = document.getElementById(`${prefix}-verdict-text`);
-    const scoreEl = document.getElementById(`${prefix}-verdict-score`);
-    textEl.textContent  = 'Analyzing your situation...';
-    if (scoreEl) scoreEl.textContent = '';
+async function loadVerdict() {
+    ['d','m','s'].forEach(p=>{
+        const t=document.getElementById(`${p}-vtext`), s=document.getElementById(`${p}-vscore`);
+        if(t) t.textContent='Analyzing...'; if(s) s.textContent='';
+    });
     try {
-        const res = await fetch(`${API}/ai/verdict/${currentUser.id}`);
-        const d   = await res.json();
-        if (scoreEl) scoreEl.textContent = (d.overall_score||'?') + '/10';
-        textEl.textContent = (d.overall_verdict||'') + ' ' + (d.advice||'');
-        // Sync both verdict displays
-        ['d','m','s'].forEach(p => {
-            const t = document.getElementById(`${p}-verdict-text`);
-            const s = document.getElementById(`${p}-verdict-score`);
-            if (t) t.textContent = (d.overall_verdict||'') + ' ' + (d.advice||'');
-            if (s) s.textContent = (d.overall_score||'?') + '/10';
+        const res=await fetch(`${API}/ai/verdict/${currentUser.id}`);
+        const d=await res.json();
+        const txt=(d.overall_verdict||'')+' '+(d.advice||''), score=(d.overall_score||'?')+'/10';
+        ['d','m','s'].forEach(p=>{
+            const t=document.getElementById(`${p}-vtext`), s=document.getElementById(`${p}-vscore`);
+            if(t) t.textContent=txt; if(s) s.textContent=score;
         });
-    } catch(e) { textEl.textContent = 'Verdict failed. Check backend.'; }
+    } catch(e){
+        ['d','m','s'].forEach(p=>{const t=document.getElementById(`${p}-vtext`); if(t) t.textContent='Verdict failed. Check backend.';});
+    }
 }
 
-// ── SHARE ─────────────────────────────────────────────
 function shareCard() {
-    const t = `NOBUNK REPORT\n\n${currentUser.name}\nOverall: ${document.getElementById('d-overall').textContent}\nSafe Bunks: ${document.getElementById('d-bunks').textContent}\nDanger: ${document.getElementById('d-danger').textContent} subjects\nStreak: ${streak} days 🔥\n\nnobunk.vercel.app`;
-    navigator.clipboard.writeText(t).then(() => showToast('Copied!'));
+    const t=`NOBUNK REPORT\n\n${currentUser.name}\nOverall: ${document.getElementById('d-overall').textContent}\nSafe Bunks: ${document.getElementById('d-bunks').textContent}\nDanger: ${document.getElementById('d-danger').textContent} subjects\nStreak: ${streak} days 🔥\n\nnobunk.vercel.app`;
+    navigator.clipboard.writeText(t).then(()=>showToast('Copied!'));
 }
 
-// ── SIGN OUT ──────────────────────────────────────────
-function signOut() { localStorage.clear(); window.location.href = '/'; }
+function signOut() { localStorage.clear(); window.location.href='/'; }
 
-// ── IMPORT ────────────────────────────────────────────
-const importFiles = {};
-
+const importFiles={};
 function openImportModal() {
     document.getElementById('import-modal').classList.add('open');
-    document.getElementById('import-file-list').innerHTML = '';
-    document.getElementById('import-result').innerHTML    = '';
-    const btn = document.getElementById('import-go');
-    btn.disabled=true; btn.style.opacity='0.4'; btn.textContent='Import →';
+    document.getElementById('import-file-list').innerHTML='';
+    document.getElementById('import-result').innerHTML='';
+    const btn=document.getElementById('import-go'); btn.disabled=true; btn.style.opacity='0.4'; btn.textContent='Import →';
     document.getElementById('import-drop').classList.remove('has-files');
-    document.getElementById('import-drop').querySelector('.import-drop-title').textContent = 'Select Screenshots';
-    document.getElementById('import-drop').querySelector('.import-drop-sub').textContent   = '1 or 2 images';
-    document.getElementById('import-files').value = '';
+    document.getElementById('import-drop').querySelector('.import-drop-title').textContent='Select Screenshots';
+    document.getElementById('import-drop').querySelector('.import-drop-sub').textContent='1 or 2 images';
+    document.getElementById('import-files').value='';
     delete importFiles[1]; delete importFiles[2];
 }
 
 function closeImportModal() { document.getElementById('import-modal').classList.remove('open'); }
 
 function importFilesChosen(input) {
-    const files = Array.from(input.files);
-    if (!files.length) return;
-    files.forEach((f,i) => importFiles[i+1] = f);
-    const drop = document.getElementById('import-drop');
+    const files=Array.from(input.files); if(!files.length) return;
+    files.forEach((f,i)=>importFiles[i+1]=f);
+    const drop=document.getElementById('import-drop');
     drop.classList.add('has-files');
-    drop.querySelector('.import-drop-title').textContent = `${files.length} file${files.length>1?'s':''} selected`;
-    drop.querySelector('.import-drop-sub').textContent   = 'tap to change';
-    document.getElementById('import-file-list').innerHTML = files.map(f => `<div class="import-file-item">✓ ${f.name}</div>`).join('');
-    const btn = document.getElementById('import-go');
-    btn.disabled=false; btn.style.opacity='1';
+    drop.querySelector('.import-drop-title').textContent=`${files.length} file${files.length>1?'s':''} selected`;
+    drop.querySelector('.import-drop-sub').textContent='tap to change';
+    document.getElementById('import-file-list').innerHTML=files.map(f=>`<div class="import-file-item">✓ ${f.name}</div>`).join('');
+    const btn=document.getElementById('import-go'); btn.disabled=false; btn.style.opacity='1';
 }
 
 async function runImport() {
-    if (!importFiles[1]) return;
+    if(!importFiles[1]) return;
     const btn=document.getElementById('import-go'), result=document.getElementById('import-result');
     btn.disabled=true; btn.textContent='Reading...'; result.innerHTML='';
-    const fd = new FormData();
-    Object.values(importFiles).filter(Boolean).forEach(f => fd.append('files', f));
+    const fd=new FormData();
+    Object.values(importFiles).filter(Boolean).forEach(f=>fd.append('files',f));
     try {
-        const res  = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {method:'POST',body:fd});
-        const data = await res.json();
-        if (data.error) { result.className='import-result error'; result.textContent='✕ '+data.error; btn.disabled=false; btn.textContent='Import →'; return; }
+        const res=await fetch(`${API}/onboarding/screenshot/${currentUser.id}`,{method:'POST',body:fd});
+        const data=await res.json();
+        if(data.error){result.className='import-result error';result.textContent='✕ '+data.error;btn.disabled=false;btn.textContent='Import →';return;}
         result.className='import-result success'; result.textContent='✓ '+data.message;
         btn.textContent='Done!';
-        setTimeout(() => { closeImportModal(); loadDashboard(); showToast('Attendance imported!'); }, 1500);
-    } catch(e) { result.className='import-result error'; result.textContent='Something went wrong'; btn.disabled=false; btn.textContent='Import →'; }
+        setTimeout(()=>{closeImportModal();loadDashboard();showToast('Attendance imported!');},1500);
+    } catch(e){result.className='import-result error';result.textContent='Something went wrong';btn.disabled=false;btn.textContent='Import →';}
 }
 
-// ── DROPDOWNS ─────────────────────────────────────────
-function toggleDropdown(id) {
-    const dd = document.getElementById(id);
-    dd.classList.toggle('open');
-}
+function toggleDropdown(id) { document.getElementById(id).classList.toggle('open'); }
+function closeAllDD() { document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open')); }
+document.addEventListener('click',e=>{ if(!e.target.closest('.user-pill')&&!e.target.closest('.m-user-btn')) closeAllDD(); });
 
-function closeAllDropdowns() {
-    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
-}
-
-document.addEventListener('click', e => {
-    if (!e.target.closest('.user-pill') && !e.target.closest('.m-user-btn')) {
-        closeAllDropdowns();
-    }
-});
-
-// ── TOAST ─────────────────────────────────────────────
-function showToast(msg, ms=2500) {
-    const t = document.getElementById('toast');
-    t.textContent=msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), ms);
-}
+function showToast(msg,ms=2500) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),ms); }
 
 init();
 </script>
