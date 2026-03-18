@@ -273,6 +273,49 @@
         #confirm-ok { background: var(--danger); color: #fff; }
         #confirm-cancel { background: var(--border); color: var(--muted); }
 
+        /* ── IMPORT MODAL ── */
+        #import-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; align-items: center; justify-content: center; z-index: 5000;
+        }
+        #import-modal.open { display: flex; }
+        .import-box {
+            background: #111; border: 1px solid var(--border);
+            padding: 2.5rem; max-width: 420px; width: 90%;
+        }
+        .import-box h3 {
+            font-family: var(--font-tech); font-size: 0.75rem; letter-spacing: 0.2em;
+            text-transform: uppercase; margin-bottom: 0.5rem;
+        }
+        .import-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+        .import-drop {
+            border: 1.5px dashed rgba(255,255,255,0.12); padding: 2rem 1rem;
+            text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
+        }
+        .import-drop:hover { border-color: var(--success); }
+        .import-drop.has-files { border-color: var(--success); border-style: solid; background: rgba(0,255,136,0.04); }
+        .import-drop-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .import-drop-title { font-family: var(--font-tech); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+        .import-drop-sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+        .import-file-list { margin-bottom: 1rem; }
+        .import-file-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 0; border-bottom: 1px solid var(--border);
+            font-size: 0.78rem; color: var(--success);
+        }
+        .import-file-item:last-child { border-bottom: none; }
+        .import-btns { display: flex; gap: 10px; margin-top: 1rem; }
+        .import-btns button {
+            flex: 1; padding: 12px; font-family: var(--font-tech); font-size: 0.65rem;
+            font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border: none;
+        }
+        #import-go { background: var(--success); color: #000; }
+        #import-go:disabled { opacity: 0.4; cursor: not-allowed; }
+        #import-cancel { background: rgba(255,255,255,0.06); color: var(--muted); }
+        .import-result { margin-top: 1rem; font-size: 0.78rem; }
+        .import-result.success { color: var(--success); }
+        .import-result.error { color: var(--danger); }
+
         /* ── UTIL ── */
         .faded-out { opacity: 0; filter: blur(30px); pointer-events: none; }
         .hidden { display: none; }
@@ -352,6 +395,7 @@
             <h1 id="greeting" style="font-size:clamp(3rem,8vw,7rem);line-height:0.9;">Hello, Student.</h1>
             <div style="display:flex;gap:10px;margin-top:2rem;flex-wrap:wrap;">
                 <button onclick="loadVerdict()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 20px;cursor:pointer;font-family:var(--font-tech);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.borderColor='#fff';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='var(--muted)'">✦ AI Verdict</button>
+                <button onclick="openImportModal()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px 20px;cursor:pointer;font-family:var(--font-tech);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--success)';this.style.color='var(--success)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='var(--muted)'">↑ Import Attendance</button>
                 <button onclick="shareCard()" style="background:#fff;color:#000;border:none;padding:10px 20px;cursor:pointer;font-family:var(--font-tech);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:background 0.2s;" onmouseover="this.style.background='var(--success)'" onmouseout="this.style.background='#fff'">↗ Share</button>
             </div>
         </header>
@@ -465,7 +509,25 @@
     </main>
 </div>
 
-<!-- ── TOAST ── -->
+<!-- ── IMPORT MODAL ── -->
+<div id="import-modal">
+    <div class="import-box">
+        <h3>Import Attendance</h3>
+        <p>Take screenshots of your attendance page in the college app. If the list is long, upload 2 screenshots — we'll merge them.</p>
+        <div class="import-drop" id="import-drop" onclick="document.getElementById('import-files').click()">
+            <div class="import-drop-icon">📱</div>
+            <div class="import-drop-title">Tap to select screenshots</div>
+            <div class="import-drop-sub">Select 1 or 2 images</div>
+        </div>
+        <input type="file" id="import-files" accept="image/*" multiple style="display:none" onchange="importFilesChosen(this)">
+        <div class="import-file-list" id="import-file-list"></div>
+        <div class="import-result" id="import-result"></div>
+        <div class="import-btns">
+            <button id="import-cancel" onclick="closeImportModal()">Cancel</button>
+            <button id="import-go" onclick="runImport()" disabled>Import →</button>
+        </div>
+    </div>
+</div>
 <div id="toast"></div>
 
 <!-- ── CONFIRM MODAL ── -->
@@ -806,6 +868,79 @@ function shareCard() {
         'nobunk.vercel.app'
     ].join('\n');
     navigator.clipboard.writeText(t).then(() => showToast('Copied to clipboard!'));
+}
+
+// ── IMPORT MODAL ──────────────────────────────────────
+
+function openImportModal() {
+    document.getElementById('import-modal').classList.add('open');
+    document.getElementById('import-file-list').innerHTML = '';
+    document.getElementById('import-result').innerHTML = '';
+    document.getElementById('import-go').disabled = true;
+    document.getElementById('import-drop').classList.remove('has-files');
+    document.getElementById('import-files').value = '';
+}
+
+function closeImportModal() {
+    document.getElementById('import-modal').classList.remove('open');
+}
+
+function importFilesChosen(input) {
+    const files = Array.from(input.files);
+    if (!files.length) return;
+    const drop = document.getElementById('import-drop');
+    drop.classList.add('has-files');
+    drop.querySelector('.import-drop-title').textContent = `${files.length} file${files.length > 1 ? 's' : ''} selected`;
+    drop.querySelector('.import-drop-sub').textContent = 'Tap to change';
+    document.getElementById('import-file-list').innerHTML = files.map(f =>
+        `<div class="import-file-item">✓ ${f.name}</div>`
+    ).join('');
+    document.getElementById('import-go').disabled = false;
+}
+
+async function runImport() {
+    const input = document.getElementById('import-files');
+    const files = Array.from(input.files);
+    if (!files.length) return;
+
+    const btn = document.getElementById('import-go');
+    const result = document.getElementById('import-result');
+    btn.disabled = true;
+    btn.textContent = 'Reading...';
+    result.innerHTML = '';
+
+    const formData = new FormData();
+    files.forEach(f => formData.append('files', f));
+
+    try {
+        const res  = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {
+            method: 'POST', body: formData
+        });
+        const data = await res.json();
+
+        if (data.error) {
+            result.className = 'import-result error';
+            result.textContent = '❌ ' + data.error;
+            btn.disabled = false;
+            btn.textContent = 'Import →';
+            return;
+        }
+
+        result.className = 'import-result success';
+        result.textContent = '✓ ' + data.message;
+        btn.textContent = 'Done!';
+        setTimeout(() => {
+            closeImportModal();
+            loadDashboard();
+            showToast('Attendance imported!');
+        }, 1500);
+
+    } catch(e) {
+        result.className = 'import-result error';
+        result.textContent = 'Something went wrong — try again';
+        btn.disabled = false;
+        btn.textContent = 'Import →';
+    }
 }
 
 // ── SIGN OUT ──────────────────────────────────────────
