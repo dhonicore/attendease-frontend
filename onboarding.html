@@ -897,6 +897,9 @@ function goToDashboard() {
   }
 }
 
+// Keep Render awake
+setInterval(() => fetch(`${API}/health`).catch(()=>{}), 8 * 60 * 1000);
+
 init();
 </script>
 </body>

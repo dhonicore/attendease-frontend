@@ -799,6 +799,9 @@ document.addEventListener('click',e=>{ if(!e.target.closest('.user-pill')&&!e.ta
 
 function showToast(msg,ms=2500) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),ms); }
 
+// Keep Render awake
+setInterval(() => fetch(`${API}/health`).catch(()=>{}), 8 * 60 * 1000);
+
 init();
 </script>
 </body>
