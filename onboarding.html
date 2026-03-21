@@ -131,7 +131,6 @@ body {
 
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* SUBJECTS PREVIEW */
 .subjects-box {
   background: var(--card);
   border: 1px solid var(--border);
@@ -166,14 +165,6 @@ body {
   margin: 3px;
 }
 
-.no-subjects {
-  color: var(--muted);
-  font-size: 0.82rem;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-/* ATTENDANCE IMPORT */
 .upload-box {
   border: 1.5px dashed rgba(255,255,255,0.12);
   border-radius: 14px;
@@ -205,7 +196,6 @@ input[type="file"] { display: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: 0.85rem; color: var(--muted); }
 
-/* MANUAL ATTENDANCE */
 .manual-subject {
   background: var(--card);
   border: 1px solid var(--border);
@@ -230,7 +220,6 @@ input[type="file"] { display: none; }
 }
 .manual-fields input:focus { border-color: var(--success); }
 
-/* BUTTONS */
 .btn-row { padding: 1rem 0 2rem; }
 
 .btn-next {
@@ -249,7 +238,6 @@ input[type="file"] { display: none; }
 }
 
 .btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-next:active { transform: translateY(0); }
 .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
 .btn-skip {
@@ -267,23 +255,6 @@ input[type="file"] { display: none; }
 }
 
 .btn-skip:hover { color: var(--text); }
-
-.btn-secondary {
-  width: 100%;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 13px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 8px;
-}
-
-.btn-secondary:hover { border-color: rgba(255,255,255,0.3); }
 
 .success-banner {
   background: rgba(0,255,136,0.08);
@@ -327,6 +298,38 @@ input[type="file"] { display: none; }
 .summary-row:last-child { border-bottom: none; }
 .summary-label { color: var(--muted); }
 .summary-val { font-weight: 600; }
+
+.screenshot-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.screenshot-preview {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.divider {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
 </style>
 </head>
 <body>
@@ -426,24 +429,26 @@ input[type="file"] { display: none; }
     <div class="screen-content">
       <div class="step-label">Past Attendance</div>
       <div class="screen-title">Import your attendance</div>
-      <div class="screen-sub">Semester already started? Import so NoBunk knows where you stand right now.</div>
+      <div class="screen-sub">Upload screenshots from your college app. Upload multiple if your list is long.</div>
 
       <div class="success-banner" id="import-success"></div>
       <div class="error-banner" id="import-error"></div>
 
       <div class="upload-box" id="ss-box" onclick="document.getElementById('ss-file').click()">
         <div class="upload-icon">📱</div>
-        <div class="upload-title">Upload attendance screenshot</div>
-        <div class="upload-sub">From your college app — AI reads it automatically</div>
+        <div class="upload-title">Upload attendance screenshots</div>
+        <div class="upload-sub">Select multiple images at once — AI reads all of them</div>
       </div>
-      <input type="file" id="ss-file" accept="image/*" onchange="uploadScreenshot(this)">
+      <input type="file" id="ss-file" accept="image/*" multiple onchange="uploadScreenshots(this)">
+
+      <div class="screenshot-previews" id="ss-previews"></div>
 
       <div class="loading-state" id="ss-loading">
         <div class="spinner"></div>
-        <div class="loading-text">AI is reading your attendance...</div>
+        <div class="loading-text" id="ss-loading-text">AI is reading your attendance...</div>
       </div>
 
-      <div style="text-align:center;margin:1rem 0;color:var(--muted);font-size:0.78rem;">— or enter manually —</div>
+      <div class="divider">or enter manually</div>
 
       <div id="manual-list"></div>
     </div>
@@ -453,12 +458,12 @@ input[type="file"] { display: none; }
     </div>
   </div>
 
-  <!-- STEP 3: COE (OPTIONAL) -->
+  <!-- STEP 3: COE -->
   <div class="screen" id="s3">
     <div class="screen-content">
       <div class="step-label">Holidays (Optional)</div>
       <div class="screen-title">Upload your COE</div>
-      <div class="screen-sub">Upload your college Calendar of Events so NoBunk can detect holidays and calculate accurately.</div>
+      <div class="screen-sub">Upload your college Calendar of Events so NoBunk can detect holidays and calculate remaining classes accurately.</div>
 
       <div class="success-banner" id="coe-success"></div>
 
@@ -502,7 +507,6 @@ let currentUser = null;
 let currentSubjects = [];
 let currentStep = 1;
 
-// ── SUBJECT DATABASE ──
 const SUBJECT_DB = {
   CMRIT: {
     1: {
@@ -577,11 +581,7 @@ function updateCycles() {
   const college = document.getElementById('college').value;
   const year = document.getElementById('year').value;
   const cycleField = document.getElementById('cycle-field');
-  if (college === 'CMRIT' && year === '1') {
-    cycleField.style.display = 'block';
-  } else {
-    cycleField.style.display = 'none';
-  }
+  cycleField.style.display = (college === 'CMRIT' && year === '1') ? 'block' : 'none';
   updateSubjects();
 }
 
@@ -595,7 +595,6 @@ function updateSubjects() {
   const count = document.getElementById('subjects-count');
 
   let subjects = [];
-
   if (college === 'CMRIT' && year && semester && cycle) {
     subjects = SUBJECT_DB?.CMRIT?.[year]?.[semester]?.[cycle] || [];
   }
@@ -631,28 +630,17 @@ async function saveProfile() {
   }
 
   try {
-    // save profile
     await fetch(`${API}/onboarding/profile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: currentUser.id,
-        college, year, semester, section,
-        min_attendance: minAtt
-      })
+      body: JSON.stringify({ user_id: currentUser.id, college, year, semester, section, min_attendance: minAtt })
     });
 
-    // save subjects
     if (currentSubjects.length > 0) {
       await fetch(`${API}/onboarding/save-timetable`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: currentUser.id,
-          section,
-          subjects: currentSubjects,
-          schedule: {}
-        })
+        body: JSON.stringify({ user_id: currentUser.id, section, subjects: currentSubjects, schedule: {} })
       });
     }
 
@@ -666,61 +654,80 @@ async function saveProfile() {
 function buildManualForm() {
   const list = document.getElementById('manual-list');
   if (currentSubjects.length === 0) {
-    list.innerHTML = '<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:1rem 0;">No subjects loaded — go back and select your college details.</div>';
+    list.innerHTML = '<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:1rem 0;">No subjects loaded.</div>';
     return;
   }
-  list.innerHTML = currentSubjects.map(s => `
-    <div class="manual-subject">
+  list.innerHTML = currentSubjects.map(s => {
+    const key = s.replace(/[^a-zA-Z0-9]/g, '');
+    return `<div class="manual-subject">
       <div class="manual-subject-name">${s}</div>
       <div class="manual-fields">
-        <div><label>Classes Held</label><input type="number" id="total-${btoa(s).replace(/=/g,'')}" placeholder="e.g. 14" min="0"></div>
-        <div><label>You Attended</label><input type="number" id="att-${btoa(s).replace(/=/g,'')}" placeholder="e.g. 13" min="0"></div>
+        <div><label>Classes Held</label><input type="number" id="total-${key}" placeholder="e.g. 14" min="0"></div>
+        <div><label>You Attended</label><input type="number" id="att-${key}" placeholder="e.g. 13" min="0"></div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
-async function uploadScreenshot(input) {
-  const file = input.files[0];
-  if (!file) return;
+async function uploadScreenshots(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+
   const box = document.getElementById('ss-box');
   box.classList.add('uploaded');
-  box.querySelector('.upload-title').textContent = 'Screenshot uploaded';
+  box.querySelector('.upload-title').textContent = `${files.length} screenshot${files.length > 1 ? 's' : ''} selected`;
+  box.querySelector('.upload-sub').textContent = 'Tap to add more';
+
   document.getElementById('ss-loading').classList.add('visible');
   document.getElementById('import-success').style.display = 'none';
   document.getElementById('import-error').style.display = 'none';
 
-  const formData = new FormData();
-  formData.append('file', file);
+  const previews = document.getElementById('ss-previews');
+  previews.innerHTML = '';
+  files.forEach(f => {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(f);
+    img.className = 'screenshot-preview';
+    previews.appendChild(img);
+  });
 
-  try {
-    const res = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {
-      method: 'POST',
-      body: formData
-    });
-    const data = await res.json();
-    document.getElementById('ss-loading').classList.remove('visible');
+  let totalImported = 0;
+  let currentFile = 0;
 
-    if (data.message) {
-      const successEl = document.getElementById('import-success');
-      successEl.style.display = 'block';
-      successEl.textContent = `✓ ${data.message}`;
-    } else {
-      const errEl = document.getElementById('import-error');
-      errEl.style.display = 'block';
-      errEl.textContent = 'Could not read screenshot. Please enter manually below.';
+  for (const file of files) {
+    currentFile++;
+    document.getElementById('ss-loading-text').textContent = `Reading screenshot ${currentFile} of ${files.length}...`;
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.message) totalImported++;
+    } catch(e) {
+      console.error(e);
     }
-  } catch(e) {
-    document.getElementById('ss-loading').classList.remove('visible');
-    const errEl = document.getElementById('import-error');
-    errEl.style.display = 'block';
-    errEl.textContent = 'Upload failed. Please enter manually below.';
+  }
+
+  document.getElementById('ss-loading').classList.remove('visible');
+
+  if (totalImported > 0) {
+    const el = document.getElementById('import-success');
+    el.style.display = 'block';
+    el.textContent = `✓ Successfully imported from ${totalImported} screenshot${totalImported > 1 ? 's' : ''}`;
+  } else {
+    const el = document.getElementById('import-error');
+    el.style.display = 'block';
+    el.textContent = 'Could not read screenshots. Please enter manually below.';
   }
 }
 
 async function saveManualAndContinue() {
   const entries = [];
   for (const s of currentSubjects) {
-    const key = btoa(s).replace(/=/g,'');
+    const key = s.replace(/[^a-zA-Z0-9]/g, '');
     const total = parseInt(document.getElementById(`total-${key}`)?.value) || 0;
     const attended = parseInt(document.getElementById(`att-${key}`)?.value) || 0;
     if (total > 0) entries.push({ name: s, attended, total });
@@ -728,7 +735,6 @@ async function saveManualAndContinue() {
 
   if (entries.length > 0) {
     try {
-      // get subjects from backend
       const res = await fetch(`${API}/subjects/${currentUser.id}`);
       const data = await res.json();
       const dbSubjects = data.subjects || [];
@@ -742,7 +748,7 @@ async function saveManualAndContinue() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 subject_id: match.id,
-                date: `2026-01-${String((i%28)+1).padStart(2,'0')}`,
+                date: `2026-01-${String((i % 28) + 1).padStart(2, '0')}`,
                 status: 'attended'
               })
             });
@@ -754,7 +760,7 @@ async function saveManualAndContinue() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 subject_id: match.id,
-                date: `2026-02-${String((i%28)+1).padStart(2,'0')}`,
+                date: `2026-02-${String((i % 28) + 1).padStart(2, '0')}`,
                 status: 'bunked'
               })
             });
@@ -803,13 +809,14 @@ function buildSummary() {
   const semester = document.getElementById('semester').value || '—';
   const section = document.getElementById('section').value || '—';
   const minAtt = document.getElementById('min-attendance').value || '75';
-  const cycle = document.getElementById('cycle')?.value || '—';
+  const cycleEl = document.getElementById('cycle');
+  const cycleText = cycleEl?.options[cycleEl?.selectedIndex]?.text || '—';
 
   document.getElementById('summary-card').innerHTML = `
     <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${currentUser.name}</span></div>
     <div class="summary-row"><span class="summary-label">College</span><span class="summary-val">${college}</span></div>
     <div class="summary-row"><span class="summary-label">Year & Sem</span><span class="summary-val">${year}st Year · Sem ${semester}</span></div>
-    <div class="summary-row"><span class="summary-label">Cycle</span><span class="summary-val">${cycle}</span></div>
+    <div class="summary-row"><span class="summary-label">Cycle</span><span class="summary-val">${cycleText}</span></div>
     <div class="summary-row"><span class="summary-label">Section</span><span class="summary-val">${section}</span></div>
     <div class="summary-row"><span class="summary-label">Subjects</span><span class="summary-val">${currentSubjects.length} loaded</span></div>
     <div class="summary-row"><span class="summary-label">Min Attendance</span><span class="summary-val">${minAtt}%</span></div>
