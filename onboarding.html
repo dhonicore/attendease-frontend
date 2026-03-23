@@ -16,330 +16,136 @@
   --warn: #ffaa00;
   --danger: #ff3366;
 }
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; min-height:100vh; }
+.wrap { max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; padding:0 1.25rem; }
+.topbar { padding:1.5rem 0 1rem; display:flex; align-items:center; justify-content:space-between; }
+.logo { font-family:'Montserrat',sans-serif; font-size:1rem; font-weight:900; letter-spacing:0.05em; color:var(--success); }
+.step-counter { font-size:0.72rem; font-weight:600; color:var(--muted); letter-spacing:0.05em; }
+.progress-track { height:2px; background:rgba(255,255,255,0.06); border-radius:1px; margin-bottom:2.5rem; overflow:hidden; }
+.progress-fill { height:100%; background:var(--success); border-radius:1px; transition:width 0.4s cubic-bezier(0.4,0,0.2,1); }
+.screen { display:none; flex:1; flex-direction:column; }
+.screen.active { display:flex; }
+.screen-content { flex:1; }
+.step-label { font-size:0.68rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--success); margin-bottom:0.75rem; }
+.screen-title { font-family:'Montserrat',sans-serif; font-size:clamp(1.6rem,6vw,2.2rem); font-weight:900; line-height:1.1; letter-spacing:-0.02em; margin-bottom:0.75rem; }
+.screen-sub { font-size:0.88rem; color:var(--muted); line-height:1.6; margin-bottom:2rem; }
+.field { margin-bottom:1rem; }
+.field label { display:block; font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.field input,.field select { width:100%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:13px 16px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:500; color:var(--text); outline:none; transition:border-color 0.2s; -webkit-appearance:none; }
+.field input:focus,.field select:focus { border-color:var(--success); }
+.field input::placeholder { color:var(--muted); }
+.field select { cursor:pointer; }
+.field select option { background:#111; }
+.field-hint { font-size:0.7rem; color:var(--muted); margin-top:5px; line-height:1.5; }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.upload-box { border:1.5px dashed rgba(255,255,255,0.12); border-radius:14px; padding:2rem 1rem; text-align:center; cursor:pointer; transition:all 0.2s; background:var(--card); margin-bottom:1rem; }
+.upload-box:hover { border-color:var(--success); }
+.upload-box.uploaded { border-color:var(--success); border-style:solid; background:rgba(0,255,136,0.05); }
+.upload-box.error { border-color:var(--danger); background:rgba(255,51,102,0.05); }
+.upload-icon { font-size:2rem; margin-bottom:0.75rem; }
+.upload-title { font-size:0.95rem; font-weight:600; margin-bottom:4px; }
+.upload-sub { font-size:0.78rem; color:var(--muted); }
+input[type="file"] { display:none; }
+.loading-state { text-align:center; padding:2rem; display:none; }
+.loading-state.visible { display:block; }
+.spinner { width:32px; height:32px; border:2px solid rgba(255,255,255,0.1); border-top-color:var(--success); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-text { font-size:0.85rem; color:var(--muted); }
+.result-box { border-radius:10px; padding:12px 14px; font-size:0.82rem; margin-bottom:1rem; }
+.result-box.success { background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.2); color:var(--success); }
+.result-box.error { background:rgba(255,51,102,0.06); border:1px solid rgba(255,51,102,0.2); color:var(--danger); }
+.subjects-preview { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1rem; }
+.subjects-preview-title { font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+.subject-chip { display:inline-block; background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); border-radius:20px; padding:5px 12px; font-size:0.78rem; font-weight:600; color:var(--success); margin:3px; }
+.schedule-preview { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1rem; margin-top:0.75rem; }
+.schedule-day { margin-bottom:10px; }
+.schedule-day:last-child { margin-bottom:0; }
+.schedule-day-name { font-weight:700; color:var(--success); text-transform:uppercase; font-size:0.65rem; letter-spacing:0.1em; margin-bottom:3px; }
+.schedule-day-subs { color:#aaa; font-size:0.8rem; }
+.btn-row { padding:1rem 0 2rem; }
+.btn-next { width:100%; background:var(--success); color:#000; border:none; border-radius:12px; padding:15px; font-family:'Montserrat',sans-serif; font-size:0.9rem; font-weight:800; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s; }
+.btn-next:hover { opacity:0.9; transform:translateY(-1px); }
+.btn-next:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+.btn-skip { width:100%; background:transparent; color:var(--muted); border:none; padding:12px; font-family:'Inter',sans-serif; font-size:0.82rem; cursor:pointer; transition:color 0.15s; margin-top:8px; }
+.btn-skip:hover { color:var(--text); }
+.success-icon { font-size:3rem; margin-bottom:1rem; }
+.summary-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.25rem; margin-bottom:1.5rem; }
+.summary-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
+.summary-row:last-child { border-bottom:none; }
+.summary-label { color:var(--muted); }
+.summary-val { font-weight:600; }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
+/* ── MANUAL ENTRY CARDS ── */
+.manual-progress {
+  display:flex; align-items:center; gap:10px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:10px; padding:12px 16px; margin-bottom:1.25rem;
 }
+.manual-progress-bar-wrap { flex:1; height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; }
+.manual-progress-bar { height:100%; background:var(--success); border-radius:2px; transition:width 0.3s ease; }
+.manual-progress-text { font-size:0.72rem; font-weight:700; color:var(--success); white-space:nowrap; font-family:'Montserrat',sans-serif; }
 
-.wrap {
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 0 1.25rem;
+.att-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:1.25rem;
+  margin-bottom:12px;
+  transition:border-color 0.2s;
+  position:relative;
+  overflow:hidden;
 }
-
-.topbar {
-  padding: 1.5rem 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.att-card-accent {
+  position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:16px 0 0 16px;
+  background:var(--border); transition:background 0.3s;
 }
-
-.logo {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  color: var(--success);
+.att-card.filled .att-card-accent { background:var(--success); }
+.att-card.warn-card .att-card-accent { background:var(--warn); }
+.att-card.danger-card .att-card-accent { background:var(--danger); }
+.att-card-name { font-size:0.95rem; font-weight:700; margin-bottom:4px; padding-left:8px; }
+.att-card-pct {
+  font-family:'Montserrat',sans-serif; font-size:1.8rem; font-weight:900;
+  text-align:right; line-height:1; margin-bottom:0.75rem;
+  color:var(--muted); transition:color 0.2s;
 }
-
-.step-counter { font-size: 0.72rem; font-weight: 600; color: var(--muted); }
-
-.progress-track {
-  height: 2px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 1px;
-  margin-bottom: 2.5rem;
-  overflow: hidden;
+.att-card-pct.safe { color:var(--success); }
+.att-card-pct.warn { color:var(--warn); }
+.att-card-pct.danger { color:var(--danger); }
+.att-card-inputs { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.att-input-wrap label {
+  display:block; font-size:0.6rem; font-weight:700;
+  letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:6px;
 }
-
-.progress-fill {
-  height: 100%;
-  background: var(--success);
-  border-radius: 1px;
-  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+.att-input-wrap input {
+  width:100%; background:rgba(255,255,255,0.05);
+  border:1.5px solid var(--border); border-radius:10px;
+  padding:12px; font-family:'Montserrat',sans-serif;
+  font-size:1.4rem; font-weight:900; color:var(--text);
+  text-align:center; outline:none; transition:border-color 0.2s;
+  -webkit-appearance:none; appearance:none;
 }
-
-.screen { display: none; flex: 1; flex-direction: column; }
-.screen.active { display: flex; }
-.screen-content { flex: 1; }
-
-.step-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--success);
-  margin-bottom: 0.75rem;
+.att-input-wrap input:focus { border-color:var(--success); }
+.att-card-status {
+  margin-top:8px; padding-left:8px;
+  font-size:0.72rem; color:var(--muted); min-height:18px;
+  transition:color 0.2s;
 }
-
-.screen-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1.8rem, 6vw, 2.4rem);
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.75rem;
-}
-
-.screen-sub {
-  font-size: 0.88rem;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 2rem;
-}
-
-.field { margin-bottom: 1rem; }
-
-.field label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-
-.field input, .field select {
-  width: 100%;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 13px 16px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.2s;
-  -webkit-appearance: none;
-}
-
-.field input:focus, .field select:focus { border-color: var(--success); }
-.field input::placeholder { color: var(--muted); }
-.field select option { background: #111; }
-
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-.subjects-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-}
-
-.subjects-box-title {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.subject-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0,255,136,0.08);
-  border: 1px solid rgba(0,255,136,0.2);
-  border-radius: 20px;
-  padding: 5px 12px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--success);
-  margin: 3px;
-}
-
-.upload-box {
-  border: 1.5px dashed rgba(255,255,255,0.12);
-  border-radius: 14px;
-  padding: 2rem 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: var(--card);
-  margin-bottom: 1rem;
-}
-
-.upload-box:hover { border-color: var(--success); }
-.upload-box.uploaded { border-color: var(--success); border-style: solid; background: rgba(0,255,136,0.05); }
-.upload-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-.upload-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
-.upload-sub { font-size: 0.78rem; color: var(--muted); }
-input[type="file"] { display: none; }
-
-.loading-state { text-align: center; padding: 2rem; display: none; }
-.loading-state.visible { display: block; }
-.spinner {
-  width: 32px; height: 32px;
-  border: 2px solid rgba(255,255,255,0.1);
-  border-top-color: var(--success);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 1rem;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 0.85rem; color: var(--muted); }
-
-.manual-subject {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 8px;
-}
-
-.manual-subject-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; }
-.manual-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.manual-fields label { font-size: 0.62rem; color: var(--muted); display: block; margin-bottom: 4px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-.manual-fields input {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 0.88rem;
-  color: var(--text);
-  outline: none;
-  font-family: 'Inter', sans-serif;
-}
-.manual-fields input:focus { border-color: var(--success); }
-
-.btn-row { padding: 1rem 0 2rem; }
-
-.btn-next {
-  width: 100%;
-  background: var(--success);
-  color: #000;
-  border: none;
-  border-radius: 12px;
-  padding: 15px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-.btn-skip {
-  width: 100%;
-  background: transparent;
-  color: var(--muted);
-  border: none;
-  padding: 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.15s;
-  margin-top: 8px;
-}
-
-.btn-skip:hover { color: var(--text); }
-
-.success-banner {
-  background: rgba(0,255,136,0.08);
-  border: 1px solid rgba(0,255,136,0.2);
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-size: 0.82rem;
-  color: var(--success);
-  margin-bottom: 1rem;
-  display: none;
-}
-
-.error-banner {
-  background: rgba(255,51,102,0.08);
-  border: 1px solid rgba(255,51,102,0.2);
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-size: 0.82rem;
-  color: var(--danger);
-  margin-bottom: 1rem;
-  display: none;
-}
-
-.summary-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.85rem;
-}
-
-.summary-row:last-child { border-bottom: none; }
-.summary-label { color: var(--muted); }
-.summary-val { font-weight: 600; }
-
-.screenshot-previews {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 1rem;
-}
-
-.screenshot-preview {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.divider {
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.75rem;
-  margin: 1rem 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.divider::before, .divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
+.att-card-status.safe { color:var(--success); }
+.att-card-status.warn { color:var(--warn); }
+.att-card-status.danger { color:var(--danger); }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar">
     <div class="logo">NoBunk</div>
-    <div class="step-counter" id="step-counter">Step 1 of 4</div>
+    <div class="step-counter" id="step-counter">Step 1 of 5</div>
   </div>
   <div class="progress-track">
-    <div class="progress-fill" id="progress-fill" style="width:25%"></div>
+    <div class="progress-fill" id="progress-fill" style="width:20%"></div>
   </div>
 
   <!-- STEP 1: DETAILS -->
@@ -347,76 +153,44 @@ input[type="file"] { display: none; }
     <div class="screen-content">
       <div class="step-label">Your Details</div>
       <div class="screen-title">Tell us about yourself</div>
-      <div class="screen-sub">We'll auto-fill your subjects based on your college and year.</div>
-
+      <div class="screen-sub">We need this to calculate your attendance and bunk limits accurately.</div>
       <div class="field">
-        <label>College</label>
-        <select id="college" onchange="updateCycles()">
-          <option value="">Select your college</option>
-          <option value="CMRIT">CMRIT — Bengaluru</option>
-          <option value="OTHER">Other college</option>
-        </select>
+        <label>College Name</label>
+        <input type="text" id="college" placeholder="e.g. CMRIT, RV College, PES University">
       </div>
-
       <div class="row2">
         <div class="field">
           <label>Year</label>
-          <select id="year" onchange="updateCycles()">
+          <select id="year">
             <option value="">Select</option>
-            <option value="1">1st Year</option>
-            <option value="2">2nd Year</option>
-            <option value="3">3rd Year</option>
-            <option value="4">4th Year</option>
+            <option>1st Year</option><option>2nd Year</option>
+            <option>3rd Year</option><option>4th Year</option>
           </select>
         </div>
         <div class="field">
           <label>Semester</label>
-          <select id="semester" onchange="updateSubjects()">
+          <select id="semester">
             <option value="">Select</option>
-            <option value="1">Sem 1</option>
-            <option value="2">Sem 2</option>
-            <option value="3">Sem 3</option>
-            <option value="4">Sem 4</option>
-            <option value="5">Sem 5</option>
-            <option value="6">Sem 6</option>
-            <option value="7">Sem 7</option>
-            <option value="8">Sem 8</option>
+            <option>Sem 1</option><option>Sem 2</option><option>Sem 3</option>
+            <option>Sem 4</option><option>Sem 5</option><option>Sem 6</option>
+            <option>Sem 7</option><option>Sem 8</option>
           </select>
         </div>
       </div>
-
-      <div class="field" id="cycle-field" style="display:none;">
-        <label>Cycle</label>
-        <select id="cycle" onchange="updateSubjects()">
-          <option value="">Select cycle</option>
-          <option value="CHEM">Chemistry Cycle (ISE/AIML/AIDS — Sections A-H)</option>
-          <option value="PHY_CSE">Physics Cycle CSE (Sections I-L)</option>
-          <option value="PHY_ECE">Physics Cycle ECE (Sections M-P)</option>
-        </select>
+      <div class="row2">
+        <div class="field">
+          <label>Section</label>
+          <input type="text" id="section" placeholder="e.g. A, B, C">
+        </div>
+        <div class="field">
+          <label>Batch</label>
+          <input type="text" id="batch" placeholder="e.g. A1, A2, A3">
+        </div>
       </div>
-
-      <div class="field">
-        <label>Section</label>
-        <select id="section">
-          <option value="">Select</option>
-          <option>A</option><option>B</option><option>C</option><option>D</option>
-          <option>E</option><option>F</option><option>G</option><option>H</option>
-          <option>I</option><option>J</option><option>K</option><option>L</option>
-          <option>M</option><option>N</option><option>O</option><option>P</option>
-        </select>
-      </div>
-
+      <div class="field-hint" style="margin-bottom:1rem;">Batch determines your lab rotation. Check your timetable for entries like A1(CHE)/A2(PY)/A3(CHE).</div>
       <div class="field">
         <label>Minimum Attendance Required (%)</label>
         <input type="number" id="min-attendance" value="75" min="1" max="100">
-      </div>
-
-      <div class="subjects-box" id="subjects-preview-box" style="display:none;">
-        <div class="subjects-box-title">
-          <span>Your Subjects</span>
-          <span id="subjects-count" style="color:var(--success)"></span>
-        </div>
-        <div id="subjects-chips"></div>
       </div>
     </div>
     <div class="btn-row">
@@ -424,60 +198,47 @@ input[type="file"] { display: none; }
     </div>
   </div>
 
-  <!-- STEP 2: PAST ATTENDANCE -->
+  <!-- STEP 2: TIMETABLE -->
   <div class="screen" id="s2">
     <div class="screen-content">
-      <div class="step-label">Past Attendance</div>
-      <div class="screen-title">Import your attendance</div>
-      <div class="screen-sub">Upload screenshots from your college app. Upload multiple if your list is long.</div>
-
-      <div class="success-banner" id="import-success"></div>
-      <div class="error-banner" id="import-error"></div>
-
-      <div class="upload-box" id="ss-box" onclick="document.getElementById('ss-file').click()">
-        <div class="upload-icon">📱</div>
-        <div class="upload-title">Upload attendance screenshots</div>
-        <div class="upload-sub">Select multiple images at once — AI reads all of them</div>
+      <div class="step-label">Timetable</div>
+      <div class="screen-title">Upload your timetable</div>
+      <div class="screen-sub">Upload your section's timetable PDF. AI will extract your subjects and day-wise schedule including your batch's lab slots.</div>
+      <div class="upload-box" id="tt-box" onclick="document.getElementById('tt-file').click()">
+        <div class="upload-icon">📄</div>
+        <div class="upload-title">Tap to upload timetable</div>
+        <div class="upload-sub">PDF or image</div>
       </div>
-      <input type="file" id="ss-file" accept="image/*" multiple onchange="uploadScreenshots(this)">
-
-      <div class="screenshot-previews" id="ss-previews"></div>
-
-      <div class="loading-state" id="ss-loading">
+      <input type="file" id="tt-file" accept=".pdf,image/*" onchange="uploadTimetable(this)">
+      <div class="loading-state" id="tt-loading">
         <div class="spinner"></div>
-        <div class="loading-text" id="ss-loading-text">AI is reading your attendance...</div>
+        <div class="loading-text">AI is reading your timetable...</div>
       </div>
-
-      <div class="divider">or enter manually</div>
-
-      <div id="manual-list"></div>
+      <div id="tt-result" style="display:none;"></div>
     </div>
     <div class="btn-row">
-      <button class="btn-next" onclick="saveManualAndContinue()">Save & Continue →</button>
-      <button class="btn-skip" onclick="goTo(3)">Skip — track from today</button>
+      <button class="btn-next" id="tt-next-btn" onclick="saveTimetable()" disabled>Save & Continue →</button>
+      <button class="btn-skip" onclick="skipTimetable()">Skip — add subjects manually later</button>
     </div>
   </div>
 
   <!-- STEP 3: COE -->
   <div class="screen" id="s3">
     <div class="screen-content">
-      <div class="step-label">Holidays (Optional)</div>
+      <div class="step-label">Academic Calendar</div>
       <div class="screen-title">Upload your COE</div>
-      <div class="screen-sub">Upload your college Calendar of Events so NoBunk can detect holidays and calculate remaining classes accurately.</div>
-
-      <div class="success-banner" id="coe-success"></div>
-
+      <div class="screen-sub">Calendar of Events lets NoBunk detect holidays, Saturday substitutions, and calculate your exact remaining classes for the semester.</div>
       <div class="upload-box" id="coe-box" onclick="document.getElementById('coe-file').click()">
         <div class="upload-icon">📅</div>
-        <div class="upload-title">Upload COE / Academic Calendar</div>
-        <div class="upload-sub">PDF or image</div>
+        <div class="upload-title">Tap to upload COE</div>
+        <div class="upload-sub">PDF or image — AI detects holidays + substitutions</div>
       </div>
       <input type="file" id="coe-file" accept=".pdf,image/*" onchange="uploadCOE(this)">
-
       <div class="loading-state" id="coe-loading">
         <div class="spinner"></div>
-        <div class="loading-text">Detecting holidays...</div>
+        <div class="loading-text">Reading academic calendar...</div>
       </div>
+      <div id="coe-result"></div>
     </div>
     <div class="btn-row">
       <button class="btn-next" onclick="goTo(4)">Continue →</button>
@@ -485,13 +246,41 @@ input[type="file"] { display: none; }
     </div>
   </div>
 
-  <!-- STEP 4: DONE -->
+  <!-- STEP 4: MANUAL ATTENDANCE -->
   <div class="screen" id="s4">
     <div class="screen-content">
+      <div class="step-label">Past Attendance</div>
+      <div class="screen-title">How many have you attended?</div>
+      <div class="screen-sub">Enter your current attendance for each subject. Just two numbers — classes held and you attended.</div>
+
+      <!-- Progress bar -->
+      <div class="manual-progress">
+        <div class="manual-progress-bar-wrap">
+          <div class="manual-progress-bar" id="manual-prog-bar" style="width:0%"></div>
+        </div>
+        <div class="manual-progress-text" id="manual-prog-text">0 / 0 done</div>
+      </div>
+
+      <div id="manual-cards-list"></div>
+
+      <div id="manual-loading" style="display:none;text-align:center;padding:1rem;">
+        <div class="spinner" style="margin:0 auto 0.5rem;"></div>
+        <div style="font-size:0.8rem;color:var(--muted);">Saving attendance...</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" id="manual-save-btn" onclick="saveManualAttendance()">Save & Continue →</button>
+      <button class="btn-skip" onclick="goTo(5)">Skip — I'll track from today</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: DONE -->
+  <div class="screen" id="s5">
+    <div class="screen-content">
       <div style="text-align:center;padding-top:2rem;">
-        <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
-        <div class="screen-title" style="text-align:center;">You're set!</div>
-        <div class="screen-sub" style="text-align:center;">NoBunk is ready. Track your attendance from today.</div>
+        <div class="success-icon">🎉</div>
+        <div class="screen-title" style="text-align:center;">You're all set!</div>
+        <div class="screen-sub" style="text-align:center;">NoBunk is ready. Open your dashboard to see your attendance analysis.</div>
       </div>
       <div class="summary-card" id="summary-card"></div>
     </div>
@@ -503,67 +292,30 @@ input[type="file"] { display: none; }
 
 <script>
 const API = 'https://attendease-backend-wrag.onrender.com';
-let currentUser = null;
-let currentSubjects = [];
-let currentStep = 1;
-
-const SUBJECT_DB = {
-  CMRIT: {
-    1: {
-      2: {
-        CHEM: [
-          "Applied Mathematics II",
-          "Applied Chemistry for Smart Systems",
-          "Applied Chemistry Lab",
-          "Introduction to AI and Applications",
-          "Introduction to Electrical Engineering",
-          "Python Programming",
-          "Python Programming Lab",
-          "Communication Skills",
-          "Indian Constitution & Engineering Ethics",
-          "Interdisciplinary Project-Based Learning",
-          "Applied Mathematics Lab",
-          "Aptitude"
-        ],
-        PHY_CSE: [
-          "Applied Mathematics II",
-          "Applied Mathematics Lab",
-          "Physics - Quantum Physics and Applications",
-          "Computer Aided Drawing",
-          "Introduction to Electronics and Communication Engineering",
-          "Programming in C",
-          "C Programming Lab",
-          "Samskrutika Kannada",
-          "Soft Skills",
-          "Interdisciplinary Project-Based Learning"
-        ],
-        PHY_ECE: [
-          "Applied Mathematics II (Transforms)",
-          "Applied Mathematics Lab",
-          "Quantum Physics and Electronic Sensors",
-          "Computer Aided Drawing",
-          "Introduction to Electrical Engineering",
-          "Fundamentals of Electronics and Communication Engineering",
-          "Electronics Lab",
-          "Samskrutika Kannada",
-          "Soft Skills",
-          "Interdisciplinary Project-Based Learning"
-        ]
-      }
-    }
-  }
-};
+let currentUser  = null;
+let timetableData = null;
+let currentStep  = 1;
+let subjectsList = []; // subjects loaded for manual entry
 
 function init() {
   const p = new URLSearchParams(window.location.search);
-  const uid = p.get('user_id');
-  const uname = p.get('name');
+  const uid    = p.get('user_id');
+  const uname  = p.get('name');
   const uemail = p.get('email');
   if (uid) {
     currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
-    localStorage.setItem('user_id', uid);
-    localStorage.setItem('user_name', uname || '');
+    localStorage.setItem('user_id',    uid);
+    localStorage.setItem('user_name',  uname  || '');
     localStorage.setItem('user_email', uemail || '');
+  } else {
+    const storedId = localStorage.getItem('user_id');
+    if (storedId) {
+      currentUser = {
+        id:    storedId,
+        name:  decodeURIComponent(localStorage.getItem('user_name') || 'Student'),
+        email: localStorage.getItem('user_email') || ''
+      };
+    }
   }
 }
 
@@ -571,210 +323,114 @@ function goTo(step) {
   document.getElementById(`s${currentStep}`).classList.remove('active');
   currentStep = step;
   document.getElementById(`s${step}`).classList.add('active');
-  document.getElementById('step-counter').textContent = `Step ${step} of 4`;
-  document.getElementById('progress-fill').style.width = `${step * 25}%`;
-  if (step === 2) buildManualForm();
-  if (step === 4) buildSummary();
+  document.getElementById('step-counter').textContent = `Step ${step} of 5`;
+  document.getElementById('progress-fill').style.width = `${step * 20}%`;
+  window.scrollTo(0, 0);
+  if (step === 4) loadManualCards();
+  if (step === 5) buildSummary();
 }
 
-function updateCycles() {
-  const college = document.getElementById('college').value;
-  const year = document.getElementById('year').value;
-  const cycleField = document.getElementById('cycle-field');
-  cycleField.style.display = (college === 'CMRIT' && year === '1') ? 'block' : 'none';
-  updateSubjects();
-}
-
-function updateSubjects() {
-  const college = document.getElementById('college').value;
-  const year = parseInt(document.getElementById('year').value);
-  const semester = parseInt(document.getElementById('semester').value);
-  const cycle = document.getElementById('cycle')?.value || '';
-  const box = document.getElementById('subjects-preview-box');
-  const chips = document.getElementById('subjects-chips');
-  const count = document.getElementById('subjects-count');
-
-  let subjects = [];
-  if (college === 'CMRIT' && year && semester && cycle) {
-    subjects = SUBJECT_DB?.CMRIT?.[year]?.[semester]?.[cycle] || [];
-  }
-
-  currentSubjects = subjects;
-
-  if (subjects.length > 0) {
-    box.style.display = 'block';
-    count.textContent = `${subjects.length} subjects`;
-    chips.innerHTML = subjects.map(s => `<span class="subject-chip">${s}</span>`).join('');
-  } else {
-    box.style.display = 'none';
-    chips.innerHTML = '';
-  }
-}
-
+// ── STEP 1 ──────────────────────────────────────────
 async function saveProfile() {
-  const college = document.getElementById('college').value;
-  const year = document.getElementById('year').value;
-  const semester = document.getElementById('semester').value;
-  const cycle = document.getElementById('cycle')?.value || '';
-  const section = document.getElementById('section').value;
-  const minAtt = parseInt(document.getElementById('min-attendance').value) || 75;
-
-  if (!college || !year || !semester || !section) {
-    alert('Please fill in all fields');
-    return;
-  }
-
-  if (college === 'CMRIT' && year === '1' && !cycle) {
-    alert('Please select your cycle');
-    return;
-  }
-
+  const college = document.getElementById('college').value.trim();
+  const year    = document.getElementById('year').value;
+  const semester= document.getElementById('semester').value;
+  const section = document.getElementById('section').value.trim();
+  const batch   = document.getElementById('batch').value.trim();
+  const minAtt  = parseInt(document.getElementById('min-attendance').value) || 75;
+  if (!college || !year || !semester) { alert('Please fill in college, year and semester'); return; }
   try {
     await fetch(`${API}/onboarding/profile`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: currentUser.id, college, year, semester, section, min_attendance: minAtt })
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: currentUser.id, college, year, semester, section, batch, min_attendance: minAtt })
     });
-
-    if (currentSubjects.length > 0) {
-      await fetch(`${API}/onboarding/save-timetable`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: currentUser.id, section, subjects: currentSubjects, schedule: {} })
-      });
-    }
-
-    goTo(2);
-  } catch(e) {
-    console.error(e);
-    goTo(2);
-  }
+  } catch(e) { console.error(e); }
+  goTo(2);
 }
 
-function buildManualForm() {
-  const list = document.getElementById('manual-list');
-  if (currentSubjects.length === 0) {
-    list.innerHTML = '<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:1rem 0;">No subjects loaded.</div>';
-    return;
-  }
-  list.innerHTML = currentSubjects.map(s => {
-    const key = s.replace(/[^a-zA-Z0-9]/g, '');
-    return `<div class="manual-subject">
-      <div class="manual-subject-name">${s}</div>
-      <div class="manual-fields">
-        <div><label>Classes Held</label><input type="number" id="total-${key}" placeholder="e.g. 14" min="0"></div>
-        <div><label>You Attended</label><input type="number" id="att-${key}" placeholder="e.g. 13" min="0"></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function uploadScreenshots(input) {
-  const files = Array.from(input.files);
-  if (!files.length) return;
-
-  const box = document.getElementById('ss-box');
+// ── STEP 2: TIMETABLE ───────────────────────────────
+async function uploadTimetable(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const box = document.getElementById('tt-box');
   box.classList.add('uploaded');
-  box.querySelector('.upload-title').textContent = `${files.length} screenshot${files.length > 1 ? 's' : ''} selected`;
-  box.querySelector('.upload-sub').textContent = 'Tap to add more';
+  box.querySelector('.upload-title').textContent = file.name;
+  box.querySelector('.upload-sub').textContent = 'Reading...';
+  document.getElementById('tt-loading').classList.add('visible');
+  document.getElementById('tt-result').style.display = 'none';
 
-  document.getElementById('ss-loading').classList.add('visible');
-  document.getElementById('import-success').style.display = 'none';
-  document.getElementById('import-error').style.display = 'none';
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${API}/onboarding/timetable/${currentUser.id}`, {
+      method: 'POST', body: formData
+    });
+    timetableData = await res.json();
+    document.getElementById('tt-loading').classList.remove('visible');
 
-  const previews = document.getElementById('ss-previews');
-  previews.innerHTML = '';
-  files.forEach(f => {
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(f);
-    img.className = 'screenshot-preview';
-    previews.appendChild(img);
-  });
-
-  let totalImported = 0;
-  let currentFile = 0;
-
-  for (const file of files) {
-    currentFile++;
-    document.getElementById('ss-loading-text').textContent = `Reading screenshot ${currentFile} of ${files.length}...`;
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      const res = await fetch(`${API}/onboarding/screenshot/${currentUser.id}`, {
-        method: 'POST',
-        body: formData
-      });
-      const data = await res.json();
-      if (data.message) totalImported++;
-    } catch(e) {
-      console.error(e);
+    if (timetableData.error) {
+      box.querySelector('.upload-sub').textContent = 'Could not read — try again or skip';
+      box.classList.remove('uploaded'); box.classList.add('error');
+      return;
     }
-  }
 
-  document.getElementById('ss-loading').classList.remove('visible');
-
-  if (totalImported > 0) {
-    const el = document.getElementById('import-success');
-    el.style.display = 'block';
-    el.textContent = `✓ Successfully imported from ${totalImported} screenshot${totalImported > 1 ? 's' : ''}`;
-  } else {
-    const el = document.getElementById('import-error');
-    el.style.display = 'block';
-    el.textContent = 'Could not read screenshots. Please enter manually below.';
+    box.querySelector('.upload-sub').textContent = '✓ Schedule extracted';
+    renderTimetableResult(timetableData);
+  } catch(e) {
+    document.getElementById('tt-loading').classList.remove('visible');
+    box.querySelector('.upload-sub').textContent = 'Error — try again or skip';
   }
 }
 
-async function saveManualAndContinue() {
-  const entries = [];
-  for (const s of currentSubjects) {
-    const key = s.replace(/[^a-zA-Z0-9]/g, '');
-    const total = parseInt(document.getElementById(`total-${key}`)?.value) || 0;
-    const attended = parseInt(document.getElementById(`att-${key}`)?.value) || 0;
-    if (total > 0) entries.push({ name: s, attended, total });
+function renderTimetableResult(data) {
+  const resultDiv = document.getElementById('tt-result');
+  resultDiv.style.display = 'block';
+  const subjects = data.subjects || [];
+  const schedule = data.schedule || {};
+  let html = '';
+  if (subjects.length > 0) {
+    html += `<div class="subjects-preview">
+      <div class="subjects-preview-title">${subjects.length} subjects found</div>
+      <div>${subjects.map(s => `<span class="subject-chip">${s}</span>`).join('')}</div>
+    </div>`;
   }
-
-  if (entries.length > 0) {
-    try {
-      const res = await fetch(`${API}/subjects/${currentUser.id}`);
-      const data = await res.json();
-      const dbSubjects = data.subjects || [];
-
-      for (const entry of entries) {
-        const match = dbSubjects.find(s => s.name === entry.name);
-        if (match) {
-          for (let i = 0; i < entry.attended; i++) {
-            await fetch(`${API}/attendance`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                subject_id: match.id,
-                date: `2026-01-${String((i % 28) + 1).padStart(2, '0')}`,
-                status: 'attended'
-              })
-            });
-          }
-          const bunked = entry.total - entry.attended;
-          for (let i = 0; i < bunked; i++) {
-            await fetch(`${API}/attendance`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                subject_id: match.id,
-                date: `2026-02-${String((i % 28) + 1).padStart(2, '0')}`,
-                status: 'bunked'
-              })
-            });
-          }
-        }
+  const dayNames = ['monday','tuesday','wednesday','thursday','friday','saturday'];
+  const hasSchedule = dayNames.some(d => schedule[d] && schedule[d].length > 0);
+  if (hasSchedule) {
+    html += `<div class="schedule-preview">
+      <div class="subjects-preview-title">Your weekly schedule</div>`;
+    dayNames.forEach(day => {
+      if (schedule[day] && schedule[day].length > 0) {
+        html += `<div class="schedule-day">
+          <div class="schedule-day-name">${day}</div>
+          <div class="schedule-day-subs">${schedule[day].join(' · ')}</div>
+        </div>`;
       }
-    } catch(e) {
-      console.error(e);
-    }
+    });
+    html += `</div>`;
   }
+  resultDiv.innerHTML = html;
+  document.getElementById('tt-next-btn').disabled = false;
+}
 
+async function saveTimetable() {
+  if (!timetableData) return;
+  try {
+    await fetch(`${API}/onboarding/save-timetable`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id:  currentUser.id,
+        subjects: timetableData.subjects || [],
+        schedule: timetableData.schedule || {}
+      })
+    });
+  } catch(e) { console.error(e); }
   goTo(3);
 }
 
+function skipTimetable() { goTo(3); }
+
+// ── STEP 3: COE ─────────────────────────────────────
 async function uploadCOE(input) {
   const file = input.files[0];
   if (!file) return;
@@ -782,50 +438,233 @@ async function uploadCOE(input) {
   box.classList.add('uploaded');
   box.querySelector('.upload-title').textContent = file.name;
   document.getElementById('coe-loading').classList.add('visible');
-
   const formData = new FormData();
   formData.append('file', file);
-
   try {
-    const res = await fetch(`${API}/onboarding/coe/${currentUser.id}`, {
-      method: 'POST',
-      body: formData
-    });
+    const res  = await fetch(`${API}/onboarding/coe/${currentUser.id}`, { method: 'POST', body: formData });
     const data = await res.json();
     document.getElementById('coe-loading').classList.remove('visible');
-    if (data.holidays_added > 0) {
-      const el = document.getElementById('coe-success');
-      el.style.display = 'block';
-      el.textContent = `✓ Detected ${data.holidays_added} holidays from your calendar`;
+    const result = document.getElementById('coe-result');
+    if (data.error) {
+      result.innerHTML = `<div class="result-box error">Could not read COE — you can skip this</div>`;
+      return;
     }
+    let msg = `✓ ${data.holidays_added} holidays detected`;
+    if (data.semester_end) msg += ` · Semester ends ${data.semester_end}`;
+    result.innerHTML = `<div class="result-box success">${msg}</div>`;
   } catch(e) {
     document.getElementById('coe-loading').classList.remove('visible');
   }
 }
 
-function buildSummary() {
-  const college = document.getElementById('college').value || '—';
-  const year = document.getElementById('year').value || '—';
-  const semester = document.getElementById('semester').value || '—';
-  const section = document.getElementById('section').value || '—';
-  const minAtt = document.getElementById('min-attendance').value || '75';
-  const cycleEl = document.getElementById('cycle');
-  const cycleText = cycleEl?.options[cycleEl?.selectedIndex]?.text || '—';
+// ── STEP 4: MANUAL ATTENDANCE ────────────────────────
+async function loadManualCards() {
+  const list = document.getElementById('manual-cards-list');
+  list.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;">Loading subjects...</div>`;
 
+  try {
+    const res  = await fetch(`${API}/dashboard/${currentUser.id}`);
+    const data = await res.json();
+    subjectsList = data.subjects || [];
+  } catch(e) {
+    subjectsList = [];
+  }
+
+  if (!subjectsList.length) {
+    list.innerHTML = `<div style="color:var(--muted);font-size:0.85rem;padding:1rem 0;">
+      No subjects found. Complete the timetable step first, or skip and add subjects manually on the dashboard.
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = subjectsList.map((s, i) => `
+    <div class="att-card" id="card-${s.id}">
+      <div class="att-card-accent"></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+        <div class="att-card-name" style="flex:1;padding-right:1rem;">${s.name}</div>
+        <div class="att-card-pct" id="pct-${s.id}">—%</div>
+      </div>
+      <div class="att-card-inputs">
+        <div class="att-input-wrap">
+          <label>Classes Held</label>
+          <input type="number" id="total-${s.id}" placeholder="0" min="0" max="999"
+            oninput="updateCard('${s.id}')" onkeydown="handleKey(event,'${s.id}','total')">
+        </div>
+        <div class="att-input-wrap">
+          <label>You Attended</label>
+          <input type="number" id="att-${s.id}" placeholder="0" min="0" max="999"
+            oninput="updateCard('${s.id}')" onkeydown="handleKey(event,'${s.id}','att')">
+        </div>
+      </div>
+      <div class="att-card-status" id="status-${s.id}"></div>
+    </div>
+  `).join('');
+
+  updateProgress();
+}
+
+function handleKey(e, sid, field) {
+  // Tab or Enter moves to next input
+  if (e.key === 'Enter' || e.key === 'Tab') {
+    e.preventDefault();
+    const next = field === 'total'
+      ? document.getElementById(`att-${sid}`)
+      : getNextCardInput(sid);
+    if (next) next.focus();
+  }
+}
+
+function getNextCardInput(currentSid) {
+  const idx = subjectsList.findIndex(s => s.id === currentSid);
+  if (idx < subjectsList.length - 1) {
+    return document.getElementById(`total-${subjectsList[idx + 1].id}`);
+  }
+  return null;
+}
+
+function updateCard(sid) {
+  const totalEl = document.getElementById(`total-${sid}`);
+  const attEl   = document.getElementById(`att-${sid}`);
+  const pctEl   = document.getElementById(`pct-${sid}`);
+  const statusEl= document.getElementById(`status-${sid}`);
+  const card    = document.getElementById(`card-${sid}`);
+
+  const total    = parseInt(totalEl.value) || 0;
+  const attended = parseInt(attEl.value)   || 0;
+
+  // Clamp attended to total
+  if (attended > total && total > 0) {
+    attEl.value = total;
+  }
+
+  if (total === 0) {
+    pctEl.textContent = '—%';
+    pctEl.className = 'att-card-pct';
+    statusEl.textContent = '';
+    statusEl.className = 'att-card-status';
+    card.classList.remove('filled','warn-card','danger-card');
+    updateProgress();
+    return;
+  }
+
+  const actualAtt = Math.min(attended, total);
+  const pct = Math.round((actualAtt / total) * 100);
+
+  pctEl.textContent = pct + '%';
+  card.classList.add('filled');
+
+  const minAtt = parseInt(document.getElementById('min-attendance')?.value) || 75;
+
+  if (pct >= minAtt + 10) {
+    pctEl.className = 'att-card-pct safe';
+    card.classList.remove('warn-card','danger-card');
+    const canBunk = Math.floor((actualAtt - minAtt/100 * total) / 1);
+    statusEl.textContent = `✓ Safe — can bunk ~${Math.max(0,canBunk)} more`;
+    statusEl.className = 'att-card-status safe';
+  } else if (pct >= minAtt) {
+    pctEl.className = 'att-card-pct warn';
+    card.classList.add('warn-card');
+    card.classList.remove('danger-card');
+    statusEl.textContent = `⚠ Borderline — attend next class`;
+    statusEl.className = 'att-card-status warn';
+  } else {
+    pctEl.className = 'att-card-pct danger';
+    card.classList.add('danger-card');
+    card.classList.remove('warn-card');
+    const needed = Math.ceil((minAtt/100 * total - actualAtt) / (1 - minAtt/100));
+    statusEl.textContent = `✕ Danger — need ${Math.max(1,needed)} consecutive classes`;
+    statusEl.className = 'att-card-status danger';
+  }
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const filled = subjectsList.filter(s => {
+    const t = parseInt(document.getElementById(`total-${s.id}`)?.value) || 0;
+    return t > 0;
+  }).length;
+  const total = subjectsList.length;
+  const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
+  document.getElementById('manual-prog-bar').style.width = pct + '%';
+  document.getElementById('manual-prog-text').textContent = `${filled} / ${total} done`;
+}
+
+async function saveManualAttendance() {
+  const btn = document.getElementById('manual-save-btn');
+  btn.disabled = true;
+  document.getElementById('manual-loading').style.display = 'block';
+
+  const toSave = subjectsList.filter(s => {
+    const t = parseInt(document.getElementById(`total-${s.id}`)?.value) || 0;
+    return t > 0;
+  });
+
+  for (const s of toSave) {
+    const total    = parseInt(document.getElementById(`total-${s.id}`).value) || 0;
+    const attended = Math.min(parseInt(document.getElementById(`att-${s.id}`).value) || 0, total);
+    const bunked   = total - attended;
+
+    // Clear old records first
+    try {
+      // Save attended records
+      for (let i = 0; i < attended; i++) {
+        await fetch(`${API}/attendance`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subject_id: s.id,
+            date: `2026-01-${String((i % 28) + 1).padStart(2,'0')}`,
+            status: 'attended'
+          })
+        });
+      }
+      // Save bunked records
+      for (let i = 0; i < bunked; i++) {
+        await fetch(`${API}/attendance`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subject_id: s.id,
+            date: `2026-02-${String((i % 28) + 1).padStart(2,'0')}`,
+            status: 'bunked'
+          })
+        });
+      }
+    } catch(e) { console.error(e); }
+  }
+
+  document.getElementById('manual-loading').style.display = 'none';
+  goTo(5);
+}
+
+// ── STEP 5 ──────────────────────────────────────────
+function buildSummary() {
+  const college  = document.getElementById('college').value  || '—';
+  const year     = document.getElementById('year').value     || '—';
+  const semester = document.getElementById('semester').value || '—';
+  const section  = document.getElementById('section').value  || '—';
+  const batch    = document.getElementById('batch').value    || '—';
+  const minAtt   = document.getElementById('min-attendance').value || '75';
+  const filled   = subjectsList.filter(s => (parseInt(document.getElementById(`total-${s.id}`)?.value)||0) > 0).length;
   document.getElementById('summary-card').innerHTML = `
-    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${currentUser.name}</span></div>
+    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${currentUser?.name || '—'}</span></div>
     <div class="summary-row"><span class="summary-label">College</span><span class="summary-val">${college}</span></div>
-    <div class="summary-row"><span class="summary-label">Year & Sem</span><span class="summary-val">${year}st Year · Sem ${semester}</span></div>
-    <div class="summary-row"><span class="summary-label">Cycle</span><span class="summary-val">${cycleText}</span></div>
-    <div class="summary-row"><span class="summary-label">Section</span><span class="summary-val">${section}</span></div>
-    <div class="summary-row"><span class="summary-label">Subjects</span><span class="summary-val">${currentSubjects.length} loaded</span></div>
+    <div class="summary-row"><span class="summary-label">Year & Sem</span><span class="summary-val">${year} · ${semester}</span></div>
+    <div class="summary-row"><span class="summary-label">Section & Batch</span><span class="summary-val">${section} · ${batch}</span></div>
     <div class="summary-row"><span class="summary-label">Min Attendance</span><span class="summary-val">${minAtt}%</span></div>
+    <div class="summary-row"><span class="summary-label">Subjects Entered</span><span class="summary-val">${filled} / ${subjectsList.length}</span></div>
   `;
 }
 
 function goToDashboard() {
-  window.location.href = `index.html?user_id=${currentUser.id}&name=${encodeURIComponent(currentUser.name)}&email=${currentUser.email}`;
+  if (currentUser) {
+    window.location.href = `index.html?user_id=${currentUser.id}&name=${encodeURIComponent(currentUser.name)}&email=${encodeURIComponent(currentUser.email || '')}`;
+  } else {
+    window.location.href = 'index.html';
+  }
 }
+
+// Keep Render awake
+setInterval(() => fetch(`${API}/health`).catch(()=>{}), 8 * 60 * 1000);
 
 init();
 </script>
