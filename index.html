@@ -452,7 +452,7 @@ let verdictData = null;
 
 function startCinematic() { document.getElementById('cinematic').classList.add('active'); }
 
-function init() {
+async function init() {
     const p = new URLSearchParams(window.location.search);
     const uid   = p.get('user_id')  || localStorage.getItem('user_id');
     const uname = p.get('name')     || localStorage.getItem('user_name');
@@ -463,6 +463,22 @@ function init() {
     localStorage.setItem('user_email', uemail||'');
     currentUser = { id:uid, name:decodeURIComponent(uname||'Student'), email:decodeURIComponent(uemail||'') };
     if (p.get('user_id')) window.history.replaceState({}, '', window.location.pathname);
+ 
+    // Check if user has completed onboarding
+    try {
+        const res  = await fetch(`${API}/users/${currentUser.id}`);
+        const data = await res.json();
+        const user = data.user || data;
+        if (!user.onboarded) {
+            // Not onboarded yet — send to onboarding
+            window.location.href = `onboarding.html?user_id=${uid}&name=${encodeURIComponent(uname||'')}&email=${encodeURIComponent(uemail||'')}`;
+            return;
+        }
+    } catch(e) {
+        // If check fails, just proceed to dashboard (don't block)
+        console.error('Onboarding check failed', e);
+    }
+ 
     updateStreak();
     showApp();
 }

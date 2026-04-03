@@ -464,7 +464,9 @@ function updateCard(key, name, idx) {
   if (pct >= minAtt + 10) {
     pctEl.className = 'att-card-pct safe';
     card.classList.remove('warn-card','danger-card');
-    const canBunk = Math.floor((safe - (minAtt / 100) * total));
+    const minFrac = minAtt / 100;
+    const denom = 1 - minFrac;
+    const canBunk = denom > 0 ? Math.floor((safe - minFrac * total) / denom) : 0;
     statusEl.textContent = `✓ Safe — can miss ${Math.max(0, canBunk)} more`;
     statusEl.className = 'att-card-status safe';
   } else if (pct >= minAtt) {
@@ -521,13 +523,13 @@ async function saveAttendance() {
     for (let i = 0; i < attended; i++) {
       await fetch(`${API}/attendance`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject_id: sid, date: `2026-01-${String((i%28)+1).padStart(2,'0')}`, status: 'attended' })
+        body: JSON.stringify({ subject_id: sid, date: `2026-01--${String((i%28)+1).padStart(2,'0')}`, status: 'attended' })
       }).catch(()=>{});
     }
     for (let i = 0; i < (total - attended); i++) {
       await fetch(`${API}/attendance`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject_id: sid, date: `2026-02-${String((i%28)+1).padStart(2,'0')}`, status: 'bunked' })
+        body: JSON.stringify({ subject_id: sid, date: `2022-02--${String((i%28)+1).padStart(2,'0')}`, status: 'bunked' })
       }).catch(()=>{});
     }
   }
