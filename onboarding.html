@@ -356,7 +356,7 @@ async function saveProfile() {
   const cycle    = document.getElementById('cycle').value;
   const section  = document.getElementById('section').value;
   const batch    = document.getElementById('batch').value;
-  const minAtt   = parseInt(document.getElementById('min-att').value) || 75;
+  const minAtt   = parseInt(document.getElementById('min-att')?.value) || 75;
 
   if (!college || !year || !semester || !cycle || !section || !batch) {
     alert('Please fill in all fields'); return;
