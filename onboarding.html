@@ -353,38 +353,33 @@ async function saveProfile() {
   const college  = document.getElementById('college').value;
   const year     = document.getElementById('year').value;
   const semester = document.getElementById('semester').value;
-  const cycle    = document.getElementById('cycle')?.value || '';
+  const cycle    = document.getElementById('cycle').value;
   const section  = document.getElementById('section').value;
-  const batch    = document.getElementById('batch').value.trim();
-  const minAtt   = parseInt(document.getElementById('min-attendance').value) || 75;
+  const batch    = document.getElementById('batch').value;
+  const minAtt   = parseInt(document.getElementById('min-att').value) || 75;
 
-  if (!college || !year || !semester || !section) { alert('Please fill in all fields'); return; }
-  if (college === 'CMRIT' && year === '1' && !cycle) { alert('Please select your cycle'); return; }
+  if (!college || !year || !semester || !cycle || !section || !batch) {
+    alert('Please fill in all fields'); return;
+  }
 
+  goTo(2); // go immediately, no waiting
+
+  // save in background
   try {
     await fetch(`${API}/onboarding/profile`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: currentUser.id, college, year, semester, section, batch, min_attendance: minAtt })
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id:currentUser.id, college, year, semester, section, batch, min_attendance:minAtt})
     });
     if (currentSubjects.length > 0) {
-      const res = await fetch(`${API}/onboarding/save-timetable`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: currentUser.id, section, subjects: currentSubjects, schedule: {} })
+      await fetch(`${API}/onboarding/save-timetable`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({user_id:currentUser.id, section, subjects:currentSubjects.map(s=>s.name), schedule:{}})
       });
-      const data = await res.json();
-      // Store DB subjects for attendance entry
-      dbSubjects = [];
-      if (data.subjects_added > 0) {
-        // Fetch them back
-        try {
-          const r2   = await fetch(`${API}/dashboard/${currentUser.id}`);
-          const d2   = await r2.json();
-          dbSubjects = d2.subjects || [];
-        } catch(e) {}
-      }
+      const r2 = await fetch(`${API}/dashboard/${currentUser.id}`);
+      const d2 = await r2.json();
+      dbSubjects = d2.subjects || [];
     }
   } catch(e) { console.error(e); }
-  goTo(2);
 }
 
 // ── STEP 2: ATTENDANCE CARDS ─────────────────────────
