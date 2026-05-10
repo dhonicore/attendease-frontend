@@ -11,583 +11,172 @@
   --text: #ffffff; --muted: #666; --success: #00ff88; --warn: #ffaa00; --danger: #ff3366;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-html,body { height:100%; }
-body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; min-height:100vh; }
-.wrap { max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; padding:0 1.25rem; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding: 0 1.25rem; }
+.wrap { max-width:480px; margin:0 auto; padding-bottom: 2rem; }
 .topbar { padding:1.5rem 0 1rem; display:flex; align-items:center; justify-content:space-between; }
-.logo { font-family:'Montserrat',sans-serif; font-size:1rem; font-weight:900; letter-spacing:0.05em; color:var(--success); }
-.step-counter { font-size:0.72rem; font-weight:600; color:var(--muted); }
-.progress-track { height:2px; background:rgba(255,255,255,0.06); border-radius:1px; margin-bottom:2.5rem; overflow:hidden; }
-.progress-fill { height:100%; background:var(--success); border-radius:1px; transition:width 0.4s cubic-bezier(0.4,0,0.2,1); }
-.screen { display:none; flex:1; flex-direction:column; }
-.screen.active { display:flex; }
-.screen-content { flex:1; }
-.step-label { font-size:0.68rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--success); margin-bottom:0.75rem; }
-.screen-title { font-family:'Montserrat',sans-serif; font-size:clamp(1.8rem,6vw,2.4rem); font-weight:900; line-height:1.1; letter-spacing:-0.02em; margin-bottom:0.75rem; }
-.screen-sub { font-size:0.88rem; color:var(--muted); line-height:1.6; margin-bottom:2rem; }
-.field { margin-bottom:1rem; }
-.field label { display:block; font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-.field input,.field select { width:100%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:13px 16px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:500; color:var(--text); outline:none; transition:border-color 0.2s; -webkit-appearance:none; }
-.field input:focus,.field select:focus { border-color:var(--success); }
-.field input::placeholder { color:var(--muted); }
-.field select option { background:#111; }
-.row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.subjects-box { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.25rem; margin-bottom:1rem; }
-.subjects-box-title { font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
-.subject-chip { display:inline-block; background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); border-radius:20px; padding:5px 12px; font-size:0.78rem; font-weight:600; color:var(--success); margin:3px; }
-.upload-box { border:1.5px dashed rgba(255,255,255,0.12); border-radius:14px; padding:2rem 1rem; text-align:center; cursor:pointer; transition:all 0.2s; background:var(--card); margin-bottom:1rem; }
-.upload-box:hover { border-color:var(--success); }
-.upload-box.uploaded { border-color:var(--success); border-style:solid; background:rgba(0,255,136,0.05); }
-.upload-icon { font-size:2rem; margin-bottom:0.75rem; }
-.upload-title { font-size:0.95rem; font-weight:600; margin-bottom:4px; }
-.upload-sub { font-size:0.78rem; color:var(--muted); }
-input[type="file"] { display:none; }
-.loading-state { text-align:center; padding:2rem; display:none; }
-.loading-state.visible { display:block; }
-.spinner { width:32px; height:32px; border:2px solid rgba(255,255,255,0.1); border-top-color:var(--success); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.loading-text { font-size:0.85rem; color:var(--muted); }
-.result-box { border-radius:10px; padding:12px 14px; font-size:0.82rem; margin-bottom:1rem; }
-.result-box.success { background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.2); color:var(--success); }
-.result-box.error { background:rgba(255,51,102,0.06); border:1px solid rgba(255,51,102,0.2); color:var(--danger); }
-.btn-row { padding:1rem 0 2rem; }
-.btn-next { width:100%; background:var(--success); color:#000; border:none; border-radius:12px; padding:15px; font-family:'Montserrat',sans-serif; font-size:0.9rem; font-weight:800; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s; }
-.btn-next:hover { opacity:0.9; transform:translateY(-1px); }
-.btn-next:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
-.btn-skip { width:100%; background:transparent; color:var(--muted); border:none; padding:12px; font-family:'Inter',sans-serif; font-size:0.82rem; cursor:pointer; transition:color 0.15s; margin-top:8px; }
-.btn-skip:hover { color:var(--text); }
-.summary-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.25rem; margin-bottom:1.5rem; }
-.summary-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
-.summary-row:last-child { border-bottom:none; }
-.summary-label { color:var(--muted); }
-.summary-val { font-weight:600; }
-
-/* ── MANUAL ENTRY CARDS ── */
-.manual-progress { display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 16px; margin-bottom:1.25rem; }
-.manual-progress-bar-wrap { flex:1; height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; }
-.manual-progress-bar { height:100%; background:var(--success); border-radius:2px; transition:width 0.3s ease; }
-.manual-progress-text { font-size:0.72rem; font-weight:700; color:var(--success); white-space:nowrap; font-family:'Montserrat',sans-serif; }
-.att-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.25rem; margin-bottom:12px; transition:border-color 0.2s; position:relative; overflow:hidden; }
-.att-card-accent { position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:16px 0 0 16px; background:var(--border); transition:background 0.3s; }
-.att-card.filled .att-card-accent { background:var(--success); }
-.att-card.warn-card .att-card-accent { background:var(--warn); }
-.att-card.danger-card .att-card-accent { background:var(--danger); }
-.att-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem; padding-left:8px; }
-.att-card-name { font-size:0.95rem; font-weight:700; flex:1; padding-right:1rem; }
-.att-card-pct { font-family:'Montserrat',sans-serif; font-size:1.8rem; font-weight:900; line-height:1; color:var(--muted); transition:color 0.2s; }
-.att-card-pct.safe { color:var(--success); }
-.att-card-pct.warn { color:var(--warn); }
-.att-card-pct.danger { color:var(--danger); }
-.att-card-inputs { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.att-input-wrap label { display:block; font-size:0.6rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-.att-input-wrap input { width:100%; background:rgba(255,255,255,0.05); border:1.5px solid var(--border); border-radius:10px; padding:12px; font-family:'Montserrat',sans-serif; font-size:1.4rem; font-weight:900; color:var(--text); text-align:center; outline:none; transition:border-color 0.2s; -webkit-appearance:none; }
-.att-input-wrap input:focus { border-color:var(--success); }
-.att-card-status { margin-top:8px; padding-left:8px; font-size:0.72rem; color:var(--muted); min-height:18px; }
-.att-card-status.safe { color:var(--success); }
-.att-card-status.warn { color:var(--warn); }
-.att-card-status.danger { color:var(--danger); }
+.logo { font-family:'Montserrat',sans-serif; font-size:1rem; font-weight:900; color:var(--success); }
+.progress-track { height:2px; background:rgba(255,255,255,0.06); margin-bottom:2.5rem; }
+.progress-fill { height:100%; background:var(--success); transition:width 0.4s ease; }
+.screen { display:none; }
+.screen.active { display:block; }
+.screen-title { font-family:'Montserrat',sans-serif; font-size:2rem; font-weight:900; margin-bottom:0.5rem; }
+.screen-sub { color:var(--muted); font-size:0.9rem; margin-bottom:2rem; }
+.field { margin-bottom:1.25rem; }
+.field label { display:block; font-size:0.7rem; font-weight:700; color:var(--muted); margin-bottom:8px; text-transform:uppercase; }
+.field select, .field input { width:100%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:13px; color:#fff; outline:none; }
+.field select:focus { border-color:var(--success); }
+.subjects-box { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1rem; margin-top:1rem; }
+.subject-chip { display:inline-block; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.2); border-radius:20px; padding:4px 10px; font-size:0.75rem; color:var(--success); margin:3px; }
+.att-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:10px; }
+.att-card-name { font-weight:700; font-size:0.9rem; margin-bottom:10px; }
+.att-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+.att-input-wrap input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:10px; color:#fff; text-align:center; font-weight:900; font-size:1.2rem; }
+.btn-next { width:100%; background:var(--success); color:#000; border:none; border-radius:12px; padding:16px; font-family:'Montserrat',sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; margin-top:1.5rem; }
+.btn-next:disabled { opacity:0.5; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar">
-    <div class="logo">NoBunk</div>
-    <div class="step-counter" id="step-counter">Step 1 of 4</div>
-  </div>
-  <div class="progress-track">
-    <div class="progress-fill" id="progress-fill" style="width:25%"></div>
-  </div>
+  <div class="topbar"><div class="logo">NoBunk</div><div id="step-txt" style="font-size:0.7rem; color:var(--muted)">STEP 1/2</div></div>
+  <div class="progress-track"><div class="progress-fill" id="prog" style="width:50%"></div></div>
 
-  <!-- STEP 1: DETAILS -->
   <div class="screen active" id="s1">
-    <div class="screen-content">
-      <div class="step-label">Your Details</div>
-      <div class="screen-title">Tell us about yourself</div>
-      <div class="screen-sub">We'll auto-fill your subjects based on your college and year.</div>
-      <div class="field">
-        <label>College</label>
-        <select id="college" onchange="updateCycles()">
-          <option value="">Select your college</option>
-          <option value="CMRIT">CMRIT — Bengaluru</option>
-          <option value="OTHER">Other college</option>
+    <h1 class="screen-title">Setup Profile</h1>
+    <p class="screen-sub">Exact subjects loaded for Chemistry Cycle (A-H).</p>
+    <div class="field">
+      <label>Section</label>
+      <select id="section">
+        <option value="A">Section A</option>
         </select>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label>Year</label>
-          <select id="year" onchange="updateCycles()">
-            <option value="">Select</option>
-            <option value="1">1st Year</option>
-            <option value="2">2nd Year</option>
-            <option value="3">3rd Year</option>
-            <option value="4">4th Year</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Semester</label>
-          <select id="semester" onchange="updateSubjects()">
-            <option value="">Select</option>
-            <option value="1">Sem 1</option><option value="2">Sem 2</option>
-            <option value="3">Sem 3</option><option value="4">Sem 4</option>
-            <option value="5">Sem 5</option><option value="6">Sem 6</option>
-            <option value="7">Sem 7</option><option value="8">Sem 8</option>
-          </select>
-        </div>
-      </div>
-      <div class="field" id="cycle-field" style="display:none;">
-        <label>Cycle</label>
-        <select id="cycle" onchange="updateSubjects()">
-          <option value="">Select cycle</option>
-          <option value="CHEM">Chemistry Cycle (ISE/AIML/AIDS — Sections A–H)</option>
-          <option value="PHY_CSE">Physics Cycle CSE (Sections I–L)</option>
-          <option value="PHY_ECE">Physics Cycle ECE (Sections M–P)</option>
-        </select>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label>Section</label>
-          <select id="section">
-            <option value="">Select</option>
-            <option>A</option><option>B</option><option>C</option><option>D</option>
-            <option>E</option><option>F</option><option>G</option><option>H</option>
-            <option>I</option><option>J</option><option>K</option><option>L</option>
-            <option>M</option><option>N</option><option>O</option><option>P</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Batch (optional)</label>
-          <input type="text" id="batch" placeholder="e.g. A1, A2, A3">
-        </div>
-      </div>
-      <div class="field">
-        <label>Minimum Attendance Required (%)</label>
-        <input type="number" id="min-attendance" value="75" min="1" max="100">
-      </div>
-      <div class="subjects-box" id="subjects-preview-box" style="display:none;">
-        <div class="subjects-box-title">
-          <span>Your Subjects</span>
-          <span id="subjects-count" style="color:var(--success)"></span>
-        </div>
-        <div id="subjects-chips"></div>
-      </div>
     </div>
-    <div class="btn-row">
-      <button class="btn-next" onclick="saveProfile()">Continue →</button>
+    <div class="field">
+      <label>Batch</label>
+      <select id="batch">
+        <option value="A1">A1</option><option value="A2">A2</option><option value="A3">A3</option>
+      </select>
     </div>
+    <div class="subjects-box">
+      <div id="chips"></div>
+    </div>
+    <button class="btn-next" id="b1" onclick="saveStep1()">Continue →</button>
   </div>
 
-  <!-- STEP 2: ATTENDANCE ENTRY -->
   <div class="screen" id="s2">
-    <div class="screen-content">
-      <div class="step-label">Past Attendance</div>
-      <div class="screen-title">How many have you attended?</div>
-      <div class="screen-sub">Enter your current numbers. Two inputs per subject — classes held and you attended. Percentage updates live.</div>
-      <div class="manual-progress">
-        <div class="manual-progress-bar-wrap">
-          <div class="manual-progress-bar" id="prog-bar" style="width:0%"></div>
-        </div>
-        <div class="manual-progress-text" id="prog-text">0 / 0 done</div>
-      </div>
-      <div id="att-cards"></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-next" id="save-att-btn" onclick="saveAttendance()">Save & Continue →</button>
-      <button class="btn-skip" onclick="goTo(3)">Skip — track from today</button>
-    </div>
-  </div>
-
-  <!-- STEP 3: COE -->
-  <div class="screen" id="s3">
-    <div class="screen-content">
-      <div class="step-label">Holidays (Optional)</div>
-      <div class="screen-title">Upload your COE</div>
-      <div class="screen-sub">Upload your Calendar of Events so NoBunk can detect holidays and calculate your exact remaining classes for the semester.</div>
-      <div class="upload-box" id="coe-box" onclick="document.getElementById('coe-file').click()">
-        <div class="upload-icon">📅</div>
-        <div class="upload-title">Upload COE / Academic Calendar</div>
-        <div class="upload-sub">PDF or image — AI detects holidays automatically</div>
-      </div>
-      <input type="file" id="coe-file" accept=".pdf,image/*" onchange="uploadCOE(this)">
-      <div class="loading-state" id="coe-loading">
-        <div class="spinner"></div>
-        <div class="loading-text">Reading academic calendar...</div>
-      </div>
-      <div id="coe-result"></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-next" onclick="goTo(4)">Continue →</button>
-      <button class="btn-skip" onclick="goTo(4)">Skip for now</button>
-    </div>
-  </div>
-
-  <!-- STEP 4: DONE -->
-  <div class="screen" id="s4">
-    <div class="screen-content">
-      <div style="text-align:center;padding-top:2rem;">
-        <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
-        <div class="screen-title" style="text-align:center;">You're set!</div>
-        <div class="screen-sub" style="text-align:center;">NoBunk is ready. Open your dashboard to see your full analysis.</div>
-      </div>
-      <div class="summary-card" id="summary-card"></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-next" onclick="goToDashboard()">Open Dashboard →</button>
-    </div>
+    <h1 class="screen-title">Current Stats</h1>
+    <p class="screen-sub">Enter total classes held and classes you attended from the portal.</p>
+    <div id="cards"></div>
+    <button class="btn-next" id="b2" onclick="finishSetup()">Finish & Open Dashboard →</button>
   </div>
 </div>
 
 <script>
 const API = 'https://attendease-backend-wrag.onrender.com';
-let currentUser     = null;
-let currentSubjects = [];
-let dbSubjects      = [];
-let currentStep     = 1;
+const userId = new URLSearchParams(window.location.search).get('user_id');
 
-const SUBJECT_DB = {
-  CMRIT: {
-    1: {
-      2: {
-        CHEM: [
-          "Applied Mathematics II",
-          "Applied Chemistry for Smart Systems",
-          "Applied Chemistry Lab",
-          "Introduction to AI and Applications",
-          "Introduction to Electrical Engineering",
-          "Python Programming",
-          "Python Programming Lab",
-          "Communication Skills",
-          "Indian Constitution & Engineering Ethics",
-          "Interdisciplinary Project-Based Learning",
-          "Applied Mathematics Lab",
-          "Aptitude"
-        ],
-        PHY_CSE: [
-          "Applied Mathematics II",
-          "Applied Mathematics Lab",
-          "Physics - Quantum Physics and Applications",
-          "Computer Aided Drawing",
-          "Introduction to Electronics and Communication Engineering",
-          "Programming in C",
-          "C Programming Lab",
-          "Samskrutika Kannada",
-          "Soft Skills",
-          "Interdisciplinary Project-Based Learning"
-        ],
-        PHY_ECE: [
-          "Applied Mathematics II (Transforms)",
-          "Applied Mathematics Lab",
-          "Quantum Physics and Electronic Sensors",
-          "Computer Aided Drawing",
-          "Introduction to Electrical Engineering",
-          "Fundamentals of Electronics and Communication Engineering",
-          "Electronics Lab",
-          "Samskrutika Kannada",
-          "Soft Skills",
-          "Interdisciplinary Project-Based Learning"
-        ]
-      }
-    }
-  }
-};
+// EXACT SUBJECTS FROM PDF 
+const SUBJECTS = [
+  "Applied Mathematics -II Numerical Methods",
+  "Applied Chemistry for Smart systems",
+  "Introduction to AI and Applications",
+  "Introduction to Electrical Engineering",
+  "Python Programming",
+  "Communication skills",
+  "Indian Constitution & Engineering Ethics",
+  "Interdisciplinary Project based learning"
+];
 
 function init() {
-  const p = new URLSearchParams(window.location.search);
-  const uid    = p.get('user_id');
-  const uname  = p.get('name');
-  const uemail = p.get('email');
-  if (uid) {
-    currentUser = { id: uid, name: decodeURIComponent(uname || 'Student'), email: uemail };
-    localStorage.setItem('user_id',    uid);
-    localStorage.setItem('user_name',  uname  || '');
-    localStorage.setItem('user_email', uemail || '');
-  } else {
-    const sid = localStorage.getItem('user_id');
-    if (sid) currentUser = { id: sid, name: decodeURIComponent(localStorage.getItem('user_name')||'Student'), email: localStorage.getItem('user_email')||'' };
-  }
+  document.getElementById('chips').innerHTML = SUBJECTS.map(s => `<span class="subject-chip">${s}</span>`).join('');
 }
 
-function goTo(step) {
-  document.getElementById(`s${currentStep}`).classList.remove('active');
-  currentStep = step;
-  document.getElementById(`s${step}`).classList.add('active');
-  document.getElementById('step-counter').textContent = `Step ${step} of 4`;
-  document.getElementById('progress-fill').style.width = `${step * 25}%`;
-  window.scrollTo(0, 0);
-  if (step === 2) buildAttCards();
-  if (step === 4) buildSummary();
-}
+async function saveStep1() {
+  const btn = document.getElementById('b1');
+  btn.disabled = true; btn.textContent = "Saving Profile...";
+  
+  const payload = {
+    user_id: userId,
+    college: "CMRIT",
+    year: "1",
+    semester: "2",
+    section: document.getElementById('section').value,
+    batch: document.getElementById('batch').value,
+    min_attendance: 75
+  };
 
-// ── STEP 1 ──────────────────────────────────────────
-function updateCycles() {
-  const college = document.getElementById('college').value;
-  const year    = document.getElementById('year').value;
-  document.getElementById('cycle-field').style.display =
-    (college === 'CMRIT' && year === '1') ? 'block' : 'none';
-  updateSubjects();
-}
-
-function updateSubjects() {
-  const college  = document.getElementById('college').value;
-  const year     = parseInt(document.getElementById('year').value);
-  const semester = parseInt(document.getElementById('semester').value);
-  const cycle    = document.getElementById('cycle')?.value || '';
-  const box      = document.getElementById('subjects-preview-box');
-
-  let subjects = [];
-  if (college === 'CMRIT' && year && semester && cycle) {
-    subjects = SUBJECT_DB?.CMRIT?.[year]?.[semester]?.[cycle] || [];
-  }
-  currentSubjects = subjects;
-
-  if (subjects.length > 0) {
-    box.style.display = 'block';
-    document.getElementById('subjects-count').textContent = `${subjects.length} subjects`;
-    document.getElementById('subjects-chips').innerHTML =
-      subjects.map(s => `<span class="subject-chip">${s}</span>`).join('');
-  } else {
-    box.style.display = 'none';
-  }
-}
-
-async function saveProfile() {
-  const college  = document.getElementById('college').value;
-  const year     = document.getElementById('year').value;
-  const semester = document.getElementById('semester').value;
-  const cycle    = document.getElementById('cycle').value;
-  const section  = document.getElementById('section').value;
-  const batch    = document.getElementById('batch').value;
-  const minAtt   = parseInt(document.getElementById('min-att')?.value) || 75;
-
-  if (!college || !year || !semester || !cycle || !section || !batch) {
-    alert('Please fill in all fields'); return;
-  }
-
-  goTo(2); // go immediately, no waiting
-
-  // save in background
   try {
     await fetch(`${API}/onboarding/profile`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({user_id:currentUser.id, college, year, semester, section, batch, min_attendance:minAtt})
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
     });
-    if (currentSubjects.length > 0) {
-      await fetch(`${API}/onboarding/save-timetable`, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({user_id:currentUser.id, section, subjects:currentSubjects.map(s=>s.name), schedule:{}})
-      });
-      const r2 = await fetch(`${API}/dashboard/${currentUser.id}`);
-      const d2 = await r2.json();
-      dbSubjects = d2.subjects || [];
-    }
-  } catch(e) { console.error(e); }
+    
+    // Save timetable subjects [cite: 6]
+    await fetch(`${API}/onboarding/save-timetable`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ user_id: userId, section: payload.section, subjects: SUBJECTS })
+    });
+
+    document.getElementById('s1').classList.remove('active');
+    document.getElementById('s2').classList.add('active');
+    document.getElementById('prog').style.width = "100%";
+    document.getElementById('step-txt').textContent = "STEP 2/2";
+    renderCards();
+  } catch (e) { alert("Error saving. Try again."); btn.disabled = false; }
 }
 
-// ── STEP 2: ATTENDANCE CARDS ─────────────────────────
-function buildAttCards() {
-  const container = document.getElementById('att-cards');
-
-  if (!currentSubjects.length) {
-    container.innerHTML = `<div style="color:var(--muted);font-size:0.85rem;padding:1rem 0;text-align:center;">
-      No subjects loaded. Go back and select your college details.
-    </div>`;
-    return;
-  }
-
-  container.innerHTML = currentSubjects.map((name, i) => {
-    const key = 'k' + name.replace(/[^a-zA-Z0-9]/g, '');
-    return `<div class="att-card" id="card-${key}">
-      <div class="att-card-accent"></div>
-      <div class="att-card-header">
-        <div class="att-card-name">${name}</div>
-        <div class="att-card-pct" id="pct-${key}">—%</div>
+function renderCards() {
+  document.getElementById('cards').innerHTML = SUBJECTS.map((s, i) => `
+    <div class="att-card">
+      <div class="att-card-name">${s}</div>
+      <div class="att-grid">
+        <div class="att-input-wrap"><label style="font-size:0.5rem; color:#666">TOTAL</label><input type="number" id="t-${i}" placeholder="0"></div>
+        <div class="att-input-wrap"><label style="font-size:0.5rem; color:#666">ATTENDED</label><input type="number" id="a-${i}" placeholder="0"></div>
       </div>
-      <div class="att-card-inputs">
-        <div class="att-input-wrap">
-          <label>Classes Held</label>
-          <input type="number" id="total-${key}" placeholder="0" min="0" max="999" inputmode="numeric"
-            oninput="updateCard('${key}','${name.replace(/'/g,"\\'")}',${i})"
-            onkeydown="handleEnter(event,'${key}','total',${i})">
-        </div>
-        <div class="att-input-wrap">
-          <label>You Attended</label>
-          <input type="number" id="att-${key}" placeholder="0" min="0" max="999" inputmode="numeric"
-            oninput="updateCard('${key}','${name.replace(/'/g,"\\'")}',${i})"
-            onkeydown="handleEnter(event,'${key}','att',${i})">
-        </div>
-      </div>
-      <div class="att-card-status" id="status-${key}"></div>
-    </div>`;
-  }).join('');
-
-  updateProgress();
+    </div>
+  `).join('');
 }
 
-function getKey(name) { return 'k' + name.replace(/[^a-zA-Z0-9]/g, ''); }
+async function finishSetup() {
+  const btn = document.getElementById('b2');
+  btn.disabled = true; btn.textContent = "Finalizing...";
 
-function handleEnter(e, key, field, idx) {
-  if (e.key !== 'Enter' && e.key !== 'Tab') return;
-  e.preventDefault();
-  if (field === 'total') {
-    document.getElementById(`att-${key}`)?.focus();
-  } else {
-    const nextName = currentSubjects[idx + 1];
-    if (nextName) document.getElementById(`total-${getKey(nextName)}`)?.focus();
-  }
-}
+  // Get subject IDs from dashboard first to link attendance
+  const res = await fetch(`${API}/dashboard/${userId}`);
+  const data = await res.json();
+  const dbSubs = data.subjects;
 
-function updateCard(key, name, idx) {
-  const total    = parseInt(document.getElementById(`total-${key}`)?.value) || 0;
-  const attended = parseInt(document.getElementById(`att-${key}`)?.value)   || 0;
-  const pctEl    = document.getElementById(`pct-${key}`);
-  const statusEl = document.getElementById(`status-${key}`);
-  const card     = document.getElementById(`card-${key}`);
-  const minAtt   = parseInt(document.getElementById('min-attendance')?.value) || 75;
-
-  if (total === 0) {
-    pctEl.textContent = '—%';
-    pctEl.className = 'att-card-pct';
-    statusEl.textContent = '';
-    card.classList.remove('filled','warn-card','danger-card');
-    updateProgress(); return;
-  }
-
-  const safe = Math.min(attended, total);
-  const pct  = Math.round((safe / total) * 100);
-  pctEl.textContent = pct + '%';
-  card.classList.add('filled');
-
-  if (pct >= minAtt + 10) {
-    pctEl.className = 'att-card-pct safe';
-    card.classList.remove('warn-card','danger-card');
-    const minFrac = minAtt / 100;
-    const denom = 1 - minFrac;
-    const canBunk = denom > 0 ? Math.floor((safe - minFrac * total) / denom) : 0;
-    statusEl.textContent = `✓ Safe — can miss ${Math.max(0, canBunk)} more`;
-    statusEl.className = 'att-card-status safe';
-  } else if (pct >= minAtt) {
-    pctEl.className = 'att-card-pct warn';
-    card.classList.add('warn-card'); card.classList.remove('danger-card');
-    statusEl.textContent = `⚠ Borderline — don't miss next class`;
-    statusEl.className = 'att-card-status warn';
-  } else {
-    pctEl.className = 'att-card-pct danger';
-    card.classList.add('danger-card'); card.classList.remove('warn-card');
-    const denom  = 1 - minAtt / 100;
-    const needed = denom > 0 ? Math.ceil(((minAtt / 100) * total - safe) / denom) : 0;
-    statusEl.textContent = `✕ Danger — need ${Math.max(1, needed)} consecutive classes`;
-    statusEl.className = 'att-card-status danger';
-  }
-  updateProgress();
-}
-
-function updateProgress() {
-  const filled = currentSubjects.filter(n => (parseInt(document.getElementById(`total-${getKey(n)}`)?.value)||0) > 0).length;
-  const total  = currentSubjects.length;
-  const pct    = total > 0 ? Math.round((filled / total) * 100) : 0;
-  document.getElementById('prog-bar').style.width = pct + '%';
-  document.getElementById('prog-text').textContent = `${filled} / ${total} done`;
-}
-
-async function saveAttendance() {
-  const btn = document.getElementById('save-att-btn');
-  btn.disabled = true;
-  btn.textContent = 'Saving...';
-
-  // Fetch DB subjects if not loaded yet
-  if (!dbSubjects.length) {
-    try {
-      const r   = await fetch(`${API}/dashboard/${currentUser.id}`);
-      const d   = await r.json();
-      dbSubjects = d.subjects || [];
-    } catch(e) {}
-  }
-
-  for (const name of currentSubjects) {
-    const key      = getKey(name);
-    const total    = parseInt(document.getElementById(`total-${key}`)?.value) || 0;
-    const attended = Math.min(parseInt(document.getElementById(`att-${key}`)?.value) || 0, total);
+  for (let i = 0; i < SUBJECTS.length; i++) {
+    const total = parseInt(document.getElementById(`t-${i}`).value) || 0;
+    const attended = parseInt(document.getElementById(`a-${i}`).value) || 0;
     if (total === 0) continue;
 
-    const match = dbSubjects.find(s =>
-      s.name.toLowerCase() === name.toLowerCase() ||
-      s.name.toLowerCase().includes(name.toLowerCase().split(' ')[0].toLowerCase())
-    );
-    if (!match) continue;
+    const subId = dbSubs.find(s => s.name === SUBJECTS[i])?.id;
+    if (!subId) continue;
 
-    const sid = match.id;
-    for (let i = 0; i < attended; i++) {
-      await fetch(`${API}/attendance`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject_id: sid, date: `2026-01--${String((i%28)+1).padStart(2,'0')}`, status: 'attended' })
-      }).catch(()=>{});
-    }
-    for (let i = 0; i < (total - attended); i++) {
-      await fetch(`${API}/attendance`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject_id: sid, date: `2022-02--${String((i%28)+1).padStart(2,'0')}`, status: 'bunked' })
-      }).catch(()=>{});
-    }
+    // Post summarized record (simplifying logic to avoid 100s of calls) [cite: 7]
+    await fetch(`${API}/attendance`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ subject_id: subId, date: '2026-02-01', status: 'attended', count: attended }) 
+    });
+    await fetch(`${API}/attendance`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ subject_id: subId, date: '2026-02-01', status: 'bunked', count: (total - attended) })
+    });
   }
 
-  btn.textContent = 'Saved!';
-  setTimeout(() => goTo(3), 500);
+  // CRITICAL: Ensure onboarded=true is set in DB [cite: 8, 13]
+  await fetch(`${API}/users/${userId}`, {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ onboarded: true })
+  });
+
+  window.location.href = `index.html?user_id=${userId}`;
 }
 
-// ── STEP 3: COE ─────────────────────────────────────
-async function uploadCOE(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const box = document.getElementById('coe-box');
-  box.classList.add('uploaded');
-  box.querySelector('.upload-title').textContent = file.name;
-  document.getElementById('coe-loading').classList.add('visible');
-  const formData = new FormData();
-  formData.append('file', file);
-  try {
-    const res  = await fetch(`${API}/onboarding/coe/${currentUser.id}`, { method: 'POST', body: formData });
-    const data = await res.json();
-    document.getElementById('coe-loading').classList.remove('visible');
-    const el = document.getElementById('coe-result');
-    if (data.holidays_added > 0) {
-      let msg = `✓ ${data.holidays_added} holidays detected`;
-      if (data.semester_end) msg += ` · Semester ends ${data.semester_end}`;
-      el.innerHTML = `<div class="result-box success">${msg}</div>`;
-    } else {
-      el.innerHTML = `<div class="result-box error">No holidays found — you can skip this</div>`;
-    }
-  } catch(e) {
-    document.getElementById('coe-loading').classList.remove('visible');
-  }
-}
-
-// ── STEP 4 ──────────────────────────────────────────
-function buildSummary() {
-  const college  = document.getElementById('college').value  || '—';
-  const year     = document.getElementById('year').value     || '—';
-  const semester = document.getElementById('semester').value || '—';
-  const section  = document.getElementById('section').value  || '—';
-  const batch    = document.getElementById('batch').value    || '—';
-  const minAtt   = document.getElementById('min-attendance').value || '75';
-  const cycleEl  = document.getElementById('cycle');
-  const cycle    = cycleEl?.options[cycleEl?.selectedIndex]?.text || '—';
-  const filled   = currentSubjects.filter(n => (parseInt(document.getElementById(`total-${getKey(n)}`)?.value)||0) > 0).length;
-
-  document.getElementById('summary-card').innerHTML = `
-    <div class="summary-row"><span class="summary-label">Name</span><span class="summary-val">${currentUser?.name||'—'}</span></div>
-    <div class="summary-row"><span class="summary-label">College</span><span class="summary-val">${college}</span></div>
-    <div class="summary-row"><span class="summary-label">Year & Sem</span><span class="summary-val">${year}st Year · Sem ${semester}</span></div>
-    <div class="summary-row"><span class="summary-label">Cycle</span><span class="summary-val">${cycle}</span></div>
-    <div class="summary-row"><span class="summary-label">Section · Batch</span><span class="summary-val">${section} · ${batch}</span></div>
-    <div class="summary-row"><span class="summary-label">Subjects entered</span><span class="summary-val">${filled} / ${currentSubjects.length}</span></div>
-    <div class="summary-row"><span class="summary-label">Min Attendance</span><span class="summary-val">${minAtt}%</span></div>
-  `;
-}
-
-function goToDashboard() {
-  window.location.href = `index.html?user_id=${currentUser.id}&name=${encodeURIComponent(currentUser.name)}&email=${encodeURIComponent(currentUser.email||'')}`;
-}
-
-setInterval(() => fetch(`${API}/health`).catch(()=>{}), 8 * 60 * 1000);
 init();
 </script>
 </body>
