@@ -3,111 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoBunk</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>NoBunk — Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505; --card: #0c0c0c; --border: #1a1a1a; --text: #f2f2f2;
-            --dim: #666666; --safe: #00ffa3; --danger: #ff4d4d; --warn: #ffcc00;
-            --mono: 'JetBrains Mono', monospace; --sans: 'Space Grotesk', sans-serif;
+            --bg: #050505; --card: #0c0c0c; --border: rgba(255,255,255,0.05);
+            --text: #ffffff; --dim: #888888; --safe: #00ffa3; --danger: #ff4d4d;
+            --sans: 'Inter', sans-serif; --head: 'Syne', sans-serif;
         }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.5; overflow-x: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
         
-        /* Layout */
-        .d-nav { height: 56px; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(5,5,5,0.8); backdrop-filter: blur(10px); z-index: 100; }
-        .logo { font-family: var(--mono); font-weight: 700; color: var(--safe); }
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        nav { height: 70px; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: var(--head); font-size: 1.2rem; letter-spacing: -0.02em; }
         
-        /* Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 1.5rem; border-radius: 16px; }
-        .stat-label { font-size: 0.7rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; }
-        .stat-val { font-family: var(--mono); font-size: 1.8rem; font-weight: 700; margin-top: 5px; }
+        .hero { padding: 80px 40px 40px; max-width: 1200px; margin: 0 auto; }
+        .hero p { color: var(--safe); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+        .hero h1 { font-family: var(--head); font-size: clamp(2.5rem, 8vw, 4.5rem); line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 40px; }
 
-        /* Verdict */
-        .verdict-box { background: linear-gradient(135deg, #0e0e0e, #050505); border: 1px solid var(--border); border-left: 4px solid var(--safe); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
-        .verdict-text { color: #bbb; font-size: 1rem; margin: 10px 0; }
-
-        /* Subjects */
-        .sub-card { background: var(--card); border: 1px solid var(--border); padding: 1.25rem; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .sub-name { font-weight: 600; font-size: 0.95rem; }
-        .sub-pct { font-family: var(--mono); font-weight: 700; font-size: 1.2rem; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; padding: 0 40px; }
         
-        .green { color: var(--safe); }
-        .red { color: var(--danger); }
-        .yellow { color: var(--warn); }
-        .hidden { display: none; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 32px; transition: all 0.3s ease; }
+        .card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-4px); }
+
+        .stat-label { color: var(--dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .stat-val { font-family: var(--head); font-size: 2.5rem; font-weight: 800; }
+
+        .subject-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
+        .subject-row:last-child { border-bottom: none; }
+        .sub-info h4 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+        .sub-info span { color: var(--dim); font-size: 0.85rem; }
+
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; padding: 0 20px; } .hero { padding: 60px 20px; } }
     </style>
 </head>
 <body>
-
-<nav class="d-nav">
-    <div class="logo">NoBunk</div>
-    <div id="user-display" style="font-size: 0.8rem; color: var(--dim)">Loading...</div>
-</nav>
-
-<div class="container">
-    <div class="verdict-box">
-        <div class="stat-label" style="color: var(--safe)">AI Analysis</div>
-        <p class="verdict-text" id="v-text">Analyzing your attendance patterns...</p>
-        <div id="v-today" style="font-family: var(--mono); font-size: 0.7rem; color: var(--dim)"></div>
+    <nav><div class="logo">NoBunk.</div><div id="u-name" style="font-size: 0.8rem; opacity: 0.5;">—</div></nav>
+    <div class="hero">
+        <p>Real-time Attendance</p>
+        <h1 id="v-text">Analyzing your semester...</h1>
     </div>
-
-    <div class="stats-grid">
-        <div class="stat-card"><div class="stat-label">Overall</div><div class="stat-val" id="stat-avg">--%</div></div>
-        <div class="stat-card"><div class="stat-label">Bunks Available</div><div class="stat-val green" id="stat-bunks">0</div></div>
+    <div class="grid">
+        <div class="card">
+            <div style="display: flex; gap: 40px; margin-bottom: 40px;">
+                <div><div class="stat-label">Overall</div><div class="stat-val" id="stat-avg">--%</div></div>
+                <div><div class="stat-label">Bunks</div><div class="stat-val" style="color: var(--safe)" id="stat-bunks">0</div></div>
+            </div>
+            <div id="subject-list"></div>
+        </div>
+        <div class="card" style="background: transparent; border-style: dashed;">
+            <div class="stat-label">AI Status</div>
+            <p id="v-today" style="font-size: 0.9rem; line-height: 1.6; color: var(--dim);">Fetching your daily schedule...</p>
+        </div>
     </div>
-
-    <h3 style="margin-bottom: 1rem; font-size: 0.8rem; color: var(--dim); text-transform: uppercase;">Your Inventory</h3>
-    <div id="subject-list"></div>
-</div>
 
 <script>
 const API = 'https://attendease-backend-wrag.onrender.com';
 const userId = localStorage.getItem('user_id') || new URLSearchParams(window.location.search).get('user_id');
 
-// Built-in Holidays for Even Sem 2025-26 
-const HOLIDAYS = ["2026-02-15", "2026-03-19", "2026-03-21", "2026-03-31", "2026-04-03", "2026-04-04", "2026-04-14", "2026-04-18", "2026-04-19", "2026-04-20", "2026-05-01", "2026-05-16", "2026-05-28"];
-
 async function init() {
-    if (!userId) { window.location.href = 'index.html'; return; }
-    
-    // Check onboarding [cite: 13]
+    if (!userId) return;
     const uRes = await fetch(`${API}/users/${userId}`);
     const user = await uRes.json();
-    if (!user.onboarded) { window.location.href = `onboarding.html?user_id=${userId}`; return; }
-
-    document.getElementById('user-display').textContent = user.name.toUpperCase();
-    loadDashboard();
-    loadVerdict();
-}
-
-async function loadDashboard() {
+    document.getElementById('u-name').textContent = user.name.split(' ')[0];
+    
+    // Dashboard Data
     const res = await fetch(`${API}/dashboard/${userId}`);
     const data = await res.json();
-    
     document.getElementById('stat-avg').textContent = data.overall_percentage + '%';
     document.getElementById('stat-bunks').textContent = data.subjects.reduce((a, b) => a + (b.can_bunk || 0), 0);
-
     document.getElementById('subject-list').innerHTML = data.subjects.map(s => `
-        <div class="sub-card">
-            <div>
-                <div class="sub-name">${s.name}</div>
-                <div style="font-size: 0.7rem; color: var(--dim)">${s.can_bunk > 0 ? 'Safe to skip ' + s.can_bunk : 'Need ' + s.needs + ' classes'}</div>
+        <div class="subject-row">
+            <div class="sub-info">
+                <h4>${s.name}</h4>
+                <span>${s.can_bunk > 0 ? 'Safe to miss ' + s.can_bunk + ' classes' : 'Critical: attendance low'}</span>
             </div>
-            <div class="sub-pct ${s.status === 'safe' ? 'green' : s.status === 'danger' ? 'red' : 'yellow'}">${s.percentage}%</div>
+            <div class="stat-val" style="font-size: 1.5rem; color: ${s.status === 'safe' ? 'var(--safe)' : 'var(--danger)'}">${s.percentage}%</div>
         </div>
     `).join('');
-}
 
-async function loadVerdict() {
-    const res = await fetch(`${API}/ai/verdict/${userId}`);
-    const d = await res.json();
-    document.getElementById('v-text').textContent = d.overall_verdict + " " + (d.advice || "");
-    document.getElementById('v-today').textContent = "TODAY: " + (d.today_summary || "No classes scheduled.");
+    // AI Verdict
+    const vRes = await fetch(`${API}/ai/verdict/${userId}`);
+    const vData = await vRes.json();
+    document.getElementById('v-text').textContent = vData.overall_verdict;
+    document.getElementById('v-today').textContent = vData.today_summary || "No classes detected for today.";
 }
-
 init();
 </script>
 </body>
