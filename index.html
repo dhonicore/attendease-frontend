@@ -1,94 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoBunk — Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #050505; --card: #0c0c0c; --border: rgba(255,255,255,0.05);
-            --text: #ffffff; --dim: #888888; --safe: #00ffa3; --danger: #ff4d4d;
-            --sans: 'Inter', sans-serif; --head: 'Syne', sans-serif;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
-        
-        nav { height: 70px; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
-        .logo { font-family: var(--head); font-size: 1.2rem; letter-spacing: -0.02em; }
-        
-        .hero { padding: 80px 40px 40px; max-width: 1200px; margin: 0 auto; }
-        .hero p { color: var(--safe); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-        .hero h1 { font-family: var(--head); font-size: clamp(2.5rem, 8vw, 4.5rem); line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 40px; }
-
-        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; padding: 0 40px; }
-        
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 32px; transition: all 0.3s ease; }
-        .card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-4px); }
-
-        .stat-label { color: var(--dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-        .stat-val { font-family: var(--head); font-size: 2.5rem; font-weight: 800; }
-
-        .subject-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
-        .subject-row:last-child { border-bottom: none; }
-        .sub-info h4 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
-        .sub-info span { color: var(--dim); font-size: 0.85rem; }
-
-        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; padding: 0 20px; } .hero { padding: 60px 20px; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoBunk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808; --card: #131313; --line: rgba(255,255,255,0.08); --txt: #fff; --muted: #959595;
+      --green: #00ff99; --yellow: #ffd166; --red: #ff5b5b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--txt); font-family: Inter, sans-serif; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 24px 16px 40px; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .brand { font-weight: 800; letter-spacing: 0.08em; color: var(--green); }
+    .btn { border: 1px solid var(--line); background: transparent; color: var(--muted); padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+    .login { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-card { width: min(420px, 92vw); background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 26px; text-align: center; }
+    .google { display: inline-block; margin-top: 14px; text-decoration: none; color: #111; background: #fff; padding: 12px 16px; border-radius: 10px; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
+    .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .kpi small { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .kpi strong { display: block; margin-top: 8px; font-size: 28px; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+    .panel h3 { font-size: 14px; margin-bottom: 10px; }
+    .today-row, .sub-row, .hol-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); gap: 12px; }
+    .today-row:last-child, .sub-row:last-child, .hol-row:last-child { border-bottom: none; }
+    .pill { border-radius: 999px; padding: 4px 10px; font-size: 11px; font-weight: 700; }
+    .ok { background: rgba(0,255,153,0.12); color: var(--green); border: 1px solid rgba(0,255,153,0.3); }
+    .no { background: rgba(255,91,91,0.12); color: var(--red); border: 1px solid rgba(255,91,91,0.3); }
+    .tabs { display: flex; gap: 8px; margin: 10px 0 14px; }
+    .tab { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); cursor: pointer; color: var(--muted); }
+    .tab.active { color: var(--txt); border-color: var(--green); }
+    .muted { color: var(--muted); font-size: 13px; line-height: 1.55; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr 1fr; } }
+  </style>
 </head>
 <body>
-    <nav><div class="logo">NoBunk.</div><div id="u-name" style="font-size: 0.8rem; opacity: 0.5;">—</div></nav>
-    <div class="hero">
-        <p>Real-time Attendance</p>
-        <h1 id="v-text">Analyzing your semester...</h1>
+  <div id="auth" class="login">
+    <div class="login-card">
+      <h1>NoBunk</h1>
+      <p class="muted" style="margin-top:8px;">Login with Google to track attendance and bunk safety.</p>
+      <a class="google" href="https://attendease-backend-wrag.onrender.com/auth/google">Continue with Google</a>
     </div>
-    <div class="grid">
-        <div class="card">
-            <div style="display: flex; gap: 40px; margin-bottom: 40px;">
-                <div><div class="stat-label">Overall</div><div class="stat-val" id="stat-avg">--%</div></div>
-                <div><div class="stat-label">Bunks</div><div class="stat-val" style="color: var(--safe)" id="stat-bunks">0</div></div>
-            </div>
-            <div id="subject-list"></div>
+  </div>
+
+  <main id="app" style="display:none;">
+    <div class="wrap">
+      <div class="top">
+        <div>
+          <div class="brand">NOBUNK</div>
+          <div id="hello" class="muted"></div>
         </div>
-        <div class="card" style="background: transparent; border-style: dashed;">
-            <div class="stat-label">AI Status</div>
-            <p id="v-today" style="font-size: 0.9rem; line-height: 1.6; color: var(--dim);">Fetching your daily schedule...</p>
-        </div>
+        <button class="btn" onclick="signOut()">Sign Out</button>
+      </div>
+
+      <div class="panel">
+        <h3>AI Verdict</h3>
+        <div id="verdict" style="font-size:24px;font-weight:800;margin-bottom:6px;">Analyzing...</div>
+        <p id="today-summary" class="muted"></p>
+      </div>
+
+      <div class="grid">
+        <div class="kpi"><small>Overall %</small><strong id="k-overall">--</strong></div>
+        <div class="kpi"><small>Total Bunks Left</small><strong id="k-bunks" style="color:var(--green)">--</strong></div>
+        <div class="kpi"><small>Classes Today</small><strong id="k-today">--</strong></div>
+        <div class="kpi"><small>Working Days Left</small><strong id="k-days" style="color:var(--yellow)">--</strong></div>
+      </div>
+
+      <div class="tabs">
+        <button id="tab-today" class="tab active" onclick="switchTab('today')">Today Advice</button>
+        <button id="tab-subs" class="tab" onclick="switchTab('subjects')">All Subjects</button>
+        <button id="tab-hol" class="tab" onclick="switchTab('holidays')">Upcoming Holidays</button>
+      </div>
+
+      <section id="view-today" class="panel"></section>
+      <section id="view-subjects" class="panel" style="display:none;"></section>
+      <section id="view-holidays" class="panel" style="display:none;"></section>
     </div>
+  </main>
 
 <script>
 const API = 'https://attendease-backend-wrag.onrender.com';
-const userId = localStorage.getItem('user_id') || new URLSearchParams(window.location.search).get('user_id');
+const p = new URLSearchParams(window.location.search);
+const userId = p.get('user_id') || localStorage.getItem('user_id');
+if (p.get('user_id')) localStorage.setItem('user_id', p.get('user_id'));
+if (p.get('name')) localStorage.setItem('user_name', p.get('name'));
+
+let dashboard = null;
+let verdict = null;
+let holidays = null;
+
+function switchTab(name) {
+  const ids = ['today','subjects','holidays'];
+  for (const id of ids) {
+    document.getElementById(`tab-${id === 'subjects' ? 'subs' : id === 'holidays' ? 'hol' : 'today'}`).classList.remove('active');
+    document.getElementById(`view-${id}`).style.display = 'none';
+  }
+  document.getElementById(`tab-${name === 'subjects' ? 'subs' : name === 'holidays' ? 'hol' : 'today'}`).classList.add('active');
+  document.getElementById(`view-${name}`).style.display = 'block';
+}
+
+function signOut() {
+  localStorage.clear();
+  window.location.href = 'index.html';
+}
+
+function renderToday() {
+  const el = document.getElementById('view-today');
+  const todayRows = (verdict?.subject_advice || []).filter(x => x.has_class_today);
+  if (!todayRows.length) {
+    el.innerHTML = '<h3>Today Advice</h3><p class="muted">No classes today.</p>';
+    return;
+  }
+  el.innerHTML = '<h3>Today Advice</h3>' + todayRows.map(s => `
+    <div class="today-row">
+      <div>
+        <div style="font-weight:700">${s.name}</div>
+        <div class="muted">${s.percentage}% · Bunks left by semester: ${s.safe_bunks_left}</div>
+      </div>
+      ${s.skip_safe_today ? '<span class="pill ok">Can Bunk Today</span>' : '<span class="pill no">Must Attend</span>'}
+    </div>
+  `).join('');
+}
+
+function renderSubjects() {
+  const el = document.getElementById('view-subjects');
+  const byId = new Map((verdict?.subject_advice || []).map(x => [x.subject_id, x]));
+  const rows = dashboard?.subjects || [];
+  if (!rows.length) {
+    el.innerHTML = '<h3>All Subjects</h3><p class="muted">No subjects found.</p>';
+    return;
+  }
+  el.innerHTML = '<h3>All Subjects</h3>' + rows.map(s => {
+    const ad = byId.get(s.id);
+    const bunkLeft = ad?.safe_bunks_left ?? s.can_bunk ?? 0;
+    return `
+      <div class="sub-row">
+        <div>
+          <div style="font-weight:700">${s.name}</div>
+          <div class="muted">${s.attended}/${s.total} attended</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:800">${s.percentage}%</div>
+          <div class="muted">Bunks left: ${bunkLeft}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderHolidays() {
+  const el = document.getElementById('view-holidays');
+  const rows = holidays?.rest_of_semester || [];
+  if (!rows.length) {
+    el.innerHTML = '<h3>Upcoming Holidays</h3><p class="muted">No holidays configured yet. Upload or set COE data first.</p>';
+    return;
+  }
+  el.innerHTML = '<h3>Upcoming Holidays</h3>' + rows.map(h => `
+    <div class="hol-row">
+      <div>
+        <div style="font-weight:700">${h.name}</div>
+        <div class="muted">${h.day}</div>
+      </div>
+      <div style="font-weight:700">${h.date}</div>
+    </div>
+  `).join('');
+}
 
 async function init() {
-    if (!userId) return;
-    const uRes = await fetch(`${API}/users/${userId}`);
-    const user = await uRes.json();
-    document.getElementById('u-name').textContent = user.name.split(' ')[0];
-    
-    // Dashboard Data
-    const res = await fetch(`${API}/dashboard/${userId}`);
-    const data = await res.json();
-    document.getElementById('stat-avg').textContent = data.overall_percentage + '%';
-    document.getElementById('stat-bunks').textContent = data.subjects.reduce((a, b) => a + (b.can_bunk || 0), 0);
-    document.getElementById('subject-list').innerHTML = data.subjects.map(s => `
-        <div class="subject-row">
-            <div class="sub-info">
-                <h4>${s.name}</h4>
-                <span>${s.can_bunk > 0 ? 'Safe to miss ' + s.can_bunk + ' classes' : 'Critical: attendance low'}</span>
-            </div>
-            <div class="stat-val" style="font-size: 1.5rem; color: ${s.status === 'safe' ? 'var(--safe)' : 'var(--danger)'}">${s.percentage}%</div>
-        </div>
-    `).join('');
+  if (!userId) return;
+  const userRes = await fetch(`${API}/users/${userId}`);
+  const user = await userRes.json();
+  if (!user || user.error) return;
+  if (!user.onboarded) {
+    window.location.href = `onboarding.html?user_id=${userId}&name=${encodeURIComponent(user.name || '')}&email=${encodeURIComponent(user.email || '')}`;
+    return;
+  }
 
-    // AI Verdict
-    const vRes = await fetch(`${API}/ai/verdict/${userId}`);
-    const vData = await vRes.json();
-    document.getElementById('v-text').textContent = vData.overall_verdict;
-    document.getElementById('v-today').textContent = vData.today_summary || "No classes detected for today.";
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('hello').textContent = `Hi ${user.name || 'Student'} · Sec ${user.section || '-'} · ${user.batch || '-'}`;
+
+  const [dashRes, verdictRes, holidaysRes] = await Promise.all([
+    fetch(`${API}/dashboard/${userId}`),
+    fetch(`${API}/ai/verdict/${userId}`),
+    fetch(`${API}/ai/holidays/${userId}`)
+  ]);
+  dashboard = await dashRes.json();
+  verdict = await verdictRes.json();
+  holidays = await holidaysRes.json();
+
+  const totalBunks = (verdict.subject_advice || []).reduce((acc, s) => acc + (s.safe_bunks_left || 0), 0);
+  const todayCount = (verdict.subject_advice || []).filter(x => x.has_class_today).length;
+
+  document.getElementById('verdict').textContent = verdict.overall_verdict || 'No verdict yet';
+  document.getElementById('today-summary').textContent = verdict.today_summary || '';
+  document.getElementById('k-overall').textContent = `${dashboard.overall_percentage || 0}%`;
+  document.getElementById('k-bunks').textContent = String(totalBunks);
+  document.getElementById('k-today').textContent = String(todayCount);
+  document.getElementById('k-days').textContent = String(verdict.days_left || 0);
+
+  renderToday();
+  renderSubjects();
+  renderHolidays();
 }
-init();
+
+init().catch(() => {});
 </script>
 </body>
 </html>

@@ -42,7 +42,23 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 
   <div class="screen active" id="s1">
     <h1 class="screen-title">Setup Profile</h1>
-    <p class="screen-sub">Exact subjects loaded for Chemistry Cycle (A-H).</p>
+    <p class="screen-sub">Step 1: basic details. Step 2: current attendance numbers.</p>
+    <div class="field">
+      <label>Name</label>
+      <input id="name" type="text" placeholder="Your name">
+    </div>
+    <div class="field">
+      <label>Year</label>
+      <select id="year">
+        <option value="1">1st Year</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Semester</label>
+      <select id="semester">
+        <option value="2">Semester 2</option>
+      </select>
+    </div>
     <div class="field">
       <label>Section</label>
       <select id="section">
@@ -72,6 +88,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 <script>
 const API = 'https://attendease-backend-wrag.onrender.com';
 const userId = new URLSearchParams(window.location.search).get('user_id');
+const userName = decodeURIComponent(new URLSearchParams(window.location.search).get('name') || localStorage.getItem('user_name') || '');
 
 // EXACT SUBJECTS FROM PDF 
 const SUBJECTS = [
@@ -86,6 +103,7 @@ const SUBJECTS = [
 ];
 
 function init() {
+  document.getElementById('name').value = userName;
   document.getElementById('chips').innerHTML = SUBJECTS.map(s => `<span class="subject-chip">${s}</span>`).join('');
 }
 
@@ -96,12 +114,19 @@ async function saveStep1() {
   const payload = {
     user_id: userId,
     college: "CMRIT",
-    year: "1",
-    semester: "2",
+    year: document.getElementById('year').value,
+    semester: document.getElementById('semester').value,
     section: document.getElementById('section').value,
     batch: document.getElementById('batch').value,
     min_attendance: 75
   };
+  const name = (document.getElementById('name').value || '').trim();
+  if (!name) {
+    alert("Please enter your name.");
+    btn.disabled = false;
+    btn.textContent = "Continue →";
+    return;
+  }
 
   try {
     await fetch(`${API}/onboarding/profile`, {
@@ -109,8 +134,12 @@ async function saveStep1() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload)
     });
+    await fetch(`${API}/users/${userId}`, {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name })
+    });
     
-    // Save timetable subjects [cite: 6]
     await fetch(`${API}/onboarding/save-timetable`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -141,40 +170,54 @@ async function finishSetup() {
   const btn = document.getElementById('b2');
   btn.disabled = true; btn.textContent = "Finalizing...";
 
-  // Get subject IDs from dashboard first to link attendance
-  const res = await fetch(`${API}/dashboard/${userId}`);
-  const data = await res.json();
-  const dbSubs = data.subjects;
+  try {
+    // Get subject IDs from dashboard first to link attendance
+    const res = await fetch(`${API}/dashboard/${userId}`);
+    const data = await res.json();
+    const dbSubs = data.subjects || [];
 
-  for (let i = 0; i < SUBJECTS.length; i++) {
-    const total = parseInt(document.getElementById(`t-${i}`).value) || 0;
-    const attended = parseInt(document.getElementById(`a-${i}`).value) || 0;
-    if (total === 0) continue;
+    const startDate = new Date().toISOString().split('T')[0];
 
-    const subId = dbSubs.find(s => s.name === SUBJECTS[i])?.id;
-    if (!subId) continue;
+    for (let i = 0; i < SUBJECTS.length; i++) {
+      const total = parseInt(document.getElementById(`t-${i}`).value) || 0;
+      const attended = parseInt(document.getElementById(`a-${i}`).value) || 0;
+      if (total === 0) continue;
+      if (attended > total) {
+        throw new Error(`Attended classes cannot exceed total for ${SUBJECTS[i]}`);
+      }
 
-    // Post summarized record (simplifying logic to avoid 100s of calls) [cite: 7]
-    await fetch(`${API}/attendance`, {
-      method: 'POST',
+      const subId = dbSubs.find(s => s.name === SUBJECTS[i])?.id;
+      if (!subId) continue;
+
+      await fetch(`${API}/attendance`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ subject_id: subId, date: startDate, status: 'attended', count: attended })
+      });
+
+      const bunked = total - attended;
+      if (bunked > 0) {
+        await fetch(`${API}/attendance`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ subject_id: subId, date: startDate, status: 'bunked', count: bunked })
+        });
+      }
+    }
+
+    // Ensure onboarded=true is set in DB
+    await fetch(`${API}/users/${userId}`, {
+      method: 'PATCH',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ subject_id: subId, date: '2026-02-01', status: 'attended', count: attended }) 
+      body: JSON.stringify({ onboarded: true })
     });
-    await fetch(`${API}/attendance`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ subject_id: subId, date: '2026-02-01', status: 'bunked', count: (total - attended) })
-    });
+
+    window.location.href = `index.html?user_id=${userId}&name=${encodeURIComponent(name)}`;
+  } catch (e) {
+    alert(e.message || "Error finalizing setup. Try again.");
+    btn.disabled = false;
+    btn.textContent = "Finish & Open Dashboard →";
   }
-
-  // CRITICAL: Ensure onboarded=true is set in DB [cite: 8, 13]
-  await fetch(`${API}/users/${userId}`, {
-    method: 'PATCH',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ onboarded: true })
-  });
-
-  window.location.href = `index.html?user_id=${userId}`;
 }
 
 init();
