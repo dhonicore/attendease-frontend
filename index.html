@@ -7,16 +7,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f6f2ec;
-      --card: #ffffff;
-      --ink: #171311;
-      --muted: #6a615a;
-      --line: #ece3da;
+      --bg: #0a0a0a;
+      --card: #151515;
+      --ink: #f2f2f2;
+      --muted: #9c9c9c;
+      --line: #242424;
       --accent: #ff7a1a;
-      --accent-soft: #fff0e3;
-      --good: #0b8a4b;
-      --warn: #9f6700;
-      --bad: #b42318;
+      --accent-soft: rgba(255,122,26,0.14);
+      --good: #23d57a;
+      --warn: #ffc45b;
+      --bad: #ff6767;
       --radius: 18px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +29,7 @@
       border: 1px solid var(--line);
       border-radius: 24px;
       padding: 34px 28px;
-      box-shadow: 0 10px 30px rgba(28, 18, 11, 0.06);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.38);
       text-align: center;
     }
     .logo { font-size: 13px; font-weight: 800; letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; }
@@ -44,7 +44,10 @@
       padding: 12px 16px;
       border-radius: 12px;
       font-weight: 700;
+      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
     }
+    .google:hover { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 16px 32px rgba(255,122,26,0.28); }
+    .google:active { transform: translateY(0); }
     .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
     .top h1 { font-size: clamp(26px, 4vw, 42px); letter-spacing: -0.03em; line-height: 1.05; }
     .hello { margin-top: 8px; }
@@ -56,13 +59,21 @@
       border-radius: 12px;
       cursor: pointer;
       font-weight: 600;
+      transition: all 0.2s ease;
     }
+    .btn:hover { border-color: rgba(255,122,26,0.4); color: #fff; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
     .panel {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 18px;
       margin-bottom: 12px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .panel:hover {
+      border-color: rgba(255,122,26,0.28);
+      transform: translateY(-2px);
     }
     .panel h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
     .verdict {
@@ -77,7 +88,9 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 14px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
     }
+    .kpi:hover { transform: translateY(-2px); border-color: rgba(255,122,26,0.32); }
     .kpi small { color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
     .kpi strong { display: block; margin-top: 10px; font-size: clamp(24px, 3vw, 32px); line-height: 1; }
     .kpi strong.accent { color: var(--accent); }
@@ -90,15 +103,19 @@
       padding: 10px 12px;
       cursor: pointer;
       font-weight: 600;
+      transition: all 0.2s ease;
     }
     .tab.active { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
+    .tab:hover { border-color: rgba(255,122,26,0.36); color: #fff; transform: translateY(-1px); }
+    .tab:active { transform: translateY(0); }
     .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); gap: 10px; }
+    .row:hover { background: rgba(255,255,255,0.01); }
     .row:last-child { border-bottom: none; }
     .title { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
     .meta { color: var(--muted); font-size: 13px; }
     .pill { border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
-    .ok { background: #e9fbef; color: var(--good); border: 1px solid #c8efd8; }
-    .no { background: #ffeceb; color: var(--bad); border: 1px solid #ffd5d2; }
+    .ok { background: rgba(35,213,122,0.12); color: var(--good); border: 1px solid rgba(35,213,122,0.34); }
+    .no { background: rgba(255,103,103,0.12); color: var(--bad); border: 1px solid rgba(255,103,103,0.34); }
     .right { text-align: right; }
     .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
     @media (max-width: 840px) {
